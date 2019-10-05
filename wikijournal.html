@@ -11,12 +11,115 @@ __TOC__
 {{Vspace}}
 
 =1 Preparation for R=
+==1.1 Installations==
+;Commands that may be helpful and used often
+* library():
+;;When no arguments given: list of installed package
+;;argument=<package>: load <package> (not string! no quotes!)
+;;help=<package>: doc for <package>
+* data():
+;;When no arguments given, list of available data sets
+;;argument=<dataset>: load dataset <dataset>
+;;package=<package>: load/list dataset(s) in <package>
+* search(): list of currently loaded packages
+* vignette(): (also doc for a package?)
+* Get help by preceding function, package, or library name with ?
+* Get help by preceding function, package, or library name with ?? if I have approximate impression for the name of it (e.g. ?aaindex will not work but ??aaindex will work)
+* s2c(string): convert string into vector of constituent characters
 
-===Progress===
+;Install seqinr
+<source lang="R">
+    install.packages("seqinr")
+</source>
 
-;Activity 1
-* Procedure: concise but sufficient so that it's reproducible
-* Results: static data, variable data, analysis results
+<div class="toccolours mw-collapsible mw-collapsed" style="width:800px">
+    Installation messages
+        <div class="mw-collapsible-content">
+            WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+            https://cran.rstudio.com/bin/windows/Rtools/
+            Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+            (as ‘lib’ is unspecified)
+            also installing the dependencies ‘ade4’, ‘segmented’
+            
+            trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/ade4_1.7-13.zip'
+            Content type 'application/zip' length 5224910 bytes (5.0 MB)
+            downloaded 5.0 MB
+            
+            trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/segmented_1.0-0.zip'
+            Content type 'application/zip' length 479928 bytes (468 KB)
+            downloaded 468 KB
+            
+            trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/seqinr_3.6-1.zip'
+            Content type 'application/zip' length 4162333 bytes (4.0 MB)
+            downloaded 4.0 MB
+            
+            package ‘ade4’ successfully unpacked and MD5 sums checked
+            package ‘segmented’ successfully unpacked and MD5 sums checked
+            package ‘seqinr’ successfully unpacked and MD5 sums checked
+            
+            The downloaded binary packages are in
+                C:\Users\Wilson\AppData\Local\Temp\RtmpOCLlIY\downloaded_packages
+        </div>
+</div>
+
+; Playing with dataset seqinr::aaindex
+;;Seems like we retieve entries of data in the dataset via some rather arbitrary name?
+
+<source lang="R">
+    ?seqinr::aaindex #This can tell me the following line, which lets me know the index and the name of the data entry; it also tells me what $H, $J etc. mean when I display a data entry (the third line)
+    which(sapply(aaindex, function(x) length(grep("Kyte", x$A)) != 0)) #grep() is probably regex
+    aaindex$FASG890101
+</source>
+
+<source lang="R">
+;;Plot sample data:
+plot(aaindex$FASG890101$I,
+     aaindex$PONJ960101$I,
+     xlab="hydrophobicity", ylab="volume", type="n")
+text(aaindex$FASG890101$I,
+     aaindex$PONJ960101$I,
+     labels=a(names(aaindex$FASG890101$I)))
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:800px">
+    Error message
+        <div class="mw-collapsible-content">
+        Error in a(names(aaindex$FASG890101$I)) : could not find function "a"
+
+        #Also: there is nothing in the plot. I suspect it doesn't like a or aaindex
+        </div>
+</div>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:800px">
+    Resolution
+        <div class="mw-collapsible-content">
+        Explicitly define seqinr::a and rerun the script.
+
+        aaindex has no problem, as it has already been loaded.
+
+        If library(seqinr) was run ahead of time, the original code should work.
+        </div>
+</div>
+
+;Avoid error by installing a package if not already installed.
+<source lang="R">
+    if (! requireNamespace("seqinr", quietly=TRUE)) {
+        install.packages("seqinr")
+      }
+    #requireNamespace(): returns TRUE is installed and vice versa
+
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install()
+    #Bioconductor packages are installed a bit differently
+
+    #Packages neither CRAN or Bioconductor: devtools (but the link on the course website is broken)
+</source>
+
+;sos package will help me find packages
+
+{{Vspace}}
 
 =0 Getting Started=
 =='''''0.2 Plagiarism and Academic Integrity'''''==
@@ -58,7 +161,7 @@ Time estimated: 0.75 h; taken 1 h; date started: 2019-10-03; date completed: 201
 My R code below ...
     <div class="mw-collapsible-content">
     <source lang="R">
-    #R-code here
+        #R-code here
     </source>
 
     </div>
