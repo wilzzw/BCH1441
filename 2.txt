@@ -1,0 +1,42 @@
+ESX systems secrete specific substrates {clusters
+Cation homeostatis?
+
+Unique way to provide such impact
+promote interdisciplinary culture
+Every technique has limitations
+
+How much you didn't know before?
+How much you gained from this workshop?
+
+research funding history
+funding reference number in publication
+
+phase space overlap
+
+Molecular Dynamics Study of CFTR and its Gating Mechanism
+
+
+Use the unnecessary model to model social sciences; if you torture the data enough, it will confess. Meaningless picture. Human on average has 1 teticle. (Yoonsik Park ref)
+Machine learning, AI, data science, quantum
+Chen's paper
+IFD (Statistics)
+trying to impress
+misinterpretation
+The value I can see in it is remind yourself
+Coding in science
+Training in PhD too focused
+Obsessed with terminologies
+rather no book than believe in book entirely
+Misinterpreting
+Heuristics
+
+Risk is probability times damage.
+NO backup is a backup unless recovery of data has been tested and shown to work.
+It is better to organize file hierarchies wide, not deep.
+don't store the same contents in more than one place. In the best case this is merely unnecessarily needlessly redundant, but in the common worse case the two copies will go out of sync.
+
+It appears that R treats a list as a scalar.
+<-
+What logical(0) actually means
+
+general themes of R-language: vector operations looping
