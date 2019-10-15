@@ -45,3 +45,5 @@ Results are always only
 meaningful when we consider which algorithm was used and how the parameters were set..
 Results cannot be compared if algorithm and parameters are not specified. This is a
 common problem, and an important issue for “repreducible reesearch”
+
+#R factor: categorical data (rep as integere levels)

@@ -46,14 +46,17 @@ myLifeDays <- function(birthday, lday) {
     return()
 }
 
+
 #Genetic Code
 for (i in seq_along(dim(cCube))) {
     dimnames(cCube)[[i]][4] <- "U"
 }
 
 #All of them that contain "C"
-dictWithC <- genCode[grep("C", names(genCode))]
+codonWithC <- genCode[grep("C", names(genCode))]
 codonVector <- genCode[1:length(genCode)] #For some reason...
+#codonVector <- as.vector(genCode) #For some reason...
+#names(codonVector) <- names(genCode)
 #dictWith1C <- dictWithC[-grep("CC", names(dictWithC))]
 
 mutate <- function(codon, from, to) {
@@ -73,13 +76,42 @@ translate <- function(codon) {
     return(codonVector[codon])
 }
 
-effectOfMutation <- function(codonBefore, codonAfter) {
-    codonBeforeName <- names(codonBefore)
+effectOfMutation <- function(codonBefore, from, to) {
+    codonAfter <- mutate(codonBefore, from, to)
     aaBefore <- translate(codonBefore)[codonBefore]
-    names(aaBefore) <- NULL
+    aaBefore <- as.character(aaBefore)
     aaAfter <- lapply(codonAfter, translate)#[codonAfter] #
-    names(aaAfter) <- NULL
-    mutationEffect <- data.frame(aaBefore=aaAfter, rownames=codonAfter)
+    aaAfter <- as.character(aaAfter)
+    mutationEffect <- data.frame(aaAfter, rownames=codonAfter)
+    column <- paste(aaBefore, " (", as.character(codonBefore), ")", sep="", collapse="")
+    #print(ncol(mutationEffect))
+    colnames(mutationEffect) <- c(column, "Codon After")
     return(mutationEffect)
 }
 
+CtoT <- function(codon) {
+    effect <- effectOfMutation(codon, "C", "T")
+    return(effect)
+}
+
+CtoA <- function(codon) {
+    effect <- effectOfMutation(codon, "C", "A")
+    return(effect)
+}
+
+CtoT_EffectTable <- CtoT(names(codonWithC)[1])
+for (i in seq_along(codonWithC[-1])) {
+    #https://stackoverflow.com/questions/7739578/merge-data-frames-based-on-rownames-in-r
+    CtoT_EffectTable <- merge(CtoT_EffectTable, CtoT(names(codonWithC)[i]), all=TRUE) 
+}
+
+outcomesOfMutation <- function(codonVector, from, to) {
+    effectTable <- effectOfMutation(names(codonVector)[1], from, to)
+    for (i in seq_along(codonVector[-1])) {
+        #https://stackoverflow.com/questions/7739578/merge-data-frames-based-on-rownames-in-r
+        effectTable <- merge(effectTable, effectOfMutation(names(codonVector)[i], from, to), all=TRUE)
+    }
+    return(effectTable)
+}
+
+#dim-reduction Find subsets, and do statistics on the subset
