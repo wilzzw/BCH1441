@@ -1,3 +1,5 @@
+<!-- HTML comments syntax -->
+
 <div class="b1">
 Wilson's Journal
 </div>
@@ -10,8 +12,16 @@ Wilson's Journal
 __TOC__
 
 {{Vspace}}
+
 =4 Concepts in Biology=
 ==4.1 Cell Cycle==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 150 min; date started: 2019-10-10; date completed: 2019-10-12
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 17:45, 12 October 2019 (EDT)
+</div>
+
 ;Universally conserved process for cell division involving many regulatory protein machineries.
 :* In fact, they are so highly conserved that many machineries work just fine when expressed in a different species<ref>Molecular Biology of the Cell</ref>
 
@@ -49,128 +59,7 @@ __TOC__
 :* [https://pubs.acs.org/doi/10.1021/bi992212i Characterization of DNA-binding domain]
 :* [https://pubs.acs.org/doi/10.1021/bi702339q Thermodynamics of DNA-binding]
 
-{{Vspace}}
 =3 Basic Bioinformatics=
-==3.4 MYSPE ==
-
-<div class="time-estimate">
-Time estimated: 1 h; taken 35 min; date started: 2019-10-14; date completed: 2019-10-14
-
-~~~~
-</div>
-
-;Motivation:
-:* Define protein function in terms of computable entities and characterize it as part of a system with collaborating components
-:* To make inferences about protein function, we often have to extend knowledge about protein function from well-characterized '''model organisms'''
-
-===3.4.1 Model Organisms===
-* Extensively characterized, methods readily available
-* Value is primarily for transfer biological knowledge to other organisms
-
-===3.4.2 Choosing MYSPE===
-;Objective:
-:* Through model-organism reasoning, infer the function of Mbp1 protein in related species of fungi from ''Saccharomyces cerevisiae''. 
-:* Choose a species to work with. The species in question will need to have the whole genome sequenced.
-
-<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
-'''''Configuration messages after init() ABC-units project'''''
-
-'''''I recently resetted/wiped out my computer so that might be why'''''
-
-~~~~
-<div class="mw-collapsible-content">
-<code>
-WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
-
-https://cran.rstudio.com/bin/windows/Rtools/
-Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
-(as ‘lib’ is unspecified)
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/jsonlite_1.6.zip'
-Content type 'application/zip' length 1162207 bytes (1.1 MB)
-downloaded 1.1 MB
-
-package ‘jsonlite’ successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
-WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
-
-https://cran.rstudio.com/bin/windows/Rtools/
-Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
-(as ‘lib’ is unspecified)
-also installing the dependencies ‘sys’, ‘askpass’, ‘curl’, ‘mime’, ‘openssl’, ‘R6’
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/sys_3.3.zip'
-Content type 'application/zip' length 59866 bytes (58 KB)
-downloaded 58 KB
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/askpass_1.1.zip'
-Content type 'application/zip' length 64780 bytes (63 KB)
-downloaded 63 KB
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/curl_4.2.zip'
-Content type 'application/zip' length 4123128 bytes (3.9 MB)
-downloaded 3.9 MB
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/mime_0.7.zip'
-Content type 'application/zip' length 48231 bytes (47 KB)
-downloaded 47 KB
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/openssl_1.4.1.zip'
-Content type 'application/zip' length 3971462 bytes (3.8 MB)
-downloaded 3.8 MB
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/R6_2.4.0.zip'
-Content type 'application/zip' length 58850 bytes (57 KB)
-downloaded 57 KB
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/httr_1.4.1.zip'
-Content type 'application/zip' length 511180 bytes (499 KB)
-downloaded 499 KB
-
-package ‘sys’ successfully unpacked and MD5 sums checked
-package ‘askpass’ successfully unpacked and MD5 sums checked
-package ‘curl’ successfully unpacked and MD5 sums checked
-package ‘mime’ successfully unpacked and MD5 sums checked
-package ‘openssl’ successfully unpacked and MD5 sums checked
-package ‘R6’ successfully unpacked and MD5 sums checked
-package ‘httr’ successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
-WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
-
-https://cran.rstudio.com/bin/windows/Rtools/
-Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
-(as ‘lib’ is unspecified)
-also installing the dependency ‘Rcpp’
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/Rcpp_1.0.2.zip'
-Content type 'application/zip' length 4535652 bytes (4.3 MB)
-downloaded 4.3 MB
-
-trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/xml2_1.2.2.zip'
-Content type 'application/zip' length 3503035 bytes (3.3 MB)
-downloaded 3.3 MB
-
-package ‘Rcpp’ successfully unpacked and MD5 sums checked
-package ‘xml2’ successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
-</code>
-</div>
-</div>
-
-;Activity -- Get MYSPE through <code>~/BCH1441/ABC-units/BIN-MYSPE.R</code>
-
-:* Not much is known about ''Eremothecium cymbalariae'', according to Wikipedia.
-
-:* Taxonomy: Fungi > Ascomycota > Saccharomycotina > Saccharomycetes > Saccharomycetales > Dipodascaceae > ''Eremothecium''
-:* Shares the same order as ''Saccharomyces cerevisiae''
-:* Produces aerial mycelium (filamentous, like mushrooms) instead of growing like yeast [NCBI, https://www.sciencedirect.com/science/article/pii/S0960982206000418]
-:* Genome size of 9.6Mb, 8 chromosomes
-
 ==3.3 Data Models==
 
 <div class="time-estimate">
@@ -264,7 +153,6 @@ e.g. Create an annotation table with annotation primary keys in the above exampl
 * This necessitates focusing on objectives rather than methodology.
 * Activities have to turn into better understanding. Otherwise, it would just be cargo cult [insight!].
 
-{{Vspace}}
 =2 Basic R=
 ==2.9 Final Notes on Coding Style==
 ;General principles: clarity, readability, don't get witty, generality, explicitly (ok, the last two are kind of a stretch with the rhyme)
@@ -725,6 +613,7 @@ lastnum <- tail(numbers, 1)
 :* Does not support "and" or "or". Only <code>&</code> or <code>|</code>
 
 {{Vspace}}
+
 =1 Preparation for R=
 ==1.4 Getting Help with R==
 
@@ -994,7 +883,6 @@ Interpretation of results.
 
 Next step and link to the next step.
 
-{{Vspace}}
 ----
 ----
 =References=

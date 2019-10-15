@@ -1,0 +1,460 @@
+=2 Basic R=
+==2.9 Final Notes on Coding Style==
+;General principles: clarity, readability, don't get witty, generality, explicitly (ok, the last two are kind of a stretch with the rhyme)
+
+;Comments: Use LOTS of comments. Not just what but also why. Indent to format nicely.
+
+;Headers, separators, and always end your code with an # [END] comment
+
+;def GLOBAL_VARIABLES at the beginning
+
+;'''options()''': set truly global options
+
+;Use <package>::<function>() over library() (explicit)
+
+;Do not mess with the global state
+
+;Try to always else the if statement
+
+;set.seed() to allow reproducible results from codes involving random processes for debugging purposes.
+:* set.seed(NULL) to re-initiate with a new seed
+
+==2.8 Plotting==
+;Plenty of examples [http://www.r-graph-gallery.com here].
+
+;The power of visualization: https://www.reddit.com/r/dataisbeautiful/
+
+===2.8.1 Helpful plotting related functions===
+;summary(x)
+
+;quantile(x, probs=<vector>): returns quantiles of the sample x. Specific quantile percentages can be specified in probs=<vector>.
+
+;Sampling from a distribution: rnorm(), runif(), ...
+
+;Built-in plotting functions:
+:* plot(): scatter plot
+:* rug(): add rugs onto the axes (visually show data distributions)
+:* hist(): histogram
+:* barplot(): bar graph
+:* boxplot(): box-plot
+:* stripchart(): (sort of like) 1D scatter plot
+
+;For more: "plottingIntro.R" (B.Steipe)
+
+;QQ-plot assessing normality assumption (by comparing the quantiles between theoretical and sample): qqnorm(), qqline()
+:* If two samples are supplied as arguments, these functions also compare the two distributions.
+
+===2.8.2 General principles===
+;All plot elements are necessary (no unhelpful redundancy), informative presentation, all information in data displayed
+
+;Plot tells a story: relationships, significance, and insufficiencies converyed by the data -> Not to mislead
+
+==2.7 Functions==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 50 min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 21:38, 7 October 2019 (EDT)
+</div>
+
+;Basic syntax (assigning function to an object name<function_name>): <code><function_name> <- function(<arguments>) {<commands>}</code>
+:* May have <code>return()</code> statement in <commands>
+
+;An example of function: seq()
+: Ways to pass arguments: <code>seq(-5,3)</code>, <code>seq(from=-2, to=2, by=1/3)</code>, <code>seq(length.out=30, to=100, from=1)</code>
+: Named arguments don't assume default order when passing with explicit argument names.
+
+;Read about a function's explicit code by typing it out and <enter>. 
+
+;S3 methods?? (back to this later) <code>method(<function>); getAnywhere(<an_item_in_methods_of_the_function>)</code>
+
+;Primitive (compiled in C)
+
+;Good practice -- Functions should not have side effects
+
+;Here is a countdown function (link on this page to the code):
+<source lang="R">
+countDown <- function(x=3) {
+    txt <- ""
+    start <- x
+    position <- 1
+    while (start >= 0) {
+        if (start > 0) {
+            txt[position] <- as.character(start)
+        } else {
+            txt[position] <- "Lift Off!"
+        }
+        start <- start - 1
+        position <- position + 1
+    }
+    return(txt)
+}
+</source>
+
+;The scope of a function is local.
+
+;Here is a mylifeday calculator:
+<source lang="R">
+myLifeDays <- function(birthday, lday) {
+    if (missing(birthday)) {
+        print ("Enter your birthday as a string in \"YYYY-MM-DD\" format.")
+        return()
+    }
+    bd <- strptime(birthday, "%Y-%m-%d") # convert string to time
+    now <- format(Sys.time(), "%Y-%m-%d") # convert "now" to time
+    diff <- round(as.numeric(difftime(now, bd, unit="days")))
+    print(sprintf("This date was %d days ago.", diff))
+
+    futureDay <- format(bd + as.difftime(lday, unit="days"), "%Y-%m-%d") #Consulted ?difftime
+    print(sprintf("Celebrate your life day on: %s", futureDay))
+    return()
+}
+</source>
+
+==2.6 Control Structures==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken ??? min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 20:31, 7 October 2019 (EDT)
+</div>
+
+===2.6.1 R Commands that may be helpful and used often===
+;is.character(), is.factor(), is.integer(), is.sorted(), is.null(), is.numeric(), is.vector(): (self-explanatory)
+<span style="color:red">Some behaviours I noticed to watch out for:</span>
+<source lang="R">
+is.integer(3) #FALSE
+is.integer(3L) #TRUE
+is.vector(3) #TRUE
+</source>
+
+;exists(<object>): returns TRUE if the <object> is defined.
+:* <object> is a string of the name of variable to be questioned![https://stackoverflow.com/questions/28218508/r-check-if-r-object-exists-before-creating-it]
+
+;Some string methods:
+:* '''nchar(<string>)''': returns the number of characters in <string>
+:* '''substr(<string>, start, end)''': slice string from <code>start</code> to <code>end</code> (inclusive). The slice can be re-assigned as a way to change <string>.
+:* '''paste(..., sep=" ", collapse=NULL)''': concatenate strings in ... and separate them by sep string. '''If vector of strings argument is given, it will return vector of concat strings unless collapse is not NULL.
+<source lang="R">
+paste(c("a", "b"), c("c", "d"), sep="?", collapse="!") #gives one string: "a?c!b?d"
+</source>
+
+;Boolean operators <code>"&&"</code> and <code>"||"</code>:
+:* <code>"&"</code> and <code>"|"</code> will give vectorized booleans, whereas <code>"&&"</code> and <code>"||"</code> give single booleans
+:* <code>"&&"</code> will start out TRUE, and stop evaluating when the first FALSE is encountered.
+:* <code>"||"</code> will start out FALSE, and stop evaluating when the first TRUE is encountered.
+
+===2.6.2 If statements===
+;Basic syntax: <code>if (<condition1>) {<command1>}; else if (<condition2>) {<command2>}; else {<command3>}</code>
+
+;ifelse(<condition>, a, b): if <condition> is TRUE, evaluates a and returns a; else, evaluates b and returns b.
+:* '''The <condition> can be vectorized, resulting in a vector of a's and b's'''
+
+===2.6.3 For loops===
+;Basic syntax: <code>for (<item> in <vector>); {<command>}</code>
+
+;Some pointers:
+:* Try to use vectorized operations instead of loops if possible.
+:* '''seq_along(x)''': Try to always use this to prevent 1:0 type error...
+
+===2.6.4 While loops===
+;Basic syntax: <code>while (<condition>); {<command>}</code>
+
+===2.6.5 Activities===
+;A rocket ship has to sequence a countdown for the rocket to launch...
+<source lang="R">
+txt <- ""
+count_down <- 3
+position <- 1
+while (count_down >= 0) {
+    if (count_down > 0) {
+        txt[position] <- as.character(count_down)
+        #print(as.character(count_down))
+    } else {
+        txt[position] <- "Lift Off!"
+    }
+    count_down <- count_down - 1
+    position <- position + 1
+}
+
+print(txt)
+</source>
+
+==2.5 Subsetting Project==
+
+;Objective: Practise and get familiar with subsetting vector-like objects in R.
+
+<div class="time-estimate">
+Time estimated: 1 h; taken ??? min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 20:31, 7 October 2019 (EDT)
+</div>
+
+===2.5.1 R Commands that may be helpful and used often===
+(aka tips I got from "subsettingPractice.R" by B. Steipe)
+
+;sort(x): returns a vector that's x but sorted (from smallest to largest)
+
+;order(x): returns the indices of the elements in x if sorted (useful in subsetting)
+
+;apply(x, <margin>, <function>): apply <function> to all margins of vector-like x. e.g. <margin>=1 would be rows if x is a matrix.
+
+;any(<boolean_vector>): returns TRUE if any of the element in <boolean_vector> is TRUE (<code>|</code> all elements)
+
+;all(<boolean_vector>): returns TRUE if all of the element in <boolean_vector> is TRUE (<code>&</code> all elements)
+
+;grep(<pattern>, x): (might end up being my favourite function) returns indices of elements in x that matches <pattern> '''(supports regex!)'''
+
+;which(<boolean_vector>): returns a vector of indices at which <boolean_vector> is TRUE.
+
+;unique(x): returns a vector of unique elements of x
+
+;duplicated(x): returns a boolean vector. For all positions at which duplication occurs, the element is TRUE.
+
+;<code>%in%</code>: operator &isin
+
+;Can combine boolean vectors with boolean operators when subsetting
+
+
+==2.4 Lists==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 45 min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 14:09, 7 October 2019 (EDT)
+</div>
+
+;Obviously list is much more versatile and flexible than vectors or data frames (any number of arbitrary types).
+
+===2.4.1 R Commands that may be helpful and used often===
+;list(): create a list
+:* <name>=<item>: the list will be named this way with <item> having name <name>
+
+;strsplit(<x>, <split>): split string <x> into a list through split markers <split>
+
+;lapply(<x>, <function>): apply <function>(function) iteratively over the list/vector <x>
+
+;unlist(<x>): flattens a list (simplifies <x> to a vector of its atomic components)
+
+===2.4.2 Methods of lists===
+;Access the list items:
+:* by index (e.g. <code><nowiki>list[[1]]</nowiki></code>) <span style="color:red">'''Double brackets!'''</span>
+:* if the list is named, access by name via $ (e.g. <code>list$firstItem</code>) or double brackets (e.g. <code><nowiki>list[[firstItem]]</nowiki></code>)
+
+; Manipulate some lists of plasmid information:
+<source lang="R">
+#source("R_Exercise-BasicSetup.R")
+#init()
+
+pUC19 <- list(size=2686, marker="ampicillin", ori="ColE1", accession="L01397", BanI=c(235, 408, 550, 1647) ) #pUC19 info
+
+(pACYC184 <- list(size=4245, marker=c("Tet", "Cam"), ori="p15A")) #Create a list like with data for pACYC184
+
+plasmidDB <- list()
+plasmidDB[["pUC19"]] <- pUC19 #Make a data bank list of plasmids and add pUC19 to it
+plasmidDB[["pACYC184"]] <- pACYC184 #Add pACYC184 to it
+
+pBR322 <- list(size=4361, marker=c("Amp", "Tet"), ori="ColE1") #Create a list like with data for pBR322
+plasmidDB[["pBR322"]] <- pBR322 #Add pBR322 to it
+
+plasmidDB$pACYC184 #Retrieve the entire pACYC184 list
+
+sizes <- lapply(plasmidDB, function(x) { return(x$size) }) #Get sizes
+min(unlist(sizes)) #This should give the smallest size
+</source>
+
+
+==2.3 Data Frames==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 20 min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 13:09, 7 October 2019 (EDT)
+</div>
+
+===2.3.1 R Commands that may be helpful and used often===
+;read.table(<path>): load data set as data frame.
+:* sep=<separation>(string): separations used in <path> data file. e.g. <code>"\t"</code> for tab in R.
+:* header=<boolean>: indicate whether the data file contains variable names as its first line.
+:* stringAsFactors=<boolean>: Usually turn this off unless I want to as.factor() all the strings.
+   
+;data.frame(...): create a data frame. ... in <column_name>=<values> format.
+:* row.names=NULL: can specify row names here. The default is NULL.
+
+
+===2.3.2 Methods for Data frames===
+:* Renaming rows/Using a column as row names by assigning directly to its row names: <code>rownames(df) <- df[,1] #First column as row names</code>
+:* Same rules for retrieving & removing rows/columns as matrices, with the added feature of retrieving by row/column names.
+:* rbind() and cbind() should also work for data frames.
+
+
+;Playing with plasmidData:
+<source lang="R">
+#source("R_Exercise-BasicSetup.R")
+#init()
+
+plasmidData <- read.table("plasmidData.tsv",
+                          sep="\t",
+                          header=TRUE,
+                          stringsAsFactors = FALSE)
+
+rownames(plasmidData) <- plasmidData[ , 1] #Make column 1 as the row names
+
+#Added a new row
+plasmidData <- rbind(plasmidData, data.frame(Name = "pMAL-p5x",
+                                             Size = 5752,
+                                             Marker = "Amp",
+                                             Ori = "pMB1",
+                                             Sites = "SacI, AvaI, ..., HindIII",
+                                             stringsAsFactors = FALSE))
+
+rownames(plasmidData) <- plasmidData[ , 1] #Repeat this line will fix the new row's name
+
+#Alternatively: rownames(plasmidData)[4] <- plasmidData[4,1]
+</source>
+
+
+==2.2 Vector Objects==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 100 min; date started: 2019-10-06; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:37, 7 October 2019 (EDT)
+</div>
+
+===2.2.1 R Commands that may be helpful and used often===
+;'''objectInfo(<object>): (specially defined function only in R_Exercise-BasicSetup.R): After init(), this function is defined and it returns mode(), typeof(), and class() of the <code><object></code>'''
+;It also gives data structure of the object?
+
+;seq(from, to, by): Generates a sequence
+
+;summary(x): summary of x=<object> (e.g. If x is a vector, then it returns basic statistics on this vector such as mean, median etc.)
+
+
+===2.2.2 Scalars ===
+;single valued, but by construction, it's also a vector of length of 1
+: e.g. length() and indexing will work
+
+;Objects can have mode, type, and class.
+
+;Important notes:
+:* ;An (apparent) integer is by default a double-precision float! To get integer type and class, one has to have <code><integer>L</code>. An alternative is to coerce it into an integer.
+:* ;However, integers obtained from range operators (e.g. <code>1:10</code>, which returns a vector) are actual integers!
+:* <span style="color:red">'''R indexing starts at 1!!!'''</span>
+
+;Coercion:
+:* The names of functions are self-explanatory. Check with objectInfo() if needed: '''as.numeric(), as.character(), as.complex()'''
+:* Note that as.numeric("pi") is silly and won't work -- It gives NA (<code>objectInfo(NA)</code> indicates <code>NA</code> is of mode logical, type logical, and class logical)
+:* as.logical(x) will return FALSE if x == 0, elif it will return TRUE if x != 0 and x is numeric, else (e.g. if x is a string) will return NA.
+:* <code>NaN</code> means "not a number", though it is of mode numeric, type double, and class numeric. '''<code>as.logical(NaN)</code> returns NA.'''
+:* <code>NULL</code> means "nothing" or "undefined". It is of mode NULL, type NULL, and class NULL (basically just nothing). e.g. <code>as.logical(NULL)</code> will be the same as <code>as.logical()</code>
+:* '''as.factor(x)''' encodes vector x as factor? (back to this later)
+
+
+===2.2.3 Vectors===
+;An ordered array of objects of the same type
+
+;A general way to generate a vector: c() (link to the function on this page?)
+
+;Subsetting:
+:* Indexing: e.g. x[1:10], x[5:1], x[seq(1,10,2)]
+:* <span style="color:red">'''Negative indices deserves a special note for R'''</span>: the negative indices are the ones to be omitted.
+:* Boolean filtering: e.g. x[x>3]
+:* If <code>length(<logical_vector>) < length(<vector>)</code>, the <logical_vector> filter will be re-applied in cyclically on <vector>.
+:* Indexing by name if it's a named array: e.g. <code>summary(x)[c("Max.", "Min.")]</code>
+:* Retrieve names of a named vector using '''names(x)'''
+
+;Extending:
+:* Extending a vector by simply assign a value to a vector index larger than its length: e.g. <code>x[4] <- 4</code> works even if <code>length(x) < 4</code> before assignment.
+
+;Many operations on vectors are by default vectorized! (just like NumPy)
+:* Similar behaviour to cyclic boolean filtering, if the two vectors on which the operator acts on have different lengths... e.g. <code>(1:10)*(1:5)</code> is the same as <code>(1:10)/rep(1:5,2)</code>
+
+
+===2.2.4 Matrices and Tensors?===
+;Ways to make a matrix
+1) To turn a 1-D vector into a matrix/tensor <array>, assign a vector of dimensions to dim(<array>) (e.g. <code>dim(a) <- c(x, y)</code>; the behaviour is similar to numpy.array.reshape() in Python)
+
+2) Use '''matrix()''' or '''array()'''
+
+3) Using '''rbind(...)''' (row bind) or '''cbind(...)''' (column bind)
+
+;dim(a): dimensions of matrix a.
+:* if <code>class(a) != "matrix"</code>, <code>dim(a)</code> will return <code>NULL</code>
+
+;<code>nrow(a) == dim(a)[1]; ncol(a) == dim(a)[2]</code>, ... (slice follows at position 3 of dim(a) for a 3-D array)
+
+; Note that unlike numpy.array subsetting, a comma must be given to the subset index of an R-array to retrieve an entire indexed row. For example:
+<source lang="R">
+a <- 1:12
+dim(a) <- c(2,6)
+
+a[1] #This should give 1, the first element
+a[1,] #This should give the first row vector, 1:6
+
+a[6] #Without comma, it takes the element at position 6 as if a is a linearized vector
+</source>
+
+==2.1 Basic Syntax==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 40 min; date started: 2019-10-05; date completed: 2019-10-06
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:46, 6 October 2019 (EDT)
+</div>
+
+===R Commands that may be helpful and used often===
+;c(...): concatenates values into a vector (will coerce values into the same type)
+
+;tail(<object>, ...): get the last part of <code><object></code>
+:* n=<integer>: get the last <code><integer></code> of <code><object></code>
+:* An analogous function: head()
+
+;sample(x, size, replace=FALSE, prob=NULL): randomly sample from elements of <code>x</code>
+:* if <code>x</code> is a single numeric >= 1, sample <code>1:x</code> ''(R syntax: <code>x:y</code> means x to y '''inclusive''')''
+:* replace=<boolean>: with or without replacement?
+:* prob=<vector>: a vector of probability weights
+
+
+===R syntax practice===
+<source lang="R">
+numbers <- c(16, 20, 3, 5, 9)
+lastnum <- tail(numbers, 1)
+
+(lastnum < 6) | (lastnum > 10) #To check whether lastNum is less than 6 or greater than 10
+
+(lastnum >= 10) & (lastnum < 20) #To check whether lastNum is in the interval [10, 20)
+
+(((((lastnum / 7)*10 - (((lastnum / 7)*10) %/% 1)) / 10) * 100) %/% 1) ^ (1/3) #To output TRUE if the following operation gives 2
+
+#COUNTER-INTUITIVE/STRANGE BEHAVIOUR!!! (lastnum / 7)*10 %/% 1 does not do what I expect it to do
+#It does 10 %/% 1 first
+#Weird that integer division, while is sort of division, takes priority?
+</source>
+
+<span style="color:red"><code>(lastnum / 7)*10 %/% 1</code> does not do what I expect it to do</span>
+
+<span style="color:red">I have to do <code>((lastnum / 7)*10) %/% 1</code></span>
+
+<span style="color:red">Weird that integer division, while is sort of division, takes priority?</span>
+
+
+===Notes on Variables===
+;Can make use of <code>make.names</code> to make syntactically valid variable names from character vectors. See <code>?make.names for more</code>.
+
+;Reserved words for R-parser can be seen in <code>?reserved</code> (e.g. <code>TRUE <- 3</code> won't work)
+
+;Do not re-assign <code>pi</code>!!! Unfortunately it doesn't throw an error.
+
+
+===Syntax features===
+;Just like python, arithmetics in R does not seem to be sensitive to (number of) spaces.
+
+;Unlike python:
+:* Booleans (TRUE or FALSE) are case sensitive (RStudio autocorrects)
+:* Exponentiation: <code>^</code> (turns out <code>**</code> also works in R)
+:* Mod: <code>%%</code>
+:* Integer division: <code>%/%</code>
+:* Does not support "and" or "or". Only <code>&</code> or <code>|</code>
+
+{{Vspace}}
