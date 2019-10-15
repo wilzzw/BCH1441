@@ -40,3 +40,8 @@ It appears that R treats a list as a scalar.
 What logical(0) actually means
 
 general themes of R-language: vector operations looping
+
+Results are always only
+meaningful when we consider which algorithm was used and how the parameters were set..
+Results cannot be compared if algorithm and parameters are not specified. This is a
+common problem, and an important issue for “repreducible reesearch”

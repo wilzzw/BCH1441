@@ -45,3 +45,41 @@ myLifeDays <- function(birthday, lday) {
     print(sprintf("Celebrate your life day on: %s", futureDay))
     return()
 }
+
+#Genetic Code
+for (i in seq_along(dim(cCube))) {
+    dimnames(cCube)[[i]][4] <- "U"
+}
+
+#All of them that contain "C"
+dictWithC <- genCode[grep("C", names(genCode))]
+codonVector <- genCode[1:length(genCode)] #For some reason...
+#dictWith1C <- dictWithC[-grep("CC", names(dictWithC))]
+
+mutate <- function(codon, from, to) {
+    codonSplit <- strsplit(codon, split="")[[1]] #
+    positionMutate <- which(codonSplit == from) #
+    allMutated <- character(length(positionMutate))
+    for (i in seq_along(positionMutate)) {
+        mutated <- codonSplit
+        mutated[positionMutate[i]] <- to
+        mutated <- paste(mutated, sep="", collapse="")
+        allMutated[i] <- mutated
+    }
+    return(allMutated)
+}
+
+translate <- function(codon) {
+    return(codonVector[codon])
+}
+
+effectOfMutation <- function(codonBefore, codonAfter) {
+    codonBeforeName <- names(codonBefore)
+    aaBefore <- translate(codonBefore)[codonBefore]
+    names(aaBefore) <- NULL
+    aaAfter <- lapply(codonAfter, translate)#[codonAfter] #
+    names(aaAfter) <- NULL
+    mutationEffect <- data.frame(aaBefore=aaAfter, rownames=codonAfter)
+    return(mutationEffect)
+}
+

@@ -1,0 +1,100 @@
+=6 Genes and Genome=
+==6.1 Genetic Code==
+;Objective: use R and the package Biostrings to work with genetic code
+
+===6.1.1 Preparation: FND-Genetic_code.R===
+
+;Install BiocManager
+<source lang="R">
+install.packages("BiocManager")
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/BiocManager_1.30.7.zip'
+Content type 'application/zip' length 97999 bytes (95 KB)
+downloaded 95 KB
+
+package ‘BiocManager’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpumGMrj\downloaded_packages
+</code>
+</div>
+</div>
+
+
+;Install Biostrings
+<source lang="R">
+BiocManager::install("Biostrings")
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+Bioconductor version 3.9 (BiocManager 1.30.7), R 3.6.1 (2019-07-05)
+Installing package(s) 'BiocVersion', 'Biostrings'
+also installing the dependencies ‘zlibbioc’, ‘BiocGenerics’, ‘S4Vectors’, ‘IRanges’, ‘XVector’
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/zlibbioc_1.30.0.zip'
+Content type 'application/zip' length 374970 bytes (366 KB)
+downloaded 366 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/BiocGenerics_0.30.0.zip'
+Content type 'application/zip' length 736201 bytes (718 KB)
+downloaded 718 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/S4Vectors_0.22.1.zip'
+Content type 'application/zip' length 2035683 bytes (1.9 MB)
+downloaded 1.9 MB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/IRanges_2.18.3.zip'
+Content type 'application/zip' length 2379794 bytes (2.3 MB)
+downloaded 2.3 MB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/XVector_0.24.0.zip'
+Content type 'application/zip' length 714038 bytes (697 KB)
+downloaded 697 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/BiocVersion_3.9.0.zip'
+Content type 'application/zip' length 8915 bytes
+downloaded 8915 bytes
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/Biostrings_2.52.0.zip'
+Content type 'application/zip' length 14372143 bytes (13.7 MB)
+downloaded 13.7 MB
+
+package ‘zlibbioc’ successfully unpacked and MD5 sums checked
+package ‘BiocGenerics’ successfully unpacked and MD5 sums checked
+package ‘S4Vectors’ successfully unpacked and MD5 sums checked
+package ‘IRanges’ successfully unpacked and MD5 sums checked
+package ‘XVector’ successfully unpacked and MD5 sums checked
+package ‘BiocVersion’ successfully unpacked and MD5 sums checked
+package ‘Biostrings’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpumGMrj\downloaded_packages
+installation path not writeable, unable to update packages: boot, foreign,
+  KernSmooth, mgcv, nlme
+</code>
+</div>
+</div>
+
+===6.1.2
+
+
+names(x)
+attr(x, which)
+str(x)
+readLines(<path>)
+nchar(<string>)
+table(mbp1AA) #Amino acid frequencies (vector of amino acid code strings)
+#good practice would be having "\n" in the end

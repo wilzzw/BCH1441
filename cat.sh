@@ -1,1 +1,1 @@
-cat opening.html {4..0}wikijournal.html closing.html > wikijournal.html
+cat opening.html {5..0}wikijournal.html closing.html > wikijournal.html
