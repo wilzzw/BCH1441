@@ -46,12 +46,28 @@ myLifeDays <- function(birthday, lday) {
     return()
 }
 
+#setwd("C:/Users/Wilson/Documents/BCH1441/ABC-units")
+#source("FND-Genetic_code.R")
 
-#Genetic Code
+# Task: What do you need to change to print the table with U instead
+#         of T? Try it.
 for (i in seq_along(dim(cCube))) {
     dimnames(cCube)[[i]][4] <- "U"
 }
 
+# Task: Point mutations are more often transitions (purine -> purine;
+#         pyrimidine -> pyrimidine) than transversions (purine -> pyrimidine;
+#         pyrimidine -> purine), even though twice as many transversions
+#         are possible in the code. This is most likely due a deamination /
+#         tautomerization process that favours C -> T changes. If the code
+#         indeed minimizes the effect of mutations, you would expect that
+#         codons that differ by a transition code for more similar amino acids
+#         than codons that differ by a transversion. Is that true? List the set
+#         of all amino acid pairs that are encoded by codons with a C -> T
+#         transition. Then list the set of amino acid pairs with a C -> A
+#         transversion. Which set of pairs is more similar?
+
+#I'm not sure whether I understand this question correctly but:
 #All of them that contain "C"
 codonWithC <- genCode[grep("C", names(genCode))]
 codonVector <- genCode[1:length(genCode)] #For some reason...
@@ -89,29 +105,53 @@ effectOfMutation <- function(codonBefore, from, to) {
     return(mutationEffect)
 }
 
-CtoT <- function(codon) {
-    effect <- effectOfMutation(codon, "C", "T")
-    return(effect)
-}
+#CtoT <- function(codon) {
+#    effect <- effectOfMutation(codon, "C", "T")
+#    return(effect)
+#}
 
-CtoA <- function(codon) {
-    effect <- effectOfMutation(codon, "C", "A")
-    return(effect)
-}
+#CtoA <- function(codon) {
+#    effect <- effectOfMutation(codon, "C", "A")
+#    return(effect)
+#}
 
-CtoT_EffectTable <- CtoT(names(codonWithC)[1])
-for (i in seq_along(codonWithC[-1])) {
+#CtoT_EffectTable <- CtoT(names(codonWithC)[1])
+#for (i in seq_along(codonWithC[-1])) {
     #https://stackoverflow.com/questions/7739578/merge-data-frames-based-on-rownames-in-r
-    CtoT_EffectTable <- merge(CtoT_EffectTable, CtoT(names(codonWithC)[i]), all=TRUE) 
-}
+#    CtoT_EffectTable <- merge(CtoT_EffectTable, CtoT(names(codonWithC)[i]), all=TRUE) 
+#}
 
 outcomesOfMutation <- function(codonVector, from, to) {
     effectTable <- effectOfMutation(names(codonVector)[1], from, to)
     for (i in seq_along(codonVector[-1])) {
-        #https://stackoverflow.com/questions/7739578/merge-data-frames-based-on-rownames-in-r
+        #The use of merge() is inspired by https://stackoverflow.com/questions/7739578/merge-data-frames-based-on-rownames-in-r
         effectTable <- merge(effectTable, effectOfMutation(names(codonVector)[i], from, to), all=TRUE)
     }
+    rownames(effectTable) <- effectTable[,"Codon After"]
     return(effectTable)
 }
 
+#The following nested for loops don't work to replace NA's as empty string. I'm not sure what's wrong yet.
+for (aftermut in rownames(datf)) {
+    for (beforemut in colnames(datf)) {
+        if (is.na(datf[aftermut, beforemut])) {
+            datf[aftermut, beforemut] <- ""
+        }
+    }
+}
+
+write.csv(outcomesOfMutation(codonWithC, "C", "T"), file="C_to_T_table.csv")
+write.csv(outcomesOfMutation(codonWithC, "C", "A"), file="C_to_A_table.csv")
+#And then I replaced all NA to empty in Excel. I don't know how to do this in R yet...
+
 #dim-reduction Find subsets, and do statistics on the subset
+
+'''
+for (aftermut in rownames(outcomesOfMutation(codonWithC, "C", "T"))) {
+    for (beforemut in colnames(outcomesOfMutation(codonWithC, "C", "T"))) {
+        if (!is.na(outcomesOfMutation(codonWithC, "C", "T")[aftermut, beforemut])) {
+            
+        }
+    }
+}
+'''
