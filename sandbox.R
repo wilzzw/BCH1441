@@ -173,6 +173,7 @@ philDB$person$school
 #Line 264: If not cat() but rather print() is used, it will print out the vector object in its barebone representation..
 
 #1.3 Task
+#source the file from Line 1 to Line 269
 autoincrement <- function(table, incr=1) {
   return(max(table$id) + incr)
 }
@@ -213,7 +214,107 @@ for (i in seq_along(df_sortedBooks$id)) {
     author <- philDB$person$name[selectPhil]
 
     cat(sprintf("\"%s\" - ", title))
-    cat(sprintf("%s ", author))
+    cat(sprintf("%s", author))
     cat(sprintf(" (%s)", yearPublished))
     cat("\n")
 }
+
+#Line 426: 
+#source("./scripts/ABC-createRefDB.R")
+# Error in fromJSON("./data/MBP1_SACCE.json") : 
+#  could not find function "fromJSON"
+#Solution: library(jsonlite)
+
+#Line 449: all(myDB$protein$taxonomyID %in% myDB$taxonomy$ID)
+#all() returns TRUE if all elements of the vector argument are TRUE
+
+#Modifying data is done directly in the JSON files
+
+lengthToLookNice <- 70
+
+MYSEQ <- "        1 msstsvasrd qiysakysgv evyefihptg simkrkaddw vnathilkaa kfakakrtri
+       61 lekevikdih ekvqggfgky qgtwvpldia rrlaekfdvl eelrplfdfs qrdgsasppq
+      121 apkhhhasrs dstkkgtgks psgalnnasg svipkrrgrp prskkldrip asgdaalqrs
+      181 rsdvtgfhkp sitistissh nlpsiqstlq rgvnideqqh yqdklqqqis qqkyeeldie
+      241 dglssdietn layiaegpvg snrlntqlmt gkeepvssss slpsspsdfs apvpfdtqrv
+      301 gsatspigam lprysmqsrp ptsdldqkvn dylaklvdyf insemqntna vpiellnpph
+      361 stpyidawid sehhtafhwa camgnlpive allqagashr avnhagetpl mrasmfhnsy
+      421 tkrtyprifq llqdtvfdid sqsqtvvhhi vkrrsntqsa lyyldvllsk ikdfspqyri
+      481 etlintqddk gntplhiaai ngdkkffqtl lgsgalstlk nydgvtadvf innkfsrtln
+      541 ysehsyhygn gtthspasts tgavitgpag aaaasasasf ihtgdmfpsq aatsvsraip
+      601 evinlmkdma dsyqglyqdr sqelqsikkm lksmnntvas vdikiletld ikkyeqigqt
+      661 meditqaide lqsrftvkqk clmnilekgq riqlqrline qeqeidkhqe esesksgpsi
+      721 npnlitgike lailqlrrka kikqmlellc gnskvqkfrk misqgtdmel devdnfldvi
+      781 lqqlnddnea kkinnpngvt"
+
+cleanSeq <- dbSanitizeSequence(MYSEQ)
+
+(seqLength <- nchar(cleanSeq))
+
+toStore <- character()
+i <- 0
+while (i*lengthToLookNice+1 <= seqLength) {
+    toStore[i+1] <- substr(cleanSeq, start=i*lengthToLookNice+1, stop=(i+1)*lengthToLookNice)
+    i <- i + 1
+}
+
+toStore
+
+#Line 566: Another functionality of cbind() I was not aware of: supplying extra arguments to create new columns. Great for calculated/derived properties from columns
+
+#Line 589-590: Failed verification
+#> sel <- myDB$taxonomy$species == MYSPE
+#> myDB$taxonomy[sel, ]
+#[1] ID      species
+#<0 rows> (or 0-length row.names)
+
+#Solution: changed "Eremothecium cymbalariae DBVPG#7215" to "Eremothecium cymbalariae" in MYSPEtaxonomy.json. I'm not sure what DBVPG#7215 indicates, but I'm removing it.
+#Then, source("../makeProteinDB.R") again
+
+#Task 3.4
+# - On your submission page, note the E-value of your protein and link
+#     to its NCBI protein database page.
+
+#E-value rounded to 0.0
+#NCBI page: https://www.ncbi.nlm.nih.gov/protein/XP_003645298.1?report=genbank&log$=protalign&blast_rank=1&RID=UT6SVB5U014
+
+# - Copy and paste the contents of your two JSON files on your submission
+#     page on the Student Wiki
+MBP1_ERECY.json:
+[
+  { "name" : "MBP1_ERECY",
+    "RefSeqID" : "XP_003645298",
+    "UniProtID" : "G8JQ18",
+    "taxonomyID" : 931890,
+    "sequence" : [
+       "MSSTSVASRDQIYSAKYSGVEVYEFIHPTGSIMKRKADDWVNATHILKAAKFAKAKRTRILEKEVIKDIH",
+       "EKVQGGFGKYQGTWVPLDIARRLAEKFDVLEELRPLFDFSQRDGSASPPQAPKHHHASRSDSTKKGTGKS",
+       "PSGALNNASGSVIPKRRGRPPRSKKLDRIPASGDAALQRSRSDVTGFHKPSITISTISSHNLPSIQSTLQ",
+       "RGVNIDEQQHYQDKLQQQISQQKYEELDIEDGLSSDIETNLAYIAEGPVGSNRLNTQLMTGKEEPVSSSS",
+       "SLPSSPSDFSAPVPFDTQRVGSATSPIGAMLPRYSMQSRPPTSDLDQKVNDYLAKLVDYFINSEMQNTNA",
+       "VPIELLNPPHSTPYIDAWIDSEHHTAFHWACAMGNLPIVEALLQAGASHRAVNHAGETPLMRASMFHNSY",
+       "TKRTYPRIFQLLQDTVFDIDSQSQTVVHHIVKRRSNTQSALYYLDVLLSKIKDFSPQYRIETLINTQDDK",
+       "GNTPLHIAAINGDKKFFQTLLGSGALSTLKNYDGVTADVFINNKFSRTLNYSEHSYHYGNGTTHSPASTS",
+       "TGAVITGPAGAAAASASASFIHTGDMFPSQAATSVSRAIPEVINLMKDMADSYQGLYQDRSQELQSIKKM",
+       "LKSMNNTVASVDIKILETLDIKKYEQIGQTMEDITQAIDELQSRFTVKQKCLMNILEKGQRIQLQRLINE",
+       "QEQEIDKHQEESESKSGPSINPNLITGIKELAILQLRRKAKIKQMLELLCGNSKVQKFRKMISQGTDMEL",
+       "DEVDNFLDVILQQLNDDNEAKKINNPNGVT"]
+  }
+]
+
+MYSPEtaxonomy.json:
+[
+  { "ID" : 931890,
+    "species" : "Eremothecium cymbalariae"}
+]
+#Should I add to the original taxonomy json or just one entry?
+
+# - Execute the two commands below and show the result on your submission page
+#> biCode(myDB$taxonomy$species) %in% biCode(MYSPE)
+# [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
+
+#> myDB$protein$taxonomyID %in% myDB$taxonomy$ID[(myDB$taxonomy$species == MYSPE)]
+# [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+#[14] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+#[27] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+#[40] FALSE FALSE FALSE FALSE FALSE  TRUE
