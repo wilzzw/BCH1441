@@ -47,3 +47,12 @@ Results cannot be compared if algorithm and parameters are not specified. This i
 common problem, and an important issue for “repreducible reesearch”
 
 #R factor: categorical data (rep as integere levels)
+
+One would wish for precise format specifications published with every data record,
+one would wish for self-describing formats, one would wish for ontologies, and
+controlled vocabularies and one would wish for validated parser code in common
+languages to be available with any database download ... in reality the
+support of database users is generally quite poor. Why? This probably results from
+the fact that one can't publish such support – or quality assurance efforts in general
+– and one can't strengthen one's grant proposals with user support and what doesn't
+get funded and doesn't get done. 

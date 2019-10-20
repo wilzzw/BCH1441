@@ -1,4 +1,41 @@
 =3 Basic Bioinformatics=
+==3.6 Storing Data==
+===3.6.1 Data representation===
+;Bits: The most elementary representation of data (0 or 1)
+
+;Data formats: specified for storing complex data
+:* Flat-file formats: store as files and define ad-hoc rules to specify how the lines of files will be parsed (e.g. FASTA, GenbankFF, PDB files)
+	'''Documentation, maintenance, and correct parsing is a big problem with the ad-hoc approaches. i.e. everything breaks if the file format changes'''
+:* Structured data grammars: language for storing data, with rules for parsing of which parsing code can be produced automatically (e.g. XML, JSON)
+
+;XML:
+:* comes with open and end markups with definitions specified in .dtd files (document type definition)
+:* R has some XML parsing packages which are preferred over manual parsing with regex
+
+;JSON:
+:* Python-dictionary-like, much more human-readable
+:* Two types of contents: {objects} and key<nowiki>:</nowiki>value pairs
+:* Versatile data types and complexity for values
+
+===3.6.2 Implementation of relational data models===
+* Computer file systems (represent the data model in terms of files and directory trees)
+
+* Place into spreadsheets (e.g. CSV), but analyze data by exporting data from CSV into e.g. R data frames
+
+* "Real" databases for large-scale, robust data requirements. (e.g. MySQL, Postgresql, dplyr...)
+
+===3.6.3 Running through BIN-Storing_data.R===
+;Useful commands:
+:* rm(): remove object from memory
+:* order(x): returns a vector of array indices of x ordered based on the items in x
+
+;Objectives:
+:* Learn how to build a database in R (in terms of a list of data frames)
+
+;Activity 1 - Build a database of philosophers
+
+;Language: entity, instance of entity OR item
+
 ==3.5 Abstractions==
 
 <div class="time-estimate">

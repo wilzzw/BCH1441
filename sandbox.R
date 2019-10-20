@@ -155,3 +155,65 @@ for (aftermut in rownames(outcomesOfMutation(codonWithC, "C", "T"))) {
     }
 }
 '''
+
+
+#Line 123: database_name(List_name)$entity_name(Dataframe_name)$attribute_name(Column_name)[ID(Row_name)]
+philDB$person$name[1]
+
+# task: Write an expression that returns all "school" entries from the
+#       person table.
+philDB$person$school
+
+#Line 136: will throw an error:
+#Error in match.names(clabs, names(xi)) : 
+#  names do not match previous names
+
+#Make sure to turn of stringsAsFactor
+
+#Line 264: If not cat() but rather print() is used, it will print out the vector object in its barebone representation..
+
+#1.3 Task
+autoincrement <- function(table, incr=1) {
+  return(max(table$id) + incr)
+}
+
+newPersonID <- autoincrement(philDB$person)
+newPhil <- data.frame(id = newPersonID,
+                      name = "Immanuel Kant",
+                      born = "1724",
+                      died = "1804",
+                      school = "Enlightenment",
+                      stringsAsFactors = FALSE)
+philDB$person <- rbind(philDB$person, newPhil)
+
+newBooksID <- c(autoincrement(philDB$books), autoincrement(philDB$books, 2))
+newBooks <- data.frame(id = newBooksID,
+                       title = c("Critique of Pure Reason", "Critique of Judgement"),
+                       published = c("1781", "1790"),
+                       stringsAsFactors = FALSE)
+philDB$books <- rbind(philDB$books, newBooks)
+
+for (i in seq_along(newBooksID)) {
+    workAssign <- data.frame(id = autoincrement(philDB$works), personID = newPersonID, bookID = newBooksID[i])
+    philDB$works <- rbind(philDB$works, workAssign)
+}
+
+
+alphabetSort <- order(philDB$books$title)
+df_sortedBooks <- philDB$books[alphabetSort,]
+
+for (i in seq_along(df_sortedBooks$id)) {
+    bookid <- df_sortedBooks$id[i]
+    title <- df_sortedBooks$title[i]
+    yearPublished <- df_sortedBooks$published[i]
+
+    selectAssign <- philDB$works$bookID == bookid
+    personid <- philDB$works$personID[selectAssign]
+    selectPhil <- philDB$person$id == personid
+    author <- philDB$person$name[selectPhil]
+
+    cat(sprintf("\"%s\" - ", title))
+    cat(sprintf("%s ", author))
+    cat(sprintf(" (%s)", yearPublished))
+    cat("\n")
+}
