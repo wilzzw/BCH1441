@@ -1,0 +1,374 @@
+=3 Basic Bioinformatics=
+==3.6 Storing Data==
+
+<div class="time-estimate">
+Time estimated: 3 h; taken > 3 h; date started: 2019-10-17; date completed: 2019-10-20
+
+~~~~
+</div>
+
+===3.6.1 Data representation===
+;Bits: The most elementary representation of data (0 or 1)
+
+;Data formats: specified for storing complex data
+:* Flat-file formats: store as files and define ad-hoc rules to specify how the lines of files will be parsed (e.g. FASTA, GenbankFF, PDB files)
+	'''Documentation, maintenance, and correct parsing is a big problem with the ad-hoc approaches. i.e. everything breaks if the file format changes'''
+:* Structured data grammars: language for storing data, with rules for parsing of which parsing code can be produced automatically (e.g. XML, JSON)
+
+;XML:
+:* comes with open and end markups with definitions specified in .dtd files (document type definition)
+:* R has some XML parsing packages which are preferred over manual parsing with regex
+
+;JSON:
+:* Python-dictionary-like, much more human-readable
+:* Two types of contents: {objects} and key<nowiki>:</nowiki>value pairs
+:* Versatile data types and complexity for values
+
+===3.6.2 Implementation of relational data models===
+* Computer file systems (represent the data model in terms of files and directory trees)
+
+* Place into spreadsheets (e.g. CSV), but analyze data by exporting data from CSV into e.g. R data frames
+
+* "Real" databases for large-scale, robust data requirements. (e.g. MySQL, Postgresql, dplyr...)
+
+===3.6.3 Running through BIN-Storing_data.R===
+;Useful commands:
+:* '''rm()''': remove object from memory
+:* '''order(x)''': returns a vector of array indices of x ordered based on the items in x
+:* '''file.show(<path>)''': display plain text file specified by <path>(string)
+:* '''unlist(<list>)''': flatten/simplify <list> into a vector
+
+;Objectives:
+:* Learn how to build a database in R (in terms of a list of data frames)
+
+;Activity 1 - Build a database of philosophers
+
+
+;Activity 2 - Use JSON to organize database for Mbp1-like proteins
+R-package: jsonlite
+* Useful functions:
+:* '''fromJSON(<path>)''': read and parse from .json file specified by <path>(string) and returns a data frame
+:* '''dbSanitizeSequence()''': for parsing. Clean-up and returns a single string of one-letter code protein sequence (all uppercase)
+:* '''dbInit()''': generates a list of data frames to represent the relational database
+
+;Activity 3 - Find a protein from MYSPE most similar to Mbp1 to be added to the database
+
+1. To find such protein, BLAST: https://blast.ncbi.nlm.nih.gov/Blast.cgi
+
+2. Protein BLAST
+
+3. Query Sequence = NP_010227, Database = Reference Proteins (refseq_protein), Organism = Eremothecium cymbalariae
+
+4. BLAST!
+
+7 sequences found that produce significant alignments. The first sequence has E-value rounded to 0.0 (Sequence_ID XP_003645298.1)
+
+Link to the protein: https://www.ncbi.nlm.nih.gov/protein/XP_003645298.1?report=genbank&log$=protalign&blast_rank=1&RID=UT6SVB5U014
+
+Link to the organism: https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=931890
+
+
+;Activity 4 - Put information pertaining to MYSPE into JSON files
+1. Find UniprotID at https://www.uniprot.org/mapping/
+
+2. Query XP_003645298 from RefSeq Protein to UniProtKB
+
+The UniprotID is G8JQ18
+
+3. To get a protein sequence, copy from the NCBI protein info page and use <code>dbSanitizeSequence()</code>
+
+4. To store in JSON, use the following script:
+
+<source lang="R">
+lengthToLookNice <- 70
+
+MYSEQ <- "        1 msstsvasrd qiysakysgv evyefihptg simkrkaddw vnathilkaa kfakakrtri
+       61 lekevikdih ekvqggfgky qgtwvpldia rrlaekfdvl eelrplfdfs qrdgsasppq
+      121 apkhhhasrs dstkkgtgks psgalnnasg svipkrrgrp prskkldrip asgdaalqrs
+      181 rsdvtgfhkp sitistissh nlpsiqstlq rgvnideqqh yqdklqqqis qqkyeeldie
+      241 dglssdietn layiaegpvg snrlntqlmt gkeepvssss slpsspsdfs apvpfdtqrv
+      301 gsatspigam lprysmqsrp ptsdldqkvn dylaklvdyf insemqntna vpiellnpph
+      361 stpyidawid sehhtafhwa camgnlpive allqagashr avnhagetpl mrasmfhnsy
+      421 tkrtyprifq llqdtvfdid sqsqtvvhhi vkrrsntqsa lyyldvllsk ikdfspqyri
+      481 etlintqddk gntplhiaai ngdkkffqtl lgsgalstlk nydgvtadvf innkfsrtln
+      541 ysehsyhygn gtthspasts tgavitgpag aaaasasasf ihtgdmfpsq aatsvsraip
+      601 evinlmkdma dsyqglyqdr sqelqsikkm lksmnntvas vdikiletld ikkyeqigqt
+      661 meditqaide lqsrftvkqk clmnilekgq riqlqrline qeqeidkhqe esesksgpsi
+      721 npnlitgike lailqlrrka kikqmlellc gnskvqkfrk misqgtdmel devdnfldvi
+      781 lqqlnddnea kkinnpngvt"
+
+cleanSeq <- dbSanitizeSequence(MYSEQ)
+
+(seqLength <- nchar(cleanSeq))
+
+toStore <- character()
+i <- 0
+while (i*lengthToLookNice+1 <= seqLength) {
+    toStore[i+1] <- substr(cleanSeq, start=i*lengthToLookNice+1, stop=(i+1)*lengthToLookNice)
+    i <- i + 1
+}
+
+toStore
+</source>
+
+5. Create MYSPEtaxonomy.json with only one entry of MYSPE
+
+6. Both JSON files validated at https://jsonlint.com/
+
+;Activity 5 - Make an R script to create my own database
+<span style="color:red">'''Because I keep my makeProteinDB.R and JSON files in my own BCH1441 folder for my version control, I have to <code>source("../makeProteinDB.R")</code>'''</span>
+
+<span style="color:red">'''Because successfully sourcing ABC-createRefDB.R requires <code>getwd() == C:/Users/Wilson/Documents/BCH1441/ABC-units</code> in my RStudio setup, I have to setwd() after sourcing ABC-createRefDB.R or change all the paths appropriately'''</span>
+
+* Useful functions:
+:* '''View(<dataframe>)''': view dataframe in terms of a readable table in RStudio
+
+Protein sequence is correct. Copy and paste the whole sequence into Protein BLAST gives 100% match to the intended protein.
+
+
+
+==3.5 Abstractions==
+
+<div class="time-estimate">
+Time estimated: 30 min; taken 35 min; date started: 2019-10-15; date completed: 2019-10-15
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 11:39, 15 October 2019 (EDT)
+</div>
+
+;Motivation:
+:* Making biology "computable". Extract the essential parts and represent them effectively.
+:* Central part in modelling biology
+:* Keep in mind that the abstraction itself is not biology though!
+:* Draw rigorous and potentially powerful and complete conclusions. (re. knot example)
+
+;Elements of modelling biology:
+:* Represent biology as data
+:* Define the rigorous/unambiguous meaning of data
+:* Define operations and algebras with data
+:* Metrics to represent the target properties
+
+;Elements of abstraction:
+:* Define the labels
+:* Structure the relationships between labels (recall normalized data models)
+
+;We make inferences about biology from its model
+
+;Controlled Vocabulary: uniquely defined to represent an item
+
+;Ontology: a set of terms in terms of controlled vocabularies and relationships between them
+:* define the semantics (e.g. "Is a ..." relationship)
+
+==3.4 MYSPE ==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 35 min; date started: 2019-10-14; date completed: 2019-10-14
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 22:30, 14 October 2019 (EDT)
+</div>
+
+;Motivation:
+:* Define protein function in terms of computable entities and characterize it as part of a system with collaborating components
+:* To make inferences about protein function, we often have to extend knowledge about protein function from well-characterized '''model organisms'''
+
+===3.4.1 Model Organisms===
+* Extensively characterized, methods readily available
+* Value is primarily for transfer biological knowledge to other organisms
+
+===3.4.2 Choosing MYSPE===
+;Objective:
+:* Through model-organism reasoning, infer the function of Mbp1 protein in related species of fungi from ''Saccharomyces cerevisiae''. 
+:* Choose a species to work with. The species in question will need to have the whole genome sequenced.
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Configuration messages after init() ABC-units project'''''
+
+'''''I recently resetted/wiped out my computer so that might be why'''''
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 22:30, 14 October 2019 (EDT)
+<div class="mw-collapsible-content">
+<code>
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/jsonlite_1.6.zip'
+Content type 'application/zip' length 1162207 bytes (1.1 MB)
+downloaded 1.1 MB
+
+package ‘jsonlite’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependencies ‘sys’, ‘askpass’, ‘curl’, ‘mime’, ‘openssl’, ‘R6’
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/sys_3.3.zip'
+Content type 'application/zip' length 59866 bytes (58 KB)
+downloaded 58 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/askpass_1.1.zip'
+Content type 'application/zip' length 64780 bytes (63 KB)
+downloaded 63 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/curl_4.2.zip'
+Content type 'application/zip' length 4123128 bytes (3.9 MB)
+downloaded 3.9 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/mime_0.7.zip'
+Content type 'application/zip' length 48231 bytes (47 KB)
+downloaded 47 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/openssl_1.4.1.zip'
+Content type 'application/zip' length 3971462 bytes (3.8 MB)
+downloaded 3.8 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/R6_2.4.0.zip'
+Content type 'application/zip' length 58850 bytes (57 KB)
+downloaded 57 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/httr_1.4.1.zip'
+Content type 'application/zip' length 511180 bytes (499 KB)
+downloaded 499 KB
+
+package ‘sys’ successfully unpacked and MD5 sums checked
+package ‘askpass’ successfully unpacked and MD5 sums checked
+package ‘curl’ successfully unpacked and MD5 sums checked
+package ‘mime’ successfully unpacked and MD5 sums checked
+package ‘openssl’ successfully unpacked and MD5 sums checked
+package ‘R6’ successfully unpacked and MD5 sums checked
+package ‘httr’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependency ‘Rcpp’
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/Rcpp_1.0.2.zip'
+Content type 'application/zip' length 4535652 bytes (4.3 MB)
+downloaded 4.3 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/xml2_1.2.2.zip'
+Content type 'application/zip' length 3503035 bytes (3.3 MB)
+downloaded 3.3 MB
+
+package ‘Rcpp’ successfully unpacked and MD5 sums checked
+package ‘xml2’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
+</code>
+</div>
+</div>
+
+;Activity -- Get MYSPE through <code>~/BCH1441/ABC-units/BIN-MYSPE.R</code>
+
+:* Not much is known about ''Eremothecium cymbalariae'', according to Wikipedia.
+
+:* Taxonomy: Fungi > Ascomycota > Saccharomycotina > Saccharomycetes > Saccharomycetales > Dipodascaceae > ''Eremothecium''
+:* Shares the same order as ''Saccharomyces cerevisiae''
+:* Produces aerial mycelium (filamentous, like mushrooms) instead of growing like yeast [NCBI, https://www.sciencedirect.com/science/article/pii/S0960982206000418]
+:* Genome size of 9.6Mb, 8 chromosomes
+
+==3.3 Data Models==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 120+ min; date started: 2019-10-11; date completed: N/A
+
+~~~~
+</div>
+
+The motivation for constructing appropriate database models -- how to store data for efficient computation and avoid errors by ensuring self-consistency.
+
+===3.3.1 Data organizing principles===
+;Normal Form: A data model is normalized so to "reduce data redundancy and improve data integrity" [https://en.wikipedia.org/wiki/Database_normalization]
+
+;Primary Key: a label that uniquely identifies a record in the database.
+:* Pointing to information. Not storing information. It should not depend on the underlying mutable information.
+:* However, it can contain information about the database, rather than about an individual record.
+:* It's desirable that I define my own primary keys and maintain them myself, so that I can ensure they aren't mutable.
+e.g. Instead of storing protein name, which is not unique (many proteins have the same name but in different species) and can result in duplicate storage, use a unique ID independent of entry attributes
+
+;Foreign Key: a primary key in a different table. Appears in current table for cross-referencing.
+:* Do not store information/attributes for an entity that does not depend on the entity (unless for computational load reasons... in this case have to ensure the fields are updated).
+:* For these attributes, I would create a new table, each entity with a unique primary key. Then, cross-reference.
+e.g. The species an entry in ''Proteins'' belongs to would not be stored in ''Proteins'' because species does not depend on the specific protein.
+
+Create a new table called ''Taxonomy'' for cross-referencing.
+
+Each ''Protein'' entity will map to only one ''Taxonomy'', but each ''Taxonomy'' entity can map to any number of ''Protein'' entities. (Species does not depend on the specific protein, but a specific protein corresponds on a unique species)
+
+;Cardinality: How often can we expect a key value to appear in a different table.
+
+;Relationship: a relationship between two tables are described by referencing the primary key of a different table and the cardinalities of such relationship.
+
+;Cardinalities can be used to check my data model:
+:* N-to-N: inconsistent model? (e.g. a map between a protein entity and its functions?)
+:* 1-to-1: redundant. Attribute depends on the entity and can be stored in the table of the entities (e.g. a map between a protein entity and its protein sequence).
+
+;Store atomic values as attributes:
+:* Although what is considered atomic is context dependent.
+:* The bottom line is, the data model is such that I only need to parse my data once when I enter it into database.
+e.g. For domain regions, it would make sense to store starting residue number and ending residue number separately.
+
+;The value of an attribute should necessarily and sufficiently depend on the entire primary key.
+:* This is not the case if I were to create a Feature table whose primary key is a '''composite key''' (protein entity + feature entity).
+e.g. Protein-to-Domain map in the course notes example, and Protein-to-Function map suggested above (N-to-N problem). Duplication and inconsistent name problem.
+
+Solution:
+;Joint Table (or Junction Table/Associative Entity)
+e.g. Create an annotation table with annotation primary keys in the above example. This is a commonly used approach.
+
+'''''The bottom line'''''
+
+* The value of an attribute is specific to the entity record in the table (i.e. functionally dependent on the primary key).
+* All attribute is atomic.
+* All information is unique (no duplication! Duplicate storing information can risk screwing up and is a bad idea!)
+
+==3.2 Information Sources for Bioinformatics==
+
+;Canadian Bioinformatics Workshops: https://bioinformatics.ca/
+:* Workshops, many learning resources
+
+;International Society for Computational Biology: http://iscb.org
+
+;Journals
+:* ''Bioinformatics''
+:* ''Nucleic Acids Research'' (It has a really nice current database volume and a Web service volume for each year. 2019 Check out: EncoMPASS<ref>EncoMPASS: an online database for analyzing structure and symmetry in membrane proteins</ref>, The MemProtMD database</ref>The MemProtMD database: a resource for membrane-embedded protein structures and their lipid interactions</ref>)
+:* ''BMC Bioinformatics''
+:* ''PLoS Computational Biology''
+
+ For each bioinformatics resources/services, look for:
+ 1. what to expect with such resources and 
+ 2. how to use the services
+
+==3.1 Motivation==
+===3.1.1 Molecular biology can be understood in terms of information flow===
+;Dogma:
+: DNA sequences --> protein structure --> protein interactions & assembly --> functional circuits of biological systems
+
+;However, we seem to not be able to deterministically infer higher level information from lower level at each step.
+: What's getting in the way -- '''incomplete information'''
+
+===3.1.2 Funfamental task: Data management===
+* Amount of biological data is huge
+* The field is evolving '''very rapidly'''
+* Need to make things query-able
+* Many challenges: data & service overload, poor integration ...
+
+===3.1.2 Funfamental task: Modelling===
+* "Data alone does not explain itself." (B. Steipe)
+* It's often not entirely clear what are the best data resources, best analysis tools or services. Again, things go outdated very fast, and it's not often not straightforward to compare resources [insight!]
+* This necessitates that bioinformatics is not just about data itself. Bioinformatics aims to contribute to the understanding of biology through modelling.
+* This necessitates focusing on objectives rather than methodology.
+* Activities have to turn into better understanding. Otherwise, it would just be cargo cult [insight!].
+
+{{Vspace}}

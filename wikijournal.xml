@@ -1,0 +1,1307 @@
+<div class="b1">
+Wilson's Journal
+</div>
+
+ '''MYSPE: ''Eremothecium cymbalariae'''''
+ '''biCode(MYSPE): "ERECY"'''
+
+{{Vspace}}
+
+__TOC__
+
+{{Vspace}}
+=6 Genes and Genome=
+==6.1 Genetic Code==
+;Objective: use R and the package Biostrings to work with genetic code
+
+<div class="time-estimate">
+Time estimated: 1 h; taken > 3h; date started: 2019-10-15; date completed: 2019-10-16
+
+~~~~
+</div>
+
+===6.1.1 Preparation: FND-Genetic_code.R===
+
+;Install BiocManager
+<source lang="R">
+install.packages("BiocManager")
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/BiocManager_1.30.7.zip'
+Content type 'application/zip' length 97999 bytes (95 KB)
+downloaded 95 KB
+
+package ‘BiocManager’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpumGMrj\downloaded_packages
+</code>
+</div>
+</div>
+
+
+;Install Biostrings
+<source lang="R">
+BiocManager::install("Biostrings")
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+Bioconductor version 3.9 (BiocManager 1.30.7), R 3.6.1 (2019-07-05)
+Installing package(s) 'BiocVersion', 'Biostrings'
+also installing the dependencies ‘zlibbioc’, ‘BiocGenerics’, ‘S4Vectors’, ‘IRanges’, ‘XVector’
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/zlibbioc_1.30.0.zip'
+Content type 'application/zip' length 374970 bytes (366 KB)
+downloaded 366 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/BiocGenerics_0.30.0.zip'
+Content type 'application/zip' length 736201 bytes (718 KB)
+downloaded 718 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/S4Vectors_0.22.1.zip'
+Content type 'application/zip' length 2035683 bytes (1.9 MB)
+downloaded 1.9 MB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/IRanges_2.18.3.zip'
+Content type 'application/zip' length 2379794 bytes (2.3 MB)
+downloaded 2.3 MB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/XVector_0.24.0.zip'
+Content type 'application/zip' length 714038 bytes (697 KB)
+downloaded 697 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/BiocVersion_3.9.0.zip'
+Content type 'application/zip' length 8915 bytes
+downloaded 8915 bytes
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/Biostrings_2.52.0.zip'
+Content type 'application/zip' length 14372143 bytes (13.7 MB)
+downloaded 13.7 MB
+
+package ‘zlibbioc’ successfully unpacked and MD5 sums checked
+package ‘BiocGenerics’ successfully unpacked and MD5 sums checked
+package ‘S4Vectors’ successfully unpacked and MD5 sums checked
+package ‘IRanges’ successfully unpacked and MD5 sums checked
+package ‘XVector’ successfully unpacked and MD5 sums checked
+package ‘BiocVersion’ successfully unpacked and MD5 sums checked
+package ‘Biostrings’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpumGMrj\downloaded_packages
+installation path not writeable, unable to update packages: boot, foreign,
+  KernSmooth, mgcv, nlme
+</code>
+</div>
+</div>
+
+===6.1.2 Running through FND-Genetic_code.R===
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+
+    
+<div class="mw-collapsible-content">
+<source lang="R">
+#setwd("C:/Users/Wilson/Documents/BCH1441/ABC-units")
+#source("FND-Genetic_code.R")
+
+# Task: What do you need to change to print the table with U instead
+#         of T? Try it.
+for (i in seq_along(dim(cCube))) {
+    dimnames(cCube)[[i]][4] <- "U"
+}
+
+# Task: Point mutations are more often transitions (purine -> purine;
+#         pyrimidine -> pyrimidine) than transversions (purine -> pyrimidine;
+#         pyrimidine -> purine), even though twice as many transversions
+#         are possible in the code. This is most likely due a deamination /
+#         tautomerization process that favours C -> T changes. If the code
+#         indeed minimizes the effect of mutations, you would expect that
+#         codons that differ by a transition code for more similar amino acids
+#         than codons that differ by a transversion. Is that true? List the set
+#         of all amino acid pairs that are encoded by codons with a C -> T
+#         transition. Then list the set of amino acid pairs with a C -> A
+#         transversion. Which set of pairs is more similar?
+
+#I'm not sure whether I understand this question correctly but:
+#All of them that contain "C"
+codonWithC <- genCode[grep("C", names(genCode))]
+codonVector <- genCode[1:length(genCode)] #For some reason...
+#codonVector <- as.vector(genCode) #For some reason...
+#names(codonVector) <- names(genCode)
+#dictWith1C <- dictWithC[-grep("CC", names(dictWithC))]
+
+mutate <- function(codon, from, to) {
+    codonSplit <- strsplit(codon, split="")[[1]] #
+    positionMutate <- which(codonSplit == from) #
+    allMutated <- character(length(positionMutate))
+    for (i in seq_along(positionMutate)) {
+        mutated <- codonSplit
+        mutated[positionMutate[i]] <- to
+        mutated <- paste(mutated, sep="", collapse="")
+        allMutated[i] <- mutated
+    }
+    return(allMutated)
+}
+
+translate <- function(codon) {
+    return(codonVector[codon])
+}
+
+effectOfMutation <- function(codonBefore, from, to) {
+    codonAfter <- mutate(codonBefore, from, to)
+    aaBefore <- translate(codonBefore)[codonBefore]
+    aaBefore <- as.character(aaBefore)
+    aaAfter <- lapply(codonAfter, translate)#[codonAfter] #
+    aaAfter <- as.character(aaAfter)
+    mutationEffect <- data.frame(aaAfter, rownames=codonAfter)
+    column <- paste(aaBefore, " (", as.character(codonBefore), ")", sep="", collapse="")
+    #print(ncol(mutationEffect))
+    colnames(mutationEffect) <- c(column, "Codon After")
+    return(mutationEffect)
+}
+
+#CtoT <- function(codon) {
+#    effect <- effectOfMutation(codon, "C", "T")
+#    return(effect)
+#}
+
+#CtoA <- function(codon) {
+#    effect <- effectOfMutation(codon, "C", "A")
+#    return(effect)
+#}
+
+#CtoT_EffectTable <- CtoT(names(codonWithC)[1])
+#for (i in seq_along(codonWithC[-1])) {
+    #https://stackoverflow.com/questions/7739578/merge-data-frames-based-on-rownames-in-r
+#    CtoT_EffectTable <- merge(CtoT_EffectTable, CtoT(names(codonWithC)[i]), all=TRUE) 
+#}
+
+outcomesOfMutation <- function(codonVector, from, to) {
+    effectTable <- effectOfMutation(names(codonVector)[1], from, to)
+    for (i in seq_along(codonVector[-1])) {
+        #The use of merge() is inspired by https://stackoverflow.com/questions/7739578/merge-data-frames-based-on-rownames-in-r
+        effectTable <- merge(effectTable, effectOfMutation(names(codonVector)[i], from, to), all=TRUE)
+    }
+    rownames(effectTable) <- effectTable[,"Codon After"]
+    return(effectTable)
+}
+
+#The following nested for loops don't work to replace NA's as empty string. I'm not sure what's wrong yet.
+for (aftermut in rownames(datf)) {
+    for (beforemut in colnames(datf)) {
+        if (is.na(datf[aftermut, beforemut])) {
+            datf[aftermut, beforemut] <- ""
+        }
+    }
+}
+
+write.csv(outcomesOfMutation(codonWithC, "C", "T"), file="C_to_T_table.csv")
+write.csv(outcomesOfMutation(codonWithC, "C", "A"), file="C_to_A_table.csv")
+#And then I replaced all NA to empty in Excel. I don't know how to do this in R yet...
+</source>
+</div>
+</div>
+
+===6.1.3 Useful R functions===
+;names(x): get the vector of names for named vector <code>x</code>
+
+;attr(x, <which>): get or set special attributes of <code>x</code> (sort of like class methods?)
+
+;str(x): internal structure of an arbitrary object <code>x</code>
+
+;readLines(<path>): read lines from the file specified in <code><path</code> (<code>?readLines</code> says it reads from "connection"?)
+
+;nchar(<string>): returns number of characters in the <code><string></code>
+
+;table(<sequence>) returns a table of amino acid frequencies (<code><sequence></code> should be a vector of amino acid one-letter code strings)
+:* Or in general, seems like the argument can be any vector, and it returns a named vector with non-repetitive elements of the argument vector as names and their frequencies as elements
+
+{{Vspace}}
+=5 Protein Structure Models=
+==5.1 Structural Concepts==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 30 min; date started: 2019-10-15; date completed: 2019-10-15
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 13:10, 15 October 2019 (EDT)
+</div>
+
+===5.1.1 Abstraction and storage===
+;Structures are time-averaged and population-averaged.
+
+;Computable abstraction of structure:
+:* coordinates
+:* chemical types (e.g. atom types)
+
+;Quality metrics:
+:* resolution
+:* R-work, R-free
+:* bond length and angle deviations
+:* coordinate error (e.g. from diffraction data)
+
+;Choosing the right structural model for analyses:
+:* Quality of the dataset (raw data) and model-building (overfitting based on R-ratios)
+:* Method of structure determination
+:* Experimental conditions (native environment?)
+:* Model completeness (fewer missing segments)
+:* When making inferences about related proteins, the sequence similarity is important
+:* Space group and crystal contacts
+:* When analysis pertains to ligand binding, the holo structures would be desirable
+
+===5.1.2 Visualization and interpretation===
+;Types of tructure representation depends on purpose.
+
+;Stereo view! Trick my eyes into seeing 3D with left and right images?
+
+;Interpretation: structure as collection of features
+
+{{Vspace}}
+=4 Concepts in Biology=
+==4.1 Cell Cycle==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 150 min; date started: 2019-10-10; date completed: 2019-10-12
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 17:45, 12 October 2019 (EDT)
+</div>
+
+;Universally conserved process for cell division involving many regulatory protein machineries.
+:* In fact, they are so highly conserved that many machineries work just fine when expressed in a different species<ref>Molecular Biology of the Cell</ref>
+
+===4.1.1 Phases of cell cycle===
+;Interphase: cell growth and chromosomal DNA replication. Makes up the majority of the cell cycle duration
+:* '''G1''': cell growth pre-replication
+:* '''S-phase''': cell becomes committed to and prepares for division. DNA-replication and centrosome replication
+:* '''G2''': cell growth after DNA-replication and prior to mitosis
+
+;Mitotic phase (M-phase): mitosis and cytokinesis. Actual events of cell division.
+* '''Mitosis''' (nuclear division)
+:* '''Prophase''': nucleolus disappears and chromosomes form from chromatin condensation
+:* '''Pro-metaphase''': centrosomes move apart and polarize. Nuclear membrane disappears
+:* '''Metaphase''': chromosomes line up along the equator (metaphase plate)
+:* '''Anaphase''': centromeres break down and chromosomes separate. Sister chromatids move to opposite poles
+:* '''Telophase''': new nuclei re-form
+* '''Cytokinesis''' (cytoplasmic division)
+
+;Resting Phase (G0 phase): an off-cycle phase
+
+===4.1.2 Key players in G1/S transition===
+;Once going into the S-phase, the cell is committed to divide.
+
+;SBF(transcription factor):
+:* Constituents: Swi4 (DNA-binding) + Swi6
+:* Binds promoter of SCB elements expressed at START
+
+;MBF (transcription factor):
+:* Constituents: Mbp1 (DNA-binding) + Swi6
+:* Binds promoter of MCB elements expressed at START
+
+;Whi5/Nrm1: repress G1/S transition expression by binding Swi6 C-terminus through a conserved '''GTB motif'''.
+
+;Useful links for Mbp1:
+:* [https://pubs.acs.org/doi/10.1021/bi992212i Characterization of DNA-binding domain]
+:* [https://pubs.acs.org/doi/10.1021/bi702339q Thermodynamics of DNA-binding]
+
+{{Vspace}}
+=3 Basic Bioinformatics=
+==3.5 Abstractions==
+
+<div class="time-estimate">
+Time estimated: 30 min; taken 35 min; date started: 2019-10-15; date completed: 2019-10-15
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 11:39, 15 October 2019 (EDT)
+</div>
+
+;Motivation:
+:* Making biology "computable". Extract the essential parts and represent them effectively.
+:* Central part in modelling biology
+:* Keep in mind that the abstraction itself is not biology though!
+:* Draw rigorous and potentially powerful and complete conclusions. (re. knot example)
+
+;Elements of modelling biology:
+:* Represent biology as data
+:* Define the rigorous/unambiguous meaning of data
+:* Define operations and algebras with data
+:* Metrics to represent the target properties
+
+;Elements of abstraction:
+:* Define the labels
+:* Structure the relationships between labels (recall normalized data models)
+
+;We make inferences about biology from its model
+
+;Controlled Vocabulary: uniquely defined to represent an item
+
+;Ontology: a set of terms in terms of controlled vocabularies and relationships between them
+:* define the semantics (e.g. "Is a ..." relationship)
+
+==3.4 MYSPE ==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 35 min; date started: 2019-10-14; date completed: 2019-10-14
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 22:30, 14 October 2019 (EDT)
+</div>
+
+;Motivation:
+:* Define protein function in terms of computable entities and characterize it as part of a system with collaborating components
+:* To make inferences about protein function, we often have to extend knowledge about protein function from well-characterized '''model organisms'''
+
+===3.4.1 Model Organisms===
+* Extensively characterized, methods readily available
+* Value is primarily for transfer biological knowledge to other organisms
+
+===3.4.2 Choosing MYSPE===
+;Objective:
+:* Through model-organism reasoning, infer the function of Mbp1 protein in related species of fungi from ''Saccharomyces cerevisiae''. 
+:* Choose a species to work with. The species in question will need to have the whole genome sequenced.
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Configuration messages after init() ABC-units project'''''
+
+'''''I recently resetted/wiped out my computer so that might be why'''''
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 22:30, 14 October 2019 (EDT)
+<div class="mw-collapsible-content">
+<code>
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/jsonlite_1.6.zip'
+Content type 'application/zip' length 1162207 bytes (1.1 MB)
+downloaded 1.1 MB
+
+package ‘jsonlite’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependencies ‘sys’, ‘askpass’, ‘curl’, ‘mime’, ‘openssl’, ‘R6’
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/sys_3.3.zip'
+Content type 'application/zip' length 59866 bytes (58 KB)
+downloaded 58 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/askpass_1.1.zip'
+Content type 'application/zip' length 64780 bytes (63 KB)
+downloaded 63 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/curl_4.2.zip'
+Content type 'application/zip' length 4123128 bytes (3.9 MB)
+downloaded 3.9 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/mime_0.7.zip'
+Content type 'application/zip' length 48231 bytes (47 KB)
+downloaded 47 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/openssl_1.4.1.zip'
+Content type 'application/zip' length 3971462 bytes (3.8 MB)
+downloaded 3.8 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/R6_2.4.0.zip'
+Content type 'application/zip' length 58850 bytes (57 KB)
+downloaded 57 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/httr_1.4.1.zip'
+Content type 'application/zip' length 511180 bytes (499 KB)
+downloaded 499 KB
+
+package ‘sys’ successfully unpacked and MD5 sums checked
+package ‘askpass’ successfully unpacked and MD5 sums checked
+package ‘curl’ successfully unpacked and MD5 sums checked
+package ‘mime’ successfully unpacked and MD5 sums checked
+package ‘openssl’ successfully unpacked and MD5 sums checked
+package ‘R6’ successfully unpacked and MD5 sums checked
+package ‘httr’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependency ‘Rcpp’
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/Rcpp_1.0.2.zip'
+Content type 'application/zip' length 4535652 bytes (4.3 MB)
+downloaded 4.3 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/xml2_1.2.2.zip'
+Content type 'application/zip' length 3503035 bytes (3.3 MB)
+downloaded 3.3 MB
+
+package ‘Rcpp’ successfully unpacked and MD5 sums checked
+package ‘xml2’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpyKqYBu\downloaded_packages
+</code>
+</div>
+</div>
+
+;Activity -- Get MYSPE through <code>~/BCH1441/ABC-units/BIN-MYSPE.R</code>
+
+:* Not much is known about ''Eremothecium cymbalariae'', according to Wikipedia.
+
+:* Taxonomy: Fungi > Ascomycota > Saccharomycotina > Saccharomycetes > Saccharomycetales > Dipodascaceae > ''Eremothecium''
+:* Shares the same order as ''Saccharomyces cerevisiae''
+:* Produces aerial mycelium (filamentous, like mushrooms) instead of growing like yeast [NCBI, https://www.sciencedirect.com/science/article/pii/S0960982206000418]
+:* Genome size of 9.6Mb, 8 chromosomes
+
+==3.3 Data Models==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 120+ min; date started: 2019-10-11; date completed: N/A
+
+~~~~
+</div>
+
+The motivation for constructing appropriate database models -- how to store data for efficient computation and avoid errors by ensuring self-consistency.
+
+===3.3.1 Data organizing principles===
+;Normal Form: A data model is normalized so to "reduce data redundancy and improve data integrity" [https://en.wikipedia.org/wiki/Database_normalization]
+
+;Primary Key: a label that uniquely identifies a record in the database.
+:* Pointing to information. Not storing information. It should not depend on the underlying mutable information.
+:* However, it can contain information about the database, rather than about an individual record.
+:* It's desirable that I define my own primary keys and maintain them myself, so that I can ensure they aren't mutable.
+e.g. Instead of storing protein name, which is not unique (many proteins have the same name but in different species) and can result in duplicate storage, use a unique ID independent of entry attributes
+
+;Foreign Key: a primary key in a different table. Appears in current table for cross-referencing.
+:* Do not store information/attributes for an entity that does not depend on the entity (unless for computational load reasons... in this case have to ensure the fields are updated).
+:* For these attributes, I would create a new table, each entity with a unique primary key. Then, cross-reference.
+e.g. The species an entry in ''Proteins'' belongs to would not be stored in ''Proteins'' because species does not depend on the specific protein.
+
+Create a new table called ''Taxonomy'' for cross-referencing.
+
+Each ''Protein'' entity will map to only one ''Taxonomy'', but each ''Taxonomy'' entity can map to any number of ''Protein'' entities. (Species does not depend on the specific protein, but a specific protein corresponds on a unique species)
+
+;Cardinality: How often can we expect a key value to appear in a different table.
+
+;Relationship: a relationship between two tables are described by referencing the primary key of a different table and the cardinalities of such relationship.
+
+;Cardinalities can be used to check my data model:
+:* N-to-N: inconsistent model? (e.g. a map between a protein entity and its functions?)
+:* 1-to-1: redundant. Attribute depends on the entity and can be stored in the table of the entities (e.g. a map between a protein entity and its protein sequence).
+
+;Store atomic values as attributes:
+:* Although what is considered atomic is context dependent.
+:* The bottom line is, the data model is such that I only need to parse my data once when I enter it into database.
+e.g. For domain regions, it would make sense to store starting residue number and ending residue number separately.
+
+;The value of an attribute should necessarily and sufficiently depend on the entire primary key.
+:* This is not the case if I were to create a Feature table whose primary key is a '''composite key''' (protein entity + feature entity).
+e.g. Protein-to-Domain map in the course notes example, and Protein-to-Function map suggested above (N-to-N problem). Duplication and inconsistent name problem.
+
+Solution:
+;Joint Table (or Junction Table/Associative Entity)
+e.g. Create an annotation table with annotation primary keys in the above example. This is a commonly used approach.
+
+'''''The bottom line'''''
+
+* The value of an attribute is specific to the entity record in the table (i.e. functionally dependent on the primary key).
+* All attribute is atomic.
+* All information is unique (no duplication! Duplicate storing information can risk screwing up and is a bad idea!)
+
+==3.2 Information Sources for Bioinformatics==
+
+;Canadian Bioinformatics Workshops: https://bioinformatics.ca/
+:* Workshops, many learning resources
+
+;International Society for Computational Biology: http://iscb.org
+
+;Journals
+:* ''Bioinformatics''
+:* ''Nucleic Acids Research'' (It has a really nice current database volume and a Web service volume for each year. 2019 Check out: EncoMPASS<ref>EncoMPASS: an online database for analyzing structure and symmetry in membrane proteins</ref>, The MemProtMD database</ref>The MemProtMD database: a resource for membrane-embedded protein structures and their lipid interactions</ref>)
+:* ''BMC Bioinformatics''
+:* ''PLoS Computational Biology''
+
+ For each bioinformatics resources/services, look for:
+ 1. what to expect with such resources and 
+ 2. how to use the services
+
+==3.1 Motivation==
+===3.1.1 Molecular biology can be understood in terms of information flow===
+;Dogma:
+: DNA sequences --> protein structure --> protein interactions & assembly --> functional circuits of biological systems
+
+;However, we seem to not be able to deterministically infer higher level information from lower level at each step.
+: What's getting in the way -- '''incomplete information'''
+
+===3.1.2 Funfamental task: Data management===
+* Amount of biological data is huge
+* The field is evolving '''very rapidly'''
+* Need to make things query-able
+* Many challenges: data & service overload, poor integration ...
+
+===3.1.2 Funfamental task: Modelling===
+* "Data alone does not explain itself." (B. Steipe)
+* It's often not entirely clear what are the best data resources, best analysis tools or services. Again, things go outdated very fast, and it's not often not straightforward to compare resources [insight!]
+* This necessitates that bioinformatics is not just about data itself. Bioinformatics aims to contribute to the understanding of biology through modelling.
+* This necessitates focusing on objectives rather than methodology.
+* Activities have to turn into better understanding. Otherwise, it would just be cargo cult [insight!].
+
+{{Vspace}}
+=2 Basic R=
+==2.9 Final Notes on Coding Style==
+;General principles: clarity, readability, don't get witty, generality, explicitly (ok, the last two are kind of a stretch with the rhyme)
+
+;Comments: Use LOTS of comments. Not just what but also why. Indent to format nicely.
+
+;Headers, separators, and always end your code with an # [END] comment
+
+;def GLOBAL_VARIABLES at the beginning
+
+;'''options()''': set truly global options
+
+;Use <package>::<function>() over library() (explicit)
+
+;Do not mess with the global state
+
+;Try to always else the if statement
+
+;set.seed() to allow reproducible results from codes involving random processes for debugging purposes.
+:* set.seed(NULL) to re-initiate with a new seed
+
+==2.8 Plotting==
+;Plenty of examples [http://www.r-graph-gallery.com here].
+
+;The power of visualization: https://www.reddit.com/r/dataisbeautiful/
+
+===2.8.1 Helpful plotting related functions===
+;summary(x)
+
+;quantile(x, probs=<vector>): returns quantiles of the sample x. Specific quantile percentages can be specified in probs=<vector>.
+
+;Sampling from a distribution: rnorm(), runif(), ...
+
+;Built-in plotting functions:
+:* plot(): scatter plot
+:* rug(): add rugs onto the axes (visually show data distributions)
+:* hist(): histogram
+:* barplot(): bar graph
+:* boxplot(): box-plot
+:* stripchart(): (sort of like) 1D scatter plot
+
+;For more: "plottingIntro.R" (B.Steipe)
+
+;QQ-plot assessing normality assumption (by comparing the quantiles between theoretical and sample): qqnorm(), qqline()
+:* If two samples are supplied as arguments, these functions also compare the two distributions.
+
+===2.8.2 General principles===
+;All plot elements are necessary (no unhelpful redundancy), informative presentation, all information in data displayed
+
+;Plot tells a story: relationships, significance, and insufficiencies converyed by the data -> Not to mislead
+
+==2.7 Functions==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 50 min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 21:38, 7 October 2019 (EDT)
+</div>
+
+;Basic syntax (assigning function to an object name<function_name>): <code><function_name> <- function(<arguments>) {<commands>}</code>
+:* May have <code>return()</code> statement in <commands>
+
+;An example of function: seq()
+: Ways to pass arguments: <code>seq(-5,3)</code>, <code>seq(from=-2, to=2, by=1/3)</code>, <code>seq(length.out=30, to=100, from=1)</code>
+: Named arguments don't assume default order when passing with explicit argument names.
+
+;Read about a function's explicit code by typing it out and <enter>. 
+
+;S3 methods?? (back to this later) <code>method(<function>); getAnywhere(<an_item_in_methods_of_the_function>)</code>
+
+;Primitive (compiled in C)
+
+;Good practice -- Functions should not have side effects
+
+;Here is a countdown function (link on this page to the code):
+<source lang="R">
+countDown <- function(x=3) {
+    txt <- ""
+    start <- x
+    position <- 1
+    while (start >= 0) {
+        if (start > 0) {
+            txt[position] <- as.character(start)
+        } else {
+            txt[position] <- "Lift Off!"
+        }
+        start <- start - 1
+        position <- position + 1
+    }
+    return(txt)
+}
+</source>
+
+;The scope of a function is local.
+
+;Here is a mylifeday calculator:
+<source lang="R">
+myLifeDays <- function(birthday, lday) {
+    if (missing(birthday)) {
+        print ("Enter your birthday as a string in \"YYYY-MM-DD\" format.")
+        return()
+    }
+    bd <- strptime(birthday, "%Y-%m-%d") # convert string to time
+    now <- format(Sys.time(), "%Y-%m-%d") # convert "now" to time
+    diff <- round(as.numeric(difftime(now, bd, unit="days")))
+    print(sprintf("This date was %d days ago.", diff))
+
+    futureDay <- format(bd + as.difftime(lday, unit="days"), "%Y-%m-%d") #Consulted ?difftime
+    print(sprintf("Celebrate your life day on: %s", futureDay))
+    return()
+}
+</source>
+
+==2.6 Control Structures==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken ??? min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 20:31, 7 October 2019 (EDT)
+</div>
+
+===2.6.1 R Commands that may be helpful and used often===
+;is.character(), is.factor(), is.integer(), is.sorted(), is.null(), is.numeric(), is.vector(): (self-explanatory)
+<span style="color:red">Some behaviours I noticed to watch out for:</span>
+<source lang="R">
+is.integer(3) #FALSE
+is.integer(3L) #TRUE
+is.vector(3) #TRUE
+</source>
+
+;exists(<object>): returns TRUE if the <object> is defined.
+:* <object> is a string of the name of variable to be questioned![https://stackoverflow.com/questions/28218508/r-check-if-r-object-exists-before-creating-it]
+
+;Some string methods:
+:* '''nchar(<string>)''': returns the number of characters in <string>
+:* '''substr(<string>, start, end)''': slice string from <code>start</code> to <code>end</code> (inclusive). The slice can be re-assigned as a way to change <string>.
+:* '''paste(..., sep=" ", collapse=NULL)''': concatenate strings in ... and separate them by sep string. '''If vector of strings argument is given, it will return vector of concat strings unless collapse is not NULL.
+<source lang="R">
+paste(c("a", "b"), c("c", "d"), sep="?", collapse="!") #gives one string: "a?c!b?d"
+</source>
+
+;Boolean operators <code>"&&"</code> and <code>"||"</code>:
+:* <code>"&"</code> and <code>"|"</code> will give vectorized booleans, whereas <code>"&&"</code> and <code>"||"</code> give single booleans
+:* <code>"&&"</code> will start out TRUE, and stop evaluating when the first FALSE is encountered.
+:* <code>"||"</code> will start out FALSE, and stop evaluating when the first TRUE is encountered.
+
+===2.6.2 If statements===
+;Basic syntax: <code>if (<condition1>) {<command1>}; else if (<condition2>) {<command2>}; else {<command3>}</code>
+
+;ifelse(<condition>, a, b): if <condition> is TRUE, evaluates a and returns a; else, evaluates b and returns b.
+:* '''The <condition> can be vectorized, resulting in a vector of a's and b's'''
+
+===2.6.3 For loops===
+;Basic syntax: <code>for (<item> in <vector>); {<command>}</code>
+
+;Some pointers:
+:* Try to use vectorized operations instead of loops if possible.
+:* '''seq_along(x)''': Try to always use this to prevent 1:0 type error...
+
+===2.6.4 While loops===
+;Basic syntax: <code>while (<condition>); {<command>}</code>
+
+===2.6.5 Activities===
+;A rocket ship has to sequence a countdown for the rocket to launch...
+<source lang="R">
+txt <- ""
+count_down <- 3
+position <- 1
+while (count_down >= 0) {
+    if (count_down > 0) {
+        txt[position] <- as.character(count_down)
+        #print(as.character(count_down))
+    } else {
+        txt[position] <- "Lift Off!"
+    }
+    count_down <- count_down - 1
+    position <- position + 1
+}
+
+print(txt)
+</source>
+
+==2.5 Subsetting Project==
+
+;Objective: Practise and get familiar with subsetting vector-like objects in R.
+
+<div class="time-estimate">
+Time estimated: 1 h; taken ??? min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 20:31, 7 October 2019 (EDT)
+</div>
+
+===2.5.1 R Commands that may be helpful and used often===
+(aka tips I got from "subsettingPractice.R" by B. Steipe)
+
+;sort(x): returns a vector that's x but sorted (from smallest to largest)
+
+;order(x): returns the indices of the elements in x if sorted (useful in subsetting)
+
+;apply(x, <margin>, <function>): apply <function> to all margins of vector-like x. e.g. <margin>=1 would be rows if x is a matrix.
+
+;any(<boolean_vector>): returns TRUE if any of the element in <boolean_vector> is TRUE (<code>|</code> all elements)
+
+;all(<boolean_vector>): returns TRUE if all of the element in <boolean_vector> is TRUE (<code>&</code> all elements)
+
+;grep(<pattern>, x): (might end up being my favourite function) returns indices of elements in x that matches <pattern> '''(supports regex!)'''
+
+;which(<boolean_vector>): returns a vector of indices at which <boolean_vector> is TRUE.
+
+;unique(x): returns a vector of unique elements of x
+
+;duplicated(x): returns a boolean vector. For all positions at which duplication occurs, the element is TRUE.
+
+;<code>%in%</code>: operator &isin
+
+;Can combine boolean vectors with boolean operators when subsetting
+
+
+==2.4 Lists==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 45 min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 14:09, 7 October 2019 (EDT)
+</div>
+
+;Obviously list is much more versatile and flexible than vectors or data frames (any number of arbitrary types).
+
+===2.4.1 R Commands that may be helpful and used often===
+;list(): create a list
+:* <name>=<item>: the list will be named this way with <item> having name <name>
+
+;strsplit(<x>, <split>): split string <x> into a list through split markers <split>
+
+;lapply(<x>, <function>): apply <function>(function) iteratively over the list/vector <x>
+
+;unlist(<x>): flattens a list (simplifies <x> to a vector of its atomic components)
+
+===2.4.2 Methods of lists===
+;Access the list items:
+:* by index (e.g. <code><nowiki>list[[1]]</nowiki></code>) <span style="color:red">'''Double brackets!'''</span>
+:* if the list is named, access by name via $ (e.g. <code>list$firstItem</code>) or double brackets (e.g. <code><nowiki>list[[firstItem]]</nowiki></code>)
+
+; Manipulate some lists of plasmid information:
+<source lang="R">
+#source("R_Exercise-BasicSetup.R")
+#init()
+
+pUC19 <- list(size=2686, marker="ampicillin", ori="ColE1", accession="L01397", BanI=c(235, 408, 550, 1647) ) #pUC19 info
+
+(pACYC184 <- list(size=4245, marker=c("Tet", "Cam"), ori="p15A")) #Create a list like with data for pACYC184
+
+plasmidDB <- list()
+plasmidDB[["pUC19"]] <- pUC19 #Make a data bank list of plasmids and add pUC19 to it
+plasmidDB[["pACYC184"]] <- pACYC184 #Add pACYC184 to it
+
+pBR322 <- list(size=4361, marker=c("Amp", "Tet"), ori="ColE1") #Create a list like with data for pBR322
+plasmidDB[["pBR322"]] <- pBR322 #Add pBR322 to it
+
+plasmidDB$pACYC184 #Retrieve the entire pACYC184 list
+
+sizes <- lapply(plasmidDB, function(x) { return(x$size) }) #Get sizes
+min(unlist(sizes)) #This should give the smallest size
+</source>
+
+
+==2.3 Data Frames==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 20 min; date started: 2019-10-07; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 13:09, 7 October 2019 (EDT)
+</div>
+
+===2.3.1 R Commands that may be helpful and used often===
+;read.table(<path>): load data set as data frame.
+:* sep=<separation>(string): separations used in <path> data file. e.g. <code>"\t"</code> for tab in R.
+:* header=<boolean>: indicate whether the data file contains variable names as its first line.
+:* stringAsFactors=<boolean>: Usually turn this off unless I want to as.factor() all the strings.
+   
+;data.frame(...): create a data frame. ... in <column_name>=<values> format.
+:* row.names=NULL: can specify row names here. The default is NULL.
+
+
+===2.3.2 Methods for Data frames===
+:* Renaming rows/Using a column as row names by assigning directly to its row names: <code>rownames(df) <- df[,1] #First column as row names</code>
+:* Same rules for retrieving & removing rows/columns as matrices, with the added feature of retrieving by row/column names.
+:* rbind() and cbind() should also work for data frames.
+
+
+;Playing with plasmidData:
+<source lang="R">
+#source("R_Exercise-BasicSetup.R")
+#init()
+
+plasmidData <- read.table("plasmidData.tsv",
+                          sep="\t",
+                          header=TRUE,
+                          stringsAsFactors = FALSE)
+
+rownames(plasmidData) <- plasmidData[ , 1] #Make column 1 as the row names
+
+#Added a new row
+plasmidData <- rbind(plasmidData, data.frame(Name = "pMAL-p5x",
+                                             Size = 5752,
+                                             Marker = "Amp",
+                                             Ori = "pMB1",
+                                             Sites = "SacI, AvaI, ..., HindIII",
+                                             stringsAsFactors = FALSE))
+
+rownames(plasmidData) <- plasmidData[ , 1] #Repeat this line will fix the new row's name
+
+#Alternatively: rownames(plasmidData)[4] <- plasmidData[4,1]
+</source>
+
+
+==2.2 Vector Objects==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 100 min; date started: 2019-10-06; date completed: 2019-10-07
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:37, 7 October 2019 (EDT)
+</div>
+
+===2.2.1 R Commands that may be helpful and used often===
+;'''objectInfo(<object>): (specially defined function only in R_Exercise-BasicSetup.R): After init(), this function is defined and it returns mode(), typeof(), and class() of the <code><object></code>'''
+;It also gives data structure of the object?
+
+;seq(from, to, by): Generates a sequence
+
+;summary(x): summary of x=<object> (e.g. If x is a vector, then it returns basic statistics on this vector such as mean, median etc.)
+
+
+===2.2.2 Scalars ===
+;single valued, but by construction, it's also a vector of length of 1
+: e.g. length() and indexing will work
+
+;Objects can have mode, type, and class.
+
+;Important notes:
+:* ;An (apparent) integer is by default a double-precision float! To get integer type and class, one has to have <code><integer>L</code>. An alternative is to coerce it into an integer.
+:* ;However, integers obtained from range operators (e.g. <code>1:10</code>, which returns a vector) are actual integers!
+:* <span style="color:red">'''R indexing starts at 1!!!'''</span>
+
+;Coercion:
+:* The names of functions are self-explanatory. Check with objectInfo() if needed: '''as.numeric(), as.character(), as.complex()'''
+:* Note that as.numeric("pi") is silly and won't work -- It gives NA (<code>objectInfo(NA)</code> indicates <code>NA</code> is of mode logical, type logical, and class logical)
+:* as.logical(x) will return FALSE if x == 0, elif it will return TRUE if x != 0 and x is numeric, else (e.g. if x is a string) will return NA.
+:* <code>NaN</code> means "not a number", though it is of mode numeric, type double, and class numeric. '''<code>as.logical(NaN)</code> returns NA.'''
+:* <code>NULL</code> means "nothing" or "undefined". It is of mode NULL, type NULL, and class NULL (basically just nothing). e.g. <code>as.logical(NULL)</code> will be the same as <code>as.logical()</code>
+:* '''as.factor(x)''' encodes vector x as factor? (back to this later)
+
+
+===2.2.3 Vectors===
+;An ordered array of objects of the same type
+
+;A general way to generate a vector: c() (link to the function on this page?)
+
+;Subsetting:
+:* Indexing: e.g. x[1:10], x[5:1], x[seq(1,10,2)]
+:* <span style="color:red">'''Negative indices deserves a special note for R'''</span>: the negative indices are the ones to be omitted.
+:* Boolean filtering: e.g. x[x>3]
+:* If <code>length(<logical_vector>) < length(<vector>)</code>, the <logical_vector> filter will be re-applied in cyclically on <vector>.
+:* Indexing by name if it's a named array: e.g. <code>summary(x)[c("Max.", "Min.")]</code>
+:* Retrieve names of a named vector using '''names(x)'''
+
+;Extending:
+:* Extending a vector by simply assign a value to a vector index larger than its length: e.g. <code>x[4] <- 4</code> works even if <code>length(x) < 4</code> before assignment.
+
+;Many operations on vectors are by default vectorized! (just like NumPy)
+:* Similar behaviour to cyclic boolean filtering, if the two vectors on which the operator acts on have different lengths... e.g. <code>(1:10)*(1:5)</code> is the same as <code>(1:10)/rep(1:5,2)</code>
+
+
+===2.2.4 Matrices and Tensors?===
+;Ways to make a matrix
+1) To turn a 1-D vector into a matrix/tensor <array>, assign a vector of dimensions to dim(<array>) (e.g. <code>dim(a) <- c(x, y)</code>; the behaviour is similar to numpy.array.reshape() in Python)
+
+2) Use '''matrix()''' or '''array()'''
+
+3) Using '''rbind(...)''' (row bind) or '''cbind(...)''' (column bind)
+
+;dim(a): dimensions of matrix a.
+:* if <code>class(a) != "matrix"</code>, <code>dim(a)</code> will return <code>NULL</code>
+
+;<code>nrow(a) == dim(a)[1]; ncol(a) == dim(a)[2]</code>, ... (slice follows at position 3 of dim(a) for a 3-D array)
+
+; Note that unlike numpy.array subsetting, a comma must be given to the subset index of an R-array to retrieve an entire indexed row. For example:
+<source lang="R">
+a <- 1:12
+dim(a) <- c(2,6)
+
+a[1] #This should give 1, the first element
+a[1,] #This should give the first row vector, 1:6
+
+a[6] #Without comma, it takes the element at position 6 as if a is a linearized vector
+</source>
+
+==2.1 Basic Syntax==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 40 min; date started: 2019-10-05; date completed: 2019-10-06
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:46, 6 October 2019 (EDT)
+</div>
+
+===R Commands that may be helpful and used often===
+;c(...): concatenates values into a vector (will coerce values into the same type)
+
+;tail(<object>, ...): get the last part of <code><object></code>
+:* n=<integer>: get the last <code><integer></code> of <code><object></code>
+:* An analogous function: head()
+
+;sample(x, size, replace=FALSE, prob=NULL): randomly sample from elements of <code>x</code>
+:* if <code>x</code> is a single numeric >= 1, sample <code>1:x</code> ''(R syntax: <code>x:y</code> means x to y '''inclusive''')''
+:* replace=<boolean>: with or without replacement?
+:* prob=<vector>: a vector of probability weights
+
+
+===R syntax practice===
+<source lang="R">
+numbers <- c(16, 20, 3, 5, 9)
+lastnum <- tail(numbers, 1)
+
+(lastnum < 6) | (lastnum > 10) #To check whether lastNum is less than 6 or greater than 10
+
+(lastnum >= 10) & (lastnum < 20) #To check whether lastNum is in the interval [10, 20)
+
+(((((lastnum / 7)*10 - (((lastnum / 7)*10) %/% 1)) / 10) * 100) %/% 1) ^ (1/3) #To output TRUE if the following operation gives 2
+
+#COUNTER-INTUITIVE/STRANGE BEHAVIOUR!!! (lastnum / 7)*10 %/% 1 does not do what I expect it to do
+#It does 10 %/% 1 first
+#Weird that integer division, while is sort of division, takes priority?
+</source>
+
+<span style="color:red"><code>(lastnum / 7)*10 %/% 1</code> does not do what I expect it to do</span>
+
+<span style="color:red">I have to do <code>((lastnum / 7)*10) %/% 1</code></span>
+
+<span style="color:red">Weird that integer division, while is sort of division, takes priority?</span>
+
+
+===Notes on Variables===
+;Can make use of <code>make.names</code> to make syntactically valid variable names from character vectors. See <code>?make.names for more</code>.
+
+;Reserved words for R-parser can be seen in <code>?reserved</code> (e.g. <code>TRUE <- 3</code> won't work)
+
+;Do not re-assign <code>pi</code>!!! Unfortunately it doesn't throw an error.
+
+
+===Syntax features===
+;Just like python, arithmetics in R does not seem to be sensitive to (number of) spaces.
+
+;Unlike python:
+:* Booleans (TRUE or FALSE) are case sensitive (RStudio autocorrects)
+:* Exponentiation: <code>^</code> (turns out <code>**</code> also works in R)
+:* Mod: <code>%%</code>
+:* Integer division: <code>%/%</code>
+:* Does not support "and" or "or". Only <code>&</code> or <code>|</code>
+
+{{Vspace}}
+=1 Preparation for R=
+==1.4 Getting Help with R==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 20 min; date started: 2019-10-06; date completed: 2019-10-06
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 11:26, 6 October 2019 (EDT)
+</div>
+
+===R Commands that may be helpful and used often===
+;help(<item>): get help info for <code><item></code>, which can be function for syntax. If syntax is give as <code><item></code> argument, it should be a string.
+:* synonymous to ?<item>
+
+;apropos(<string>): show all functions that contains <code><string>(string)</code>
+:* '''Supports regex for the string argument!'''
+:* '''Not case sensitive!'''
+
+
+===For asking further questions...===
+;Minimum working example principle
+
+;Required items for a reproducible example[http://adv-r.had.co.nz/Reproducibility.html]:
+:* Required packages: should be loaded at the top of the script
+:* Code
+:* Data
+::To include data, recreate the text representation of data by running <code>dput(<object>)</code>, copy the output, and assign it to <code><object></code> by pasting the text representation in the reproducible code (<code><object> <- <pasted_item></code>).
+:* R-environment: run <code>sessionInfo()</code> and include its output as a comment in the reproducible code.
+:* <code>set.seed()</code> for random processes (reproducible; pseudo-random...)
+
+==1.3 R Scripting==
+===R Commands that may be helpful and used often===
+;source(<path>): execute the R-script <code><path>(string)</code>
+
+==1.2 Configurations==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 70 min; date started: 2019-10-05; date completed: 2019-10-06
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 11:26, 6 October 2019 (EDT)
+</div>
+
+
+===R Commands that may be helpful and used often===
+;getwd(): get current working directory
+
+;setwd(<path>): set <code><path>(string)</code> as working directory
+
+;list.files(): list files in working directory
+
+;list.dirs(): list sub-directories in working directory
+
+;ls(): list current workspace contents
+
+;rm(<item>): remove an item <code><item></code> from the workspace
+:* list=<code><list></code>: remove an array of items in <code><list></code>
+
+;save(<item>): save <code><item></code> into a file
+:* file=<code><path>(string)</code>: save the item as <code><path></code>
+:* Recommended extension from the website: .RData
+
+;load(<path>): load items saved in <code><path>(string)</code>
+
+
+===R Workspace===
+;Just don't bother restarting from saved workspace... Instead, save objects using <code>save()</code> and <code>load()</code>
+
+
+===RStudio Project===
+;Files created upon creating a project:
+:* Project file <code>.Rproj</code>: this contains project options
+:* Temporary files <code>.Rproj.user</code>: may be ignored by version control
+
+;Pointers on project options:
+:* Option to restore <code>.RData</code> at startup
+:* Option to save <code>.RData</code> upon exit
+:* Option to save command history at <code>.Rhistory</code> '''(Strongly Recommended)'''
+:* Option to set <code><tab></code> as soft tab
+:* Specify version control system (i.e. git)
+
+;More info at [https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects this link]
+
+==1.1 Installations==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 3 h; date started: 2019-10-05; date completed: 2019-10-05
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 20:33, 5 October 2019 (EDT)
+</div>
+
+===R Commands that may be helpful and used often===
+;library():
+:* When no arguments given: list of installed package
+:* argument=<code><package></code>: load <code><package></code> (not string! no quotes!)
+:* help=<code><package></code>: doc for <code><package></code>
+
+;data():
+:* When no arguments given, list of available data sets
+:* argument=<code><dataset></code>: load dataset <code><dataset></code>
+:* package=<code><package></code>: load/list dataset(s) in <code><package></code>
+
+;search(): list of currently loaded packages
+
+;vignette(): (also doc for a package?)
+
+;Get help by preceding function, package, or library name with <code>?</code>
+
+;Get help by preceding function, package, or library name with <code>??</code> if I have approximate impression for the name of it (e.g. <code>?aaindex</code> will not work but <code>??aaindex</code> will work)
+
+;s2c():
+:* argument=<code><string>(string)</code>: convert <string> into vector of constituent characters
+
+
+===Install seqinr===
+<source lang="R">
+install.packages("seqinr")
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependencies ‘ade4’, ‘segmented’
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/ade4_1.7-13.zip'
+Content type 'application/zip' length 5224910 bytes (5.0 MB)
+downloaded 5.0 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/segmented_1.0-0.zip'
+Content type 'application/zip' length 479928 bytes (468 KB)
+downloaded 468 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/seqinr_3.6-1.zip'
+Content type 'application/zip' length 4162333 bytes (4.0 MB)
+downloaded 4.0 MB
+
+package ‘ade4’ successfully unpacked and MD5 sums checked
+package ‘segmented’ successfully unpacked and MD5 sums checked
+package ‘seqinr’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+C:\Users\Wilson\AppData\Local\Temp\RtmpOCLlIY\downloaded_packages
+</code>
+</div>
+</div>
+
+
+===Playing with dataset seqinr::aaindex===
+;;Seems like we retieve entries of data in the dataset via some rather arbitrary name?
+
+<source lang="R">
+?seqinr::aaindex
+#This can tell me the following line, which lets me know the index and the name of the data entry
+#It also tells me what $H, $J etc. mean when I display a data entry (the third line)
+
+which(sapply(aaindex, function(x) length(grep("Kyte", x$A)) != 0)) #grep() is probably regex filter
+
+aaindex$FASG890101
+</source>
+
+
+===Plot sample data===
+<source lang="R">
+plot(aaindex$FASG890101$I,
+     aaindex$PONJ960101$I,
+     xlab="hydrophobicity", ylab="volume", type="n")
+text(aaindex$FASG890101$I,
+     aaindex$PONJ960101$I,
+     labels=a(names(aaindex$FASG890101$I)))
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+<span style="color:red">'''''Error message'''''</span>
+<div class="mw-collapsible-content">
+<code>Error in a(names(aaindex$FASG890101$I)) : could not find function "a"</code>
+
+Also: there is nothing in the plot. I suspect it doesn't like a or aaindex
+</div>
+</div>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+<span style="color:green">'''''Solution'''''</span>
+<div class="mw-collapsible-content">
+Explicitly define <code>seqinr::a</code> and rerun the script resolves the problem.
+
+Turns out <code>aaindex</code> has no problem, as it has already been loaded.
+
+If <code>library(seqinr)</code> was run ahead of time, the original code should work.
+</div>
+</div>
+
+
+===Some useful "punchline" codes===
+;Avoid error by installing a package if not already installed
+<source lang="R">
+if (! requireNamespace("seqinr", quietly=TRUE)) {
+    install.packages("seqinr")
+    }
+#requireNamespace(): returns TRUE is installed and vice versa
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install()
+#Bioconductor packages are installed a bit differently
+
+#Packages neither CRAN or Bioconductor: devtools (but the link on the course website is broken)
+</source>
+
+;sos package will help me find packages
+
+{{Vspace}}
+=0 Getting Started=
+=='''''0.2 Plagiarism and Academic Integrity'''''==
+
+===Objective===
+: Avoid academic offense and abide courteous academic culture.
+
+===Full Disclosure Policy===
+* Anything idea that's not my own has a source that needs to be referenced.
+* You can never have too many references.
+* APA citation format
+* The code should produce the exact results claimed. Otherwise: falsified results
+* Reference by commenting in R-code
+
+===Conclusion===
+
+When in doubt, reference it or consult [http://steipe.biochemistry.utoronto.ca/abc/index.php/FND-Wiki_editing this page].
+
+== 0.1 Project: Template for Journal ==
+
+===Objective===
+: goal of activity
+
+<div class="time-estimate">
+Time estimated: 0.75 h; taken 1 h; date started: 2019-10-03; date completed: 2019-10-03
+</div>
+
+===Progress===
+
+;Activity 1
+* Procedure: concise but sufficient so that it's reproducible
+* Results: static data, variable data, analysis results
+
+;Activity 2
+* Cross-referencing with anchors
+* Images: compressed; stereo views for images of molecules; should convey what I'm trying to show effectively
+* Here's the R-code
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+My R code below ...
+<div class="mw-collapsible-content">
+<source lang="R">
+#R-code here
+</source>
+
+</div>
+</div>
+
+
+===Conclusion and outlook===
+
+Interpretation of results.
+
+Next step and link to the next step.
+
+{{Vspace}}
+----
+----
+=References=
+
+<references />
+
+{{Vspace}}
+
+----
+
+[[Category:BCH441-2019_Journal]]
+
+----
+
+{{CC-BY}}

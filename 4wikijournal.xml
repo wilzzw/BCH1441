@@ -1,0 +1,92 @@
+=4 Background Knowledge and Concepts=
+==4.2 STA-Probability==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 70 min; date started: 2019-10-16; date completed: 2019-10-16
+
+~~~~
+</div>
+
+;To compute probabilities, know:
+:* events
+:* all possible alternative events
+
+;Approaches to compute probabilities:
+
+1. Closed form expression (e.g. binomial)
+
+2. Enumeration (i.e. list all possible outcomes by judiciously make outcome table or trees. Intuition can be deceptive in many cases!)
+
+3. Simulation (when problem is too complex and large to be tractable by closed form expression or enumeration of outcomes. Furthermore, sometimes whether the assumptions are correct is unclear. But simulation only strictly gives an estimate of real probability?)
+
+A question: If a restriction-endonuclease site is six bases long, how many such sites would you expect in a 3MB long bacterial chromosome with a GC-content of 50%?
+
+ Since GC content is 50%, so is AT content. Base pairing requirement implies that the probability of a base being A, G, C, or T is 25%
+ Consider the entire chromosome of length N base pairs to be a series of N-6+1=N-5 slots
+ Probability of a slot being the six-base-long restriction site is <math>0.25^6</math>
+ I am assuming the identity of a base is independent of what other bases are. This is a "with-replacement" assumption that may not actually be true (there is a fixed number of each base)
+ However, with 3 million bases, I expect the assumption to be ok
+ The probability of having k of such restriction sites would follow a binomial distribution:
+
+            <math>P(k) = \binom{N-5}{k} p^k (1-p)^{(N-5-k)}</math>
+ Expectation:
+
+            <math><k> = \sum_{k=0}^{N-5} k P(k)</math>
+ I noticed another assumption I made -- it often may not be possible to have N-5 restriction sites depending on the sequence of restriction site (e.g. GAATTC immediately makes it not possible)
+ However, I expect the probability of that to be vanishingly small anyways
+
+R-code to compute the expectation value:
+<source lang="R">
+N <- 3e6
+p <- (1/4)^6
+k <- 0:(N-5)
+Pk <- dbinom(k, N-5, p)
+kAvg <- k * Pk # I get an average of 732.4207 restriction sites
+</source>
+
+==4.1 BIO-Cell Cycle==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 150 min; date started: 2019-10-10; date completed: 2019-10-12
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 17:45, 12 October 2019 (EDT)
+</div>
+
+;Universally conserved process for cell division involving many regulatory protein machineries.
+:* In fact, they are so highly conserved that many machineries work just fine when expressed in a different species<ref>Molecular Biology of the Cell</ref>
+
+===4.1.1 Phases of cell cycle===
+;Interphase: cell growth and chromosomal DNA replication. Makes up the majority of the cell cycle duration
+:* '''G1''': cell growth pre-replication
+:* '''S-phase''': cell becomes committed to and prepares for division. DNA-replication and centrosome replication
+:* '''G2''': cell growth after DNA-replication and prior to mitosis
+
+;Mitotic phase (M-phase): mitosis and cytokinesis. Actual events of cell division.
+* '''Mitosis''' (nuclear division)
+:* '''Prophase''': nucleolus disappears and chromosomes form from chromatin condensation
+:* '''Pro-metaphase''': centrosomes move apart and polarize. Nuclear membrane disappears
+:* '''Metaphase''': chromosomes line up along the equator (metaphase plate)
+:* '''Anaphase''': centromeres break down and chromosomes separate. Sister chromatids move to opposite poles
+:* '''Telophase''': new nuclei re-form
+* '''Cytokinesis''' (cytoplasmic division)
+
+;Resting Phase (G0 phase): an off-cycle phase
+
+===4.1.2 Key players in G1/S transition===
+;Once going into the S-phase, the cell is committed to divide.
+
+;SBF(transcription factor):
+:* Constituents: Swi4 (DNA-binding) + Swi6
+:* Binds promoter of SCB elements expressed at START
+
+;MBF (transcription factor):
+:* Constituents: Mbp1 (DNA-binding) + Swi6
+:* Binds promoter of MCB elements expressed at START
+
+;Whi5/Nrm1: repress G1/S transition expression by binding Swi6 C-terminus through a conserved '''GTB motif'''.
+
+;Useful links for Mbp1:
+:* [https://pubs.acs.org/doi/10.1021/bi992212i Characterization of DNA-binding domain]
+:* [https://pubs.acs.org/doi/10.1021/bi702339q Thermodynamics of DNA-binding]
+
+{{Vspace}}
