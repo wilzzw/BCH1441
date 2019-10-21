@@ -56,3 +56,5 @@ support of database users is generally quite poor. Why? This probably results fr
 the fact that one can't publish such support – or quality assurance efforts in general
 – and one can't strengthen one's grant proposals with user support and what doesn't
 get funded and doesn't get done. 
+
+Seems like pdb is apparently kind of bad..

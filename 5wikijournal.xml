@@ -1,4 +1,73 @@
-=5 Protein Structure Models=
+=5 Structural Bioinformatics=
+==5.2 Protein Data Bank==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 90 min; date started: 2019-10-21; date completed: 2019-10-21
+
+~~~~
+</div>
+
+===5.2.1 PDB files===
+*flat file (no inherent indexing structure), column-formatted
+
+;HEADER, COMPND, SOURCE: identity of the structure
+
+;SEQRES: explicit sequence, the PDB-sequence for database searches, in the material the experimentalist actually worked with
+:* not to be confused with implicit sequence, which is the sequence as registered with coordinates (can have unmodelled parts missing)
+
+;Insertion codes: 
+:* Sometimes a sequence number will be followed by a capital letter (e.g. 23 followed by 23A). This is used in sequences that are longer than other homologous counterparts.
+:* Used to maintain common numbering scheme within a homologous family
+
+;ATOM: protein or nucleic acids
+
+;HETATM: ligands, cofactors, solvents
+
+;Occupancy: fraction of sites that are occupied by that atom (often seen as 1.0, but modelled coordinates without experimental support have occupancy of 0.0)
+
+;B-factor: thermal fluctuation of atoms related to mean coord displacement if fluctuations are isotropic
+:* <math>B = 8\pi^2 <\mathbf{x}^2></math>
+:* Often hard to interpret because of anisotropic fluctuation of atoms, poor crystals etc. But generally confidence of position?
+
+;For biological inferences, make sure to distinguish whether we are looking at asymmetric unit or biological unit! It's also not always obvious whether symmetry is induced by crystallization.
+
+===5.2.2 Alternative structural services===
+;[https://www.ncbi.nlm.nih.gov/Structure/MMDB/mmdb.shtml MMDB]: a structural database by NCBI
+
+;[http://ndbserver.rutgers.edu/ Nucleic Acid Structural Database (NDB)]
+
+;[http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/pdbsum/GetPage.pl?pdbcode=index.html PDBsum]: secondary database by EBI. Has analysis and interpretation information
+
+===5.2.3 Navigation of RCSB PDB website===
+;Objective: get more familiar with RCSB PDB
+
+1. Search Mbp1
+
+2. Found 3 entries for the ''S. cerevisiae'' Mbp1 protein (keyword search IS indeed bad..):
+:* PDB codes: 1BM8, 1MB1, 1L3G
+
+3. Navigate the entry 1BM8:
+:* Can download PDB-file or biological assembly?!
+:* Protein feature view shows domain topology
+:* In this example, asymmetric unit is the biological assembly
+
+4. Go to "3D View": as expected, the core of the protein is mainly hydrophobic
+
+5. Go to "Annotations": Search parameters = CathTree Search for Mlu1-box Binding Protein; DNA-binding Domain (3.10.260)
+:* There are currently 6 entries in PDB with this domain/fold (including 1BM8)
+
+6. Go to "Sequence": can annotate sequence with DSSP secondary structure propensities and annotate domains
+
+7. Go to "Sequence Similarity": self-explanatory, basically BLAST-like?
+
+8. Go to "Structural Similarity":
+:* determined by jFATCAT-rigid algorithm? [http://www.rcsb.org/pdb/explore/structureCluster.do?structureId=1BM8]
+:* Has P-value, RMSD, Score, percent identiy, Cov? (probably described in the publication above)
+:* Clicking entries under "Domain 2" will go to the same type of page but for this new domain
+:* Clicking "view" under "Results" gives a lot more functionalities worth exploring. Related to structural alignments.
+
+9. Go to "Experiment": can find experimental details of structural determination for this entry.
+
 ==5.1 Structural Concepts==
 
 <div class="time-estimate">
