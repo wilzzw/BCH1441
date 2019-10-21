@@ -24,15 +24,16 @@ A question: If a restriction-endonuclease site is six bases long, how many such 
  Since GC content is 50%, so is AT content. Base pairing requirement implies that the probability of a base being A, G, C, or T is 25%
  Consider the entire chromosome of length N base pairs to be a series of N-6+1=N-5 slots
  Probability of a slot being the six-base-long restriction site is <math>0.25^6</math>
- I am assuming the identity of a base is independent of what other bases are. This is a "with-replacement" assumption that may not actually be true (there is a fixed number of each base)
+ I am assuming the identity of a base is independent of what other bases are.
+ This is a "with-replacement" assumption that may not actually be true (there is a fixed number of each base)
  However, with 3 million bases, I expect the assumption to be ok
  The probability of having k of such restriction sites would follow a binomial distribution:
-
             <math>P(k) = \binom{N-5}{k} p^k (1-p)^{(N-5-k)}</math>
  Expectation:
-
             <math><k> = \sum_{k=0}^{N-5} k P(k)</math>
- I noticed another assumption I made -- it often may not be possible to have N-5 restriction sites depending on the sequence of restriction site (e.g. GAATTC immediately makes it not possible)
+ I noticed another assumption I made:
+ It often may not be possible to have N-5 restriction sites depending on the sequence of restriction site 
+ (e.g. GAATTC immediately makes it not possible)
  However, I expect the probability of that to be vanishingly small anyways
 
 R-code to compute the expectation value:

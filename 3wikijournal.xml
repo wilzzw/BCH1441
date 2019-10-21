@@ -1,4 +1,32 @@
-=3 Basic Bioinformatics=
+=3 Basic Bioinformatics and Databases=
+==3.7 Databases==
+<div class="time-estimate">
+Time estimated: 1 h; taken > 35 min; date started: 2019-10-21; date completed: 2019-10-21
+
+~~~~
+</div>
+
+;Choice of database system depends on objectives.
+
+;Database: a layered system of components to store, update and retrieve information
+
+;Users-Interface interactions:
+:* Normal users <=> GUI, webpages
+:* Applications (require high throughput interface supporting automated multiple queries) <=> API
+:* Information systems (e.g. another database) <=> Library (stable accession keys and cross-referencing)
+:* Database Admin <=> Console, Command line interface
+
+;Query system:
+:* Evaluates queries/interaction requests and turn into consistent language for the actual storage system via the data system
+:* Give interfaces what to return to users?
+
+;Storage management:
+:* Process actual transactions of data, such as adding, modifying, and retrieving data
+:* '''ACID requirements''': atomicity, consistency, isolation, durability (don't know how to actually implement these...)
+
+;Data objects:
+:* apart from data objects themselves, real big databases have index tables, stored procedures for high throughput transactions, as well as dictionaries of configurations and statistics of uses
+
 ==3.6 Storing Data==
 
 <div class="time-estimate">
@@ -124,8 +152,6 @@ toStore
 :* '''View(<dataframe>)''': view dataframe in terms of a readable table in RStudio
 
 Protein sequence is correct. Copy and paste the whole sequence into Protein BLAST gives 100% match to the intended protein.
-
-
 
 ==3.5 Abstractions==
 
@@ -281,7 +307,7 @@ The downloaded binary packages are in
 ==3.3 Data Models==
 
 <div class="time-estimate">
-Time estimated: 1 h; taken 120+ min; date started: 2019-10-11; date completed: N/A
+Time estimated: 1 h; taken >3 h; date started: 2019-10-11; date completed: 2019-10-17
 
 ~~~~
 </div>
@@ -332,6 +358,22 @@ e.g. Create an annotation table with annotation primary keys in the above exampl
 * The value of an attribute is specific to the entity record in the table (i.e. functionally dependent on the primary key).
 * All attribute is atomic.
 * All information is unique (no duplication! Duplicate storing information can risk screwing up and is a bad idea!)
+
+===3.3.2 Build a relational data model for transcription factors===
+;Objective: practise constructing a relational data model for the following question:
+
+ Some of the proteins that you might want to store are transcription factors. 
+ A transcription factor has a canonical binding site sequence, and there are sequences it actually has been observed to bind to. 
+ The actual binding instances in specific locations may have genes associated with them, which encode proteins. 
+ You might come up with other facts that are important too.
+
+One version:
+
+[[File:ERDversion1.jpg|500px]] 
+
+Another version (if my idea of "double-joint" works/is a thing.. this would allow getting information of activation or repression of expression):
+
+[[File:ERDversion2.jpg|500px]] 
 
 ==3.2 Information Sources for Bioinformatics==
 

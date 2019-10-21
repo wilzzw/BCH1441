@@ -152,3 +152,5 @@ U stands for undirected, N stands for named nodes, the graph has 20 nodes and 20
 ;High betweeness centrality seems to correlate with high degree of nodes. But strict relationship is not guaranteed.
 
 ;<span style="color:red">What does Line 595 do?</span>
+
+{{Vspace}}
