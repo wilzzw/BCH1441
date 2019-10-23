@@ -9,13 +9,13 @@ Time estimated: 2 h; taken 195 min; date started: 2019-10-20; date completed: 20
 
 ;Motivation: make biological inferences from relationship data
 
-===7.1.1 Concepts in graph theory===
 ;Entities: genes, proteins, regulatory DNA etc. and their attributes (structure, function)
 
 ;Relationships: between entities, describe how the entities collaborate. Some attributes: direction, multiplicity
 
 ;Entities and relationships among them can be mapped into ''graphs''.
 
+===7.1.1 Concepts in graph theory===
 ;Graph: a set of '''vertices''' and '''edges''' that relate them
 
 ;Tree: a connected graphs without cycles

@@ -1,4 +1,97 @@
 =5 Structural Bioinformatics=
+==5.3 Molecualr Graphics: UCSF Chimera==
+;Activity 1 - Going through getting started tutorial
+:* a useful Menu functionality: Select > Selection Mode
+
+'''''Useful Commands'''''
+* open <pdb_code>
+* close <modelID>
+* display <atom_spec>: display atoms specified. Doc for atom specification for Chimera is [https://www.rbvi.ucsf.edu/chimera/docs/UsersGuide/midas/frameatom_spec.html here]
+* ribbon: show ribbon (<code>~ribbon</code> would be hide ribbon)
+* start <tool>: invoke Chimera tool <tool>
+* color/col <color_name> <spec>: (special commands: "col byelement", "col by het")
+* represent/rep <style> <spec>
+* rlabel <selection>: show residue label for <selection>
+* label <selection>: show atom label for <selection>
+* select <atom_spec>: make a selection (<code>select up</code> would upgrade selection to the whole residue, similar to "same residue as ..." in VMD)
+* show <selection>
+* surface/surf
+
+* ~: opposite operator
+* :: residue name/number specification
+* #: model specification
+* .: chain ID specification
+* @: atom name specification
+* =: partial wildcard (comparable to * in Shell)
+* ?: single character wildcard (comparable to . in Shell)
+* ,: "OR" operator
+* sel: current selection
+
+;Activity 2 - Practising stereo viewing (divergent)
+
+1. open 1bm8
+
+2. preset apply pub 1
+
+3. Turn on depth cueing
+
+4. Tools > Depiction > Rainbow
+
+5. Tools > Viewing Controls > Camera, select "camera mode" as "wall-eye stereo"
+
+6. <span style="color:red">The separation between my pupils is 7 cm.</span> So I will make the separation between the two images about 6 cm.
+
+7. View it as in the instruction in the course material [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-SX-Chimera].
+
+8. It worked like wonders! The 3D view was especially obvious when I rotate the structure with mouse, and when my eyes got tired.
+
+3D image sustained for quite a separation of my eyes from the screen (until I mis-clicked elsewhere and it's all disrupted..)
+
+[[File:1BM8_stereo.png|500px]]
+
+;Activity 3 - Ramanchandran plot
+
+(Straightforward. In the Model Panel directly)
+
+;Activity 4 - B-factor colouring
+
+Hydrogens by default is coloured with the lowest B-factor (blue)?!
+
+[[File:bfactor_render.png|500px]]
+
+;Activity 5 - Viewing coulombic surface
+
+(Viewing Panel will be my best friend)
+
+[[File:coulombic_mbp1.png|500px]]
+
+;Activity 6 - Is the sequence in Chimera implicit or explicit?
+
+1. open 1bm8
+
+2. File > Save PDB, call it "1bm8_Q1A.pdb"
+
+3. Delete the following lines:
+ ATOM      6  CG  GLN A   4      -0.797   3.008  17.820  1.00 57.21           C
+ ATOM      7  CD  GLN A   4      -0.029   2.066  18.730  1.00 60.18           C
+ ATOM      8  OE1 GLN A   4       1.135   2.325  19.071  1.00 61.12           O
+ ATOM      9  NE2 GLN A   4      -0.673   0.970  19.131  1.00 61.27           N
+ ATOM     13 HE21 GLN A   4      -0.200   0.339  19.714  1.00  0.00           H
+ ATOM     14 HE22 GLN A   4      -1.594   0.835  18.832  1.00  0.00           H
+
+(I think the following lines are not from the sidechain, so I retained them)
+ ATOM     10  H1  GLN A   4      -1.493   5.767  14.644  1.00  0.00           H
+ ATOM     11  H2  GLN A   4      -0.148   4.764  14.393  1.00  0.00           H
+ ATOM     12  H3  GLN A   4      -1.618   4.097  14.918  1.00  0.00           H
+
+4. Rename the first residue GLN to ALA
+
+5. Save and load in Chimera. Check with Favorites > Sequence
+
+6. The first residue is denoted as "A". '''Therefore the residue identities in the Sequence tool is IMPLICIT!'''
+
+[[File:proofimplicit.png|500px]]
+
 ==5.2 Protein Data Bank==
 
 <div class="time-estimate">
