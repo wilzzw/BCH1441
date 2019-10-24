@@ -411,7 +411,7 @@ Time estimated: 2 h; taken 80 min; date started: 2019-10-24; date completed: 201
 
 2. Search for this structure:
 
-[[File:caffeine_chemstruc.png|500px]]
+[[File:caffeine_chemstruc.png|200px]]
 
 3. The only result is "Caffeine". PubChemCID = 2519
 
@@ -425,7 +425,7 @@ Time estimated: 2 h; taken 80 min; date started: 2019-10-24; date completed: 201
 
 3. Actions > Color > by element
 
-[[File:caffeine_chimera.png|500px]]
+[[File:caffeine_chimera.png|200px]]
 
 4. Actions > Surface > show
 
@@ -437,7 +437,7 @@ Time estimated: 2 h; taken 80 min; date started: 2019-10-24; date completed: 201
 
 8. Result in wall-eyed stereo view:
 
-[[File:caffeine_stereo.png|500px]]
+[[File:caffeine_stereo.png|400px]]
 
 9. (3D stereo view practice)
 
@@ -452,11 +452,11 @@ Time estimated: 2 h; taken 80 min; date started: 2019-10-24; date completed: 201
 
 Before Matching...
 
-[[File:before_matching.png]]
+[[File:before_matching.png|500px]]
 
 After Matching...
 
-[[File:after_matching.png]]
+[[File:after_matching.png|300px]]
 
 ==5.3 Molecualr Graphics: UCSF Chimera==
 
@@ -523,13 +523,15 @@ Time estimated: 4 h; taken 3.5+ h; date started: 2019-10-22; date completed: 201
 
 Hydrogens by default is coloured with the lowest B-factor (blue)?!
 
-[[File:bfactor_render.png|500px]]
+[[File:bfactor_render.png|400px]]
 
 ;Activity 5 - Viewing coulombic surface
 
 (Viewing Panel will be my best friend)
 
-[[File:coulombic_mbp1.png|500px]]
+(DNA-binding site is probably the one underneath, very blue and positive and looks like there's a pocket)
+
+[[File:coulombic_mbp1.png|400px]]
 
 ;Activity 6 - Is the sequence in Chimera implicit or explicit?
 
