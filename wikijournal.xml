@@ -16,18 +16,18 @@ __TOC__
 <div class="time-estimate">
 Time estimated: 2 h; taken 195 min; date started: 2019-10-20; date completed: 2019-10-20
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 14:54, 21 October 2019 (EDT)
 </div>
 
 ;Motivation: make biological inferences from relationship data
 
-===7.1.1 Concepts in graph theory===
 ;Entities: genes, proteins, regulatory DNA etc. and their attributes (structure, function)
 
 ;Relationships: between entities, describe how the entities collaborate. Some attributes: direction, multiplicity
 
 ;Entities and relationships among them can be mapped into ''graphs''.
 
+===7.1.1 Concepts in graph theory===
 ;Graph: a set of '''vertices''' and '''edges''' that relate them
 
 ;Tree: a connected graphs without cycles
@@ -385,7 +385,248 @@ write.csv(outcomesOfMutation(codonWithC, "C", "A"), file="C_to_A_table.csv")
 :* Or in general, seems like the argument can be any vector, and it returns a named vector with non-repetitive elements of the argument vector as names and their frequencies as elements
 
 {{Vspace}}
-=5 Protein Structure Models=
+=5 Structural Bioinformatics=
+==5.4 Small Molecules==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 80 min; date started: 2019-10-24; date completed: 2019-10-24
+
+~~~~
+</div>
+
+;PDB has its own chemical database: Chemical Component Dictionary
+
+;Access:
+:* PDBeChem (EBI)
+:* Ligand Expo (PDB)
+
+;SMILE (Simplified molecular-input line-entry system) string: PDB "search by ligand" converts the chemical structure to a '''SMILE string''' that can be used to generate coordinates in Chimera.
+
+===5.4.1 Explore caffeine through various databases===
+;Activity 1 - Explore on DrugBank
+: Downloadable items include PDB, SMILES, MOL, SDF, 3D-SDF, InChI
+
+;Activity 2 - Explore on PubChem (NCBI) and search by drawing a structure
+1. '''Structure search has moved. Click "Draw Structure"'''
+
+2. Search for this structure:
+
+[[File:caffeine_chemstruc.png|500px]]
+
+3. The only result is "Caffeine". PubChemCID = 2519
+
+ The SMILE string is CN1C=NC2=C1C(=O)N(C(=O)N2C)C
+
+===5.4.2 Build the structure from SMILE===
+;Activity 3 - Build structure in Chimera
+1. Tools > Structure Editing > Build Structure
+
+2. Use the SMILE string to build
+
+3. Actions > Color > by element
+
+[[File:caffeine_chimera.png|500px]]
+
+4. Actions > Surface > show
+
+5. Select the surface, then selection inspector, inspect MSMS surface and change vertex density to 50.0
+
+6. Actions > Color > all options > cornflower blue (apply to surfaces only)
+
+7. Actions > Surface > Transparency > 50%
+
+8. Result in wall-eyed stereo view:
+
+[[File:caffeine_stereo.png|500px]]
+
+9. (3D stereo view practice)
+
+===5.4.3 Superposition of small molecule into complex===
+1. Chimera "open 3g6m"
+
+2. Hide protein ribbons and atoms/bonds (there are 2 caffeine molecules in the complex!)
+
+3. Hide one caffeine molecule from the complex <code>~display #1:1</code>
+
+4. Inspect atom notations, here's the command in Chimera I use: <code>match #0@N3,C6,N4,C3,C4,C5,N1,C2,N2,C8,O2,C7,O1,C1 #1:427@N1,C2,N3,C4,C5,C6,N7,C8,N9,C10,O11,C12,O13,C14</code>
+
+Before Matching...
+
+[[File:before_matching.png]]
+
+After Matching...
+
+[[File:after_matching.png]]
+
+==5.3 Molecualr Graphics: UCSF Chimera==
+
+<div class="time-estimate">
+Time estimated: 4 h; taken 3.5+ h; date started: 2019-10-22; date completed: 2019-10-23
+
+~~~~
+</div>
+
+;Activity 1 - Going through getting started tutorial
+:* a useful Menu functionality: Select > Selection Mode
+
+'''''Useful Commands'''''
+* open <pdb_code>
+* close <modelID>
+* display <atom_spec>: display atoms specified. Doc for atom specification for Chimera is [https://www.rbvi.ucsf.edu/chimera/docs/UsersGuide/midas/frameatom_spec.html here]
+* ribbon: show ribbon (<code>~ribbon</code> would be hide ribbon)
+* start <tool>: invoke Chimera tool <tool>
+* color/col <color_name> <spec>: (special commands: "col byelement", "col by het")
+* represent/rep <style> <spec>
+* rlabel <selection>: show residue label for <selection>
+* label <selection>: show atom label for <selection>
+* select <atom_spec>: make a selection (<code>select up</code> would upgrade selection to the whole residue, similar to "same residue as ..." in VMD)
+* show <selection>
+* surface/surf
+
+* <code>~</code> opposite operator
+* <code>:</code> residue name/number specification
+* <code>#</code> model specification
+* <code>.</code> chain ID specification
+* <code>@</code> atom name specification
+* <code>=</code> partial wildcard (comparable to * in Shell)
+* <code>?</code> single character wildcard (comparable to . in Shell)
+* <code>,</code> "OR" operator
+* sel: current selection
+
+;Activity 2 - Practising stereo viewing (divergent)
+
+1. open 1bm8
+
+2. preset apply pub 1
+
+3. Turn on depth cueing
+
+4. Tools > Depiction > Rainbow
+
+5. Tools > Viewing Controls > Camera, select "camera mode" as "wall-eye stereo"
+
+6. <span style="color:red">The separation between my pupils is 7 cm.</span> So I will make the separation between the two images about 6 cm.
+
+7. View it as in the instruction in the course material [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-SX-Chimera].
+
+8. It worked like wonders! The 3D view was especially obvious when I rotate the structure with mouse, and when my eyes got tired.
+
+3D image sustained for quite a separation of my eyes from the screen (until I mis-clicked elsewhere and it's all disrupted..)
+
+[[File:1BM8_stereo.png|500px]]
+
+;Activity 3 - Ramanchandran plot
+
+(Straightforward. In the Model Panel directly)
+
+;Activity 4 - B-factor colouring
+
+Hydrogens by default is coloured with the lowest B-factor (blue)?!
+
+[[File:bfactor_render.png|500px]]
+
+;Activity 5 - Viewing coulombic surface
+
+(Viewing Panel will be my best friend)
+
+[[File:coulombic_mbp1.png|500px]]
+
+;Activity 6 - Is the sequence in Chimera implicit or explicit?
+
+1. open 1bm8
+
+2. File > Save PDB, call it "1bm8_Q1A.pdb"
+
+3. Delete the following lines:
+ ATOM      6  CG  GLN A   4      -0.797   3.008  17.820  1.00 57.21           C
+ ATOM      7  CD  GLN A   4      -0.029   2.066  18.730  1.00 60.18           C
+ ATOM      8  OE1 GLN A   4       1.135   2.325  19.071  1.00 61.12           O
+ ATOM      9  NE2 GLN A   4      -0.673   0.970  19.131  1.00 61.27           N
+ ATOM     13 HE21 GLN A   4      -0.200   0.339  19.714  1.00  0.00           H
+ ATOM     14 HE22 GLN A   4      -1.594   0.835  18.832  1.00  0.00           H
+
+(I think the following lines are not from the sidechain, so I retained them)
+ ATOM     10  H1  GLN A   4      -1.493   5.767  14.644  1.00  0.00           H
+ ATOM     11  H2  GLN A   4      -0.148   4.764  14.393  1.00  0.00           H
+ ATOM     12  H3  GLN A   4      -1.618   4.097  14.918  1.00  0.00           H
+
+4. Rename the first residue GLN to ALA
+
+5. Save and load in Chimera. Check with Favorites > Sequence
+
+6. The first residue is denoted as "A". '''Therefore the residue identities in the Sequence tool is IMPLICIT!'''
+
+[[File:proofimplicit.png|500px]]
+
+==5.2 Protein Data Bank==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 90 min; date started: 2019-10-21; date completed: 2019-10-21
+
+~~~~
+</div>
+
+===5.2.1 PDB files===
+*flat file (no inherent indexing structure), column-formatted
+
+;HEADER, COMPND, SOURCE: identity of the structure
+
+;SEQRES: explicit sequence, the PDB-sequence for database searches, in the material the experimentalist actually worked with
+:* not to be confused with implicit sequence, which is the sequence as registered with coordinates (can have unmodelled parts missing)
+
+;Insertion codes: 
+:* Sometimes a sequence number will be followed by a capital letter (e.g. 23 followed by 23A). This is used in sequences that are longer than other homologous counterparts.
+:* Used to maintain common numbering scheme within a homologous family
+
+;ATOM: protein or nucleic acids
+
+;HETATM: ligands, cofactors, solvents
+
+;Occupancy: fraction of sites that are occupied by that atom (often seen as 1.0, but modelled coordinates without experimental support have occupancy of 0.0)
+
+;B-factor: thermal fluctuation of atoms related to mean coord displacement if fluctuations are isotropic
+:* <math>B = 8\pi^2 <\mathbf{x}^2></math>
+:* Often hard to interpret because of anisotropic fluctuation of atoms, poor crystals etc. But generally confidence of position?
+
+;For biological inferences, make sure to distinguish whether we are looking at asymmetric unit or biological unit! It's also not always obvious whether symmetry is induced by crystallization.
+
+===5.2.2 Alternative structural services===
+;[https://www.ncbi.nlm.nih.gov/Structure/MMDB/mmdb.shtml MMDB]: a structural database by NCBI
+
+;[http://ndbserver.rutgers.edu/ Nucleic Acid Structural Database (NDB)]
+
+;[http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/pdbsum/GetPage.pl?pdbcode=index.html PDBsum]: secondary database by EBI. Has analysis and interpretation information
+
+===5.2.3 Navigation of RCSB PDB website===
+;Objective: get more familiar with RCSB PDB
+
+1. Search Mbp1
+
+2. Found 3 entries for the ''S. cerevisiae'' Mbp1 protein (keyword search IS indeed bad..):
+:* PDB codes: 1BM8, 1MB1, 1L3G
+
+3. Navigate the entry 1BM8:
+:* Can download PDB-file or biological assembly?!
+:* Protein feature view shows domain topology
+:* In this example, asymmetric unit is the biological assembly
+
+4. Go to "3D View": as expected, the core of the protein is mainly hydrophobic
+
+5. Go to "Annotations": Search parameters = CathTree Search for Mlu1-box Binding Protein; DNA-binding Domain (3.10.260)
+:* There are currently 6 entries in PDB with this domain/fold (including 1BM8)
+
+6. Go to "Sequence": can annotate sequence with DSSP secondary structure propensities and annotate domains
+
+7. Go to "Sequence Similarity": self-explanatory, basically BLAST-like?
+
+8. Go to "Structural Similarity":
+:* determined by jFATCAT-rigid algorithm? [http://www.rcsb.org/pdb/explore/structureCluster.do?structureId=1BM8]
+:* Has P-value, RMSD, Score, percent identiy, Cov? (probably described in the publication above)
+:* Clicking entries under "Domain 2" will go to the same type of page but for this new domain
+:* Clicking "view" under "Results" gives a lot more functionalities worth exploring. Related to structural alignments.
+
+9. Go to "Experiment": can find experimental details of structural determination for this entry.
+
 ==5.1 Structural Concepts==
 
 <div class="time-estimate">
@@ -430,7 +671,7 @@ Time estimated: 1 h; taken 30 min; date started: 2019-10-15; date completed: 201
 <div class="time-estimate">
 Time estimated: 1 h; taken 70 min; date started: 2019-10-16; date completed: 2019-10-16
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 14:54, 21 October 2019 (EDT)
 </div>
 
 ;To compute probabilities, know:
@@ -522,7 +763,7 @@ Time estimated: 1 h; taken 150 min; date started: 2019-10-10; date completed: 20
 <div class="time-estimate">
 Time estimated: 1 h; taken > 35 min; date started: 2019-10-21; date completed: 2019-10-21
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 14:54, 21 October 2019 (EDT)
 </div>
 
 ;Choice of database system depends on objectives.
@@ -551,7 +792,7 @@ Time estimated: 1 h; taken > 35 min; date started: 2019-10-21; date completed: 2
 <div class="time-estimate">
 Time estimated: 3 h; taken > 3 h; date started: 2019-10-17; date completed: 2019-10-20
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 14:54, 21 October 2019 (EDT)
 </div>
 
 ===3.6.1 Data representation===
