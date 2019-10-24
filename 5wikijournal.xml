@@ -1,5 +1,84 @@
 =5 Structural Bioinformatics=
+==5.4 Small Molecules==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 80 min; date started: 2019-10-24; date completed: 2019-10-24
+
+~~~~
+</div>
+
+;PDB has its own chemical database: Chemical Component Dictionary
+
+;Access:
+:* PDBeChem (EBI)
+:* Ligand Expo (PDB)
+
+;SMILE (Simplified molecular-input line-entry system) string: PDB "search by ligand" converts the chemical structure to a '''SMILE string''' that can be used to generate coordinates in Chimera.
+
+===5.4.1 Explore caffeine through various databases===
+;Activity 1 - Explore on DrugBank
+: Downloadable items include PDB, SMILES, MOL, SDF, 3D-SDF, InChI
+
+;Activity 2 - Explore on PubChem (NCBI) and search by drawing a structure
+1. '''Structure search has moved. Click "Draw Structure"'''
+
+2. Search for this structure:
+
+[[File:caffeine_chemstruc.png|500px]]
+
+3. The only result is "Caffeine". PubChemCID = 2519
+
+ The SMILE string is CN1C=NC2=C1C(=O)N(C(=O)N2C)C
+
+===5.4.2 Build the structure from SMILE===
+;Activity 3 - Build structure in Chimera
+1. Tools > Structure Editing > Build Structure
+
+2. Use the SMILE string to build
+
+3. Actions > Color > by element
+
+[[File:caffeine_chimera.png|500px]]
+
+4. Actions > Surface > show
+
+5. Select the surface, then selection inspector, inspect MSMS surface and change vertex density to 50.0
+
+6. Actions > Color > all options > cornflower blue (apply to surfaces only)
+
+7. Actions > Surface > Transparency > 50%
+
+8. Result in wall-eyed stereo view:
+
+[[File:caffeine_stereo.png|500px]]
+
+9. (3D stereo view practice)
+
+===5.4.3 Superposition of small molecule into complex===
+1. Chimera "open 3g6m"
+
+2. Hide protein ribbons and atoms/bonds (there are 2 caffeine molecules in the complex!)
+
+3. Hide one caffeine molecule from the complex <code>~display #1:1</code>
+
+4. Inspect atom notations, here's the command in Chimera I use: <code>match #0@N3,C6,N4,C3,C4,C5,N1,C2,N2,C8,O2,C7,O1,C1 #1:427@N1,C2,N3,C4,C5,C6,N7,C8,N9,C10,O11,C12,O13,C14</code>
+
+Before Matching...
+
+[[File:before_matching.png]]
+
+After Matching...
+
+[[File:after_matching.png]]
+
 ==5.3 Molecualr Graphics: UCSF Chimera==
+
+<div class="time-estimate">
+Time estimated: 4 h; taken 3.5+ h; date started: 2019-10-22; date completed: 2019-10-23
+
+~~~~
+</div>
+
 ;Activity 1 - Going through getting started tutorial
 :* a useful Menu functionality: Select > Selection Mode
 
@@ -17,14 +96,14 @@
 * show <selection>
 * surface/surf
 
-* ~: opposite operator
-* :: residue name/number specification
-* #: model specification
-* .: chain ID specification
-* @: atom name specification
-* =: partial wildcard (comparable to * in Shell)
-* ?: single character wildcard (comparable to . in Shell)
-* ,: "OR" operator
+* <code>~</code> opposite operator
+* <code>:</code> residue name/number specification
+* <code>#</code> model specification
+* <code>.</code> chain ID specification
+* <code>@</code> atom name specification
+* <code>=</code> partial wildcard (comparable to * in Shell)
+* <code>?</code> single character wildcard (comparable to . in Shell)
+* <code>,</code> "OR" operator
 * sel: current selection
 
 ;Activity 2 - Practising stereo viewing (divergent)
