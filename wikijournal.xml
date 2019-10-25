@@ -386,12 +386,126 @@ write.csv(outcomesOfMutation(codonWithC, "C", "A"), file="C_to_A_table.csv")
 
 {{Vspace}}
 =5 Structural Bioinformatics=
+==5.5 PDB File Analysis==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 110 min; date started: 2019-10-24; date completed: 2019-10-25
+
+~~~~
+</div>
+
+;Objective: Analyze .pdb files in R
+
+;Useful functions:
+:* abline(): add straight lines to a plot
+:* densCols(<vector>): produce a vector of colours used for smooth density contour plots
+:* smoothScatter(): scatter plots with smooth density contour plots
+:* MASS::kde2d(): create a 2D [https://en.wikipedia.org/wiki/Kernel_density_estimation kernel density estimation] (for contour plots)
+:* contour()
+:* filled.contour()
+:* persp(): perspective plot (wired surface)
+:* par()
+:* layout(): set complex plot layout arrangements
+:* bio3d::read.pdb(<path>): returns a named list of information retrieved from pdb file specified by <path>
+:* bio3d::pdbseq(<pdb_object>): get a named vector of one-letter-code sequence from pdb. Names are the corresponding residue numbers
+:* bio3d::torsion.pdb(<pdb_object>): returns a named list of all kinds of torsion angle information
+:* bio3d::aa321() & bio3d::aa123(): interconversion between 3-letter and 1-letter codes of amino acids
+:* bio3d::plot.bio3d(): modified plotting function with specific handy pdb functionalities (e.g. plot B-factor along sequence)
+:* bio3d::dssp()
+:* bio3d::dist.xyz(A,B): distance between coordinates represented in A and B. A and B are vectors with 3N elements. Each are grouped in consecutive 3 as coord. Returns matrix of pairwise distances.
+
+===5.5.1 Working through RPR-SX-PDB.R===
+;Install bio3d and hexbin
+<source lang="R">
+install.packages(c("bio3d", "hexbin"))
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing packages into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/bio3d_2.3-4.zip'
+Content type 'application/zip' length 3640992 bytes (3.5 MB)
+downloaded 3.5 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/hexbin_1.27.3.zip'
+Content type 'application/zip' length 931691 bytes (909 KB)
+downloaded 909 KB
+
+package ‘bio3d’ successfully unpacked and MD5 sums checked
+package ‘hexbin’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\RtmpwP9hs6\downloaded_packages
+</code>
+</div>
+</div>
+
+;Activity 1 - Examine plain-text 1BM8.pdb
+:* Resolution: 1.71 Å
+
+:* The first residue in SEQRES is the same as in ATOM
+
+:* There are 83 water molecules (weird that the residue number is not continuous?!)
+
+:* N-terminal and C-terminal are missing some hydrogens
+
+Line 131-136: implicit sequence == explicit sequence for 1BM8.pdb
+
+;Activity 2 - Ramanchandran plot analysis
+
+Line 210: These are the lines showing residues that are in the outlying left-handed helix region
+     eleno elety resid chain resno      phi      psi
+ 84     84    CA   SER     A    11 52.88084 36.95115
+ 293   293    CA   ASP     A    32 65.77463 14.94939
+ 406   406    CA   ASN     A    44 69.84793 27.66016
+ 887   887    CA   SER     A    91 44.70111 54.55245
+
+Check these residues in Chimera: Command: <code>display :11,32,44,91</code>
+
+Turns out these residues are in the loop/turn regions.
+
+;Activity 3 - Density plots
+Line 247:
+<code>iNA <- c(which(is.na(tor$phi)), which(is.na(tor$psi)))</code>
+
+iNA has indices for which phi or psi is not defined, such as the first and the last protein residues and water.
+
+;Activity 4 - Check for cis-peptide bonds
+Line 407-409:
+The peptide bond is expected to be planar (0 or 180 degrees in dihedral angle). Dihedral angles are defined from -180 to 180 degrees. So those seemingly "jumping" values are actually quite close.
+
+It can be fixed (Line 410-411).
+
+;Activity 5 - Explore analysis of hydrogen bonds
+Line 772:
+Without importing bio3d with library(), this line should be <code>pdb <- bio3d::read.pdb(myPDBs[i])</code>
+
+Line 792: why is it equal sign??
+
+Line 817-819: Why do you think these distributions are different?
+
+Distribution of HB distance for alpha helices is more spread out and average at a longer distance.
+
+Distribution of HB distance for beta sheets is more concentrated around a smaller distance with tailing towards a larger distance.
+
+: Perhaps the preferred geometry/angle of the hydrogen bonds are different for sheets versus for helices?
+
+At what distance do you think H-bonds have the lowest energy?
+
+: The distance with the highest frequency. For alpha-helices it would be 3.4 Å, while for beta-sheets it would be 2.8 Å.
+
 ==5.4 Small Molecules==
 
 <div class="time-estimate">
 Time estimated: 2 h; taken 80 min; date started: 2019-10-24; date completed: 2019-10-24
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:23, 24 October 2019 (EDT)
 </div>
 
 ;PDB has its own chemical database: Chemical Component Dictionary
@@ -458,12 +572,12 @@ After Matching...
 
 [[File:after_matching.png|300px]]
 
-==5.3 Molecualr Graphics: UCSF Chimera==
+==5.3 Molecular Graphics: UCSF Chimera==
 
 <div class="time-estimate">
 Time estimated: 4 h; taken 3.5+ h; date started: 2019-10-22; date completed: 2019-10-23
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:23, 24 October 2019 (EDT)
 </div>
 
 ;Activity 1 - Going through getting started tutorial
@@ -565,7 +679,7 @@ Hydrogens by default is coloured with the lowest B-factor (blue)?!
 <div class="time-estimate">
 Time estimated: 1 h; taken 90 min; date started: 2019-10-21; date completed: 2019-10-21
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:23, 24 October 2019 (EDT)
 </div>
 
 ===5.2.1 PDB files===
@@ -1069,7 +1183,7 @@ The downloaded binary packages are in
 ==3.3 Data Models==
 
 <div class="time-estimate">
-Time estimated: 1 h; taken >3 h; date started: 2019-10-11; date completed: 2019-10-17
+Time estimated: 1 h; taken 4.5 h; date started: 2019-10-11; date completed: 2019-10-17
 
 ~~~~
 </div>

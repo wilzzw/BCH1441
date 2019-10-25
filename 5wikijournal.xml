@@ -1,16 +1,31 @@
 =5 Structural Bioinformatics=
 ==5.5 PDB File Analysis==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 110 min; date started: 2019-10-24; date completed: 2019-10-25
+
+~~~~
+</div>
+
 ;Objective: Analyze .pdb files in R
 
 ;Useful functions:
 :* abline(): add straight lines to a plot
 :* densCols(<vector>): produce a vector of colours used for smooth density contour plots
 :* smoothScatter(): scatter plots with smooth density contour plots
+:* MASS::kde2d(): create a 2D [https://en.wikipedia.org/wiki/Kernel_density_estimation kernel density estimation] (for contour plots)
+:* contour()
+:* filled.contour()
+:* persp(): perspective plot (wired surface)
+:* par()
+:* layout(): set complex plot layout arrangements
 :* bio3d::read.pdb(<path>): returns a named list of information retrieved from pdb file specified by <path>
 :* bio3d::pdbseq(<pdb_object>): get a named vector of one-letter-code sequence from pdb. Names are the corresponding residue numbers
 :* bio3d::torsion.pdb(<pdb_object>): returns a named list of all kinds of torsion angle information
 :* bio3d::aa321() & bio3d::aa123(): interconversion between 3-letter and 1-letter codes of amino acids
 :* bio3d::plot.bio3d(): modified plotting function with specific handy pdb functionalities (e.g. plot B-factor along sequence)
+:* bio3d::dssp()
+:* bio3d::dist.xyz(A,B): distance between coordinates represented in A and B. A and B are vectors with 3N elements. Each are grouped in consecutive 3 as coord. Returns matrix of pairwise distances.
 
 ===5.5.1 Working through RPR-SX-PDB.R===
 ;Install bio3d and hexbin
@@ -74,14 +89,36 @@ Line 247:
 
 iNA has indices for which phi or psi is not defined, such as the first and the last protein residues and water.
 
+;Activity 4 - Check for cis-peptide bonds
+Line 407-409:
+The peptide bond is expected to be planar (0 or 180 degrees in dihedral angle). Dihedral angles are defined from -180 to 180 degrees. So those seemingly "jumping" values are actually quite close.
 
+It can be fixed (Line 410-411).
+
+;Activity 5 - Explore analysis of hydrogen bonds
+Line 772:
+Without importing bio3d with library(), this line should be <code>pdb <- bio3d::read.pdb(myPDBs[i])</code>
+
+Line 792: why is it equal sign??
+
+Line 817-819: Why do you think these distributions are different?
+
+Distribution of HB distance for alpha helices is more spread out and average at a longer distance.
+
+Distribution of HB distance for beta sheets is more concentrated around a smaller distance with tailing towards a larger distance.
+
+: Perhaps the preferred geometry/angle of the hydrogen bonds are different for sheets versus for helices?
+
+At what distance do you think H-bonds have the lowest energy?
+
+: The distance with the highest frequency. For alpha-helices it would be 3.4 Å, while for beta-sheets it would be 2.8 Å.
 
 ==5.4 Small Molecules==
 
 <div class="time-estimate">
 Time estimated: 2 h; taken 80 min; date started: 2019-10-24; date completed: 2019-10-24
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:23, 24 October 2019 (EDT)
 </div>
 
 ;PDB has its own chemical database: Chemical Component Dictionary
@@ -148,12 +185,12 @@ After Matching...
 
 [[File:after_matching.png|300px]]
 
-==5.3 Molecualr Graphics: UCSF Chimera==
+==5.3 Molecular Graphics: UCSF Chimera==
 
 <div class="time-estimate">
 Time estimated: 4 h; taken 3.5+ h; date started: 2019-10-22; date completed: 2019-10-23
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:23, 24 October 2019 (EDT)
 </div>
 
 ;Activity 1 - Going through getting started tutorial
@@ -255,7 +292,7 @@ Hydrogens by default is coloured with the lowest B-factor (blue)?!
 <div class="time-estimate">
 Time estimated: 1 h; taken 90 min; date started: 2019-10-21; date completed: 2019-10-21
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:23, 24 October 2019 (EDT)
 </div>
 
 ===5.2.1 PDB files===
