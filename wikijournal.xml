@@ -391,7 +391,7 @@ write.csv(outcomesOfMutation(codonWithC, "C", "A"), file="C_to_A_table.csv")
 <div class="time-estimate">
 Time estimated: 2 h; taken 110 min; date started: 2019-10-24; date completed: 2019-10-25
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:07, 25 October 2019 (EDT)
 </div>
 
 ;Objective: Analyze .pdb files in R
@@ -782,6 +782,79 @@ Time estimated: 1 h; taken 30 min; date started: 2019-10-15; date completed: 201
 
 {{Vspace}}
 =4 Background Knowledge and Concepts=
+==4.3 Probability Distributions==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 2 h; date started: 2019-10-25; date completed: 2019-10-25
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 17:40, 25 October 2019 (EDT)
+</div>
+
+;Objective: Review some prob distribution concepts by running through FND-STA-Probability_distribution.R
+
+;Useful functions:
+:* plotrix::multhist(): multiply-stacked histogram
+:* cut(x, breaks=n): cut a numeric vector x into n parts and convert to factors. Great for converting numerical data into categorical data.
+
+;install.packages("plotrix")
+
+===4.3.1 Probability functions in R: utilities===
+* d...: value of p.d.f. at a given outcome x value
+* p...: cumulative probability up to x
+* q...: value of x at which the given quantile cut-off occurs
+* r...: randomly sample from a probability distribution
+
+===4.3.2 Some important distributions===
+;Poisson distribution: pois(n, p)
+:* n: number of occurance
+:* p: average probability of occurance
+
+;Uniform distribution: unif(from, to)
+:* often useful for Monte-Carlo simulation methods of estimation
+
+;Normal distribution: norm(mean, var)
+:* Central Limit Theorem (CLT): averages of samples drawn from distributions tend to follow Normal Distribution
+
+===4.3.3 Quantile analyses===
+Line 260-286:
+CLT observation - It appears that the larger the sample size is for the sampling from distribution, the means follow Normal Distribution more closely.
+
+===4.3.4 Chi-sq test for comparing discrete distributions===
+;Reminder of what chi-sq test does:
+R-code line <code>View(rbind(as.vector(countsL1),as.vector(countsL2)))</code>
+
+Null hypothesis is that the distribution among V's is independent of the rows (1 or 2).
+
+Chi-sq metric is related to the sum of squares of each rows values of V's difference from the averages of V's. Larger the value the less likely the independence. [http://www.r-tutor.com/elementary-statistics/goodness-fit/chi-squared-test-independence]
+
+[[File:chi-sq_table.png|500px]]
+
+In R: chisq.test()
+:* <code>simulate.p.value = TRUE</code> seems like a good idea?
+:* B: number of replicates for simulate.p.value
+
+[https://stats.stackexchange.com/questions/113692/test-identicality-of-discrete-distributions For comparing discrete distributions, there are important caveats!]
+
+===4.3.5 Kullback-Leibler divergence/relative entropy method for comparing discrete distributions===
+Compare bt two inputs of probability mass functions.
+
+<code>sum(log(p / q))</code>
+
+where p and q are two probability mass functions (in terms of vectors)
+
+;To see what an obtained value means, can draw a number of random samples from the distribution q and compare the KL value for that against KL value of p.
+
+;One caution about probability mass functions obtained from frequencies from simulations: by random chance if certain outcomes were not sampled at all will be assigned a 0.
+
+Ways to get around it:
+:* Probability "bracketing"
+:* Adding pseudo-counts (e.g. Laplace prior, Jeffreys prior...)
+
+===4.3.6 Kolmogorov-Smirnov test for comparing continuous distributions===
+Null hypothesis is that two samples were taken from the same distribution.
+
+In R: ks.test()
+
 ==4.2 STA-Probability==
 
 <div class="time-estimate">
@@ -1185,7 +1258,7 @@ The downloaded binary packages are in
 <div class="time-estimate">
 Time estimated: 1 h; taken 4.5 h; date started: 2019-10-11; date completed: 2019-10-17
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:07, 25 October 2019 (EDT)
 </div>
 
 The motivation for constructing appropriate database models -- how to store data for efficient computation and avoid errors by ensuring self-consistency.
@@ -1641,6 +1714,7 @@ Time estimated: 1.5 h; taken 100 min; date started: 2019-10-06; date completed: 
 :* <code>NaN</code> means "not a number", though it is of mode numeric, type double, and class numeric. '''<code>as.logical(NaN)</code> returns NA.'''
 :* <code>NULL</code> means "nothing" or "undefined". It is of mode NULL, type NULL, and class NULL (basically just nothing). e.g. <code>as.logical(NULL)</code> will be the same as <code>as.logical()</code>
 :* '''as.factor(x)''' encodes vector x as factor? (back to this later)
+:* as.vector also can remove names from a vector (similar to unname())
 
 
 ===2.2.3 Vectors===

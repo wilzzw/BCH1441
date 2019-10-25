@@ -1,4 +1,22 @@
 =5 Structural Bioinformatics=
+==5.6 Molecular Forcefields==
+
+<div class="time-estimate">
+Time estimated: 15 min; taken 10 min; date started: 2019-10-25; date completed: 2019-10-25
+
+~~~~
+</div>
+
+;To calculate the energy of a biomolecule at a specific conformation
+
+;Molecular Mechanics Forcefields:
+:* e.g. GROMOS, CHARMM, AMBER etc.
+:* classical treatment of interactions specified by bonds, angles, dihedrals, vdW, Coulombic
+:* Entropy not directly accounted for
+
+;Empirical (Statistical) Forcefields:
+:* Energy: related to inversed Boltzmann of frequencies of observed states
+
 ==5.5 PDB File Analysis==
 
 <div class="time-estimate">
