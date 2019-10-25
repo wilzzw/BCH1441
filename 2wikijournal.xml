@@ -349,6 +349,7 @@ Time estimated: 1.5 h; taken 100 min; date started: 2019-10-06; date completed: 
 :* <code>NaN</code> means "not a number", though it is of mode numeric, type double, and class numeric. '''<code>as.logical(NaN)</code> returns NA.'''
 :* <code>NULL</code> means "nothing" or "undefined". It is of mode NULL, type NULL, and class NULL (basically just nothing). e.g. <code>as.logical(NULL)</code> will be the same as <code>as.logical()</code>
 :* '''as.factor(x)''' encodes vector x as factor? (back to this later)
+:* as.vector also can remove names from a vector (similar to unname())
 
 
 ===2.2.3 Vectors===

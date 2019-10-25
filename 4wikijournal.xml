@@ -30,6 +30,35 @@
 Line 260-286:
 CLT observation - It appears that the larger the sample size is for the sampling from distribution, the means follow Normal Distribution more closely.
 
+===4.3.4 Chi-sq test for comparing discrete distributions===
+;Reminder of what chi-sq test does:
+R-code line <code>View(rbind(as.vector(countsL1),as.vector(countsL2)))</code>
+
+Null hypothesis is that the distribution among V's is independent of the rows (1 or 2).
+
+Chi-sq metric is related to the sum of squares of each rows values of V's difference from the averages of V's. Larger the value the less likely the independence. [http://www.r-tutor.com/elementary-statistics/goodness-fit/chi-squared-test-independence]
+
+[[File:chi-sq_table.png]]
+
+In R: chisq.test()
+:* <code>simulate.p.value = TRUE</code> seems like a good idea?
+:* B: number of replicates for simulate.p.value
+
+[https://stats.stackexchange.com/questions/113692/test-identicality-of-discrete-distributions For comparing discrete distributions, there are important caveats!]
+
+===4.3.5 Kullback-Leibler divergence/relative entropy method for comparing discrete distributions===
+Compare bt two inputs of probability mass functions.
+
+<code>sum(log( p / q))</code>
+
+where p and q are two probability mass functions (in terms of vectors)
+
+;One caution about probability mass functions obtained from frequencies from simulations: by random chance if certain outcomes were not sampled at all will be assigned a 0.
+
+Ways to get around it:
+:* Probability "bracketing"
+:* Adding pseudo-counts (e.g. Laplace prior, Jeffreys prior...)
+
 ==4.2 STA-Probability==
 
 <div class="time-estimate">
