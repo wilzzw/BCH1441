@@ -58,3 +58,5 @@ the fact that one can't publish such support – or quality assurance efforts in
 get funded and doesn't get done. 
 
 Seems like pdb is apparently kind of bad..
+
+x[a:b] <- n (n is single value. This results in assignment of a:b all as n)

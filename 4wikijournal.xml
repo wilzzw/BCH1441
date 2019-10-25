@@ -1,4 +1,35 @@
 =4 Background Knowledge and Concepts=
+==4.3 Probability Distributions==
+
+;Objective: Review some prob distribution concepts by running through FND-STA-Probability_distribution.R
+
+;Useful functions:
+:* plotrix::multhist(): multiply-stacked histogram
+:* cut(x, breaks=n): cut a numeric vector x into n parts and convert to factors. Great for converting numerical data into categorical data.
+
+;install.packages("plotrix")
+
+===4.3.1 Probability functions in R: utilities===
+* d...: value of p.d.f. at a given outcome x value
+* p...: cumulative probability up to x
+* q...: value of x at which the given quantile cut-off occurs
+* r...: randomly sample from a probability distribution
+
+===4.3.2 Some important distributions===
+;Poisson distribution: pois(n, p)
+:* n: number of occurance
+:* p: average probability of occurance
+
+;Uniform distribution: unif(from, to)
+:* often useful for Monte-Carlo simulation methods of estimation
+
+;Normal distribution: norm(mean, var)
+:* Central Limit Theorem (CLT): averages of samples drawn from distributions tend to follow Normal Distribution
+
+===4.3.3 Quantile analyses===
+Line 260-286:
+CLT observation - It appears that the larger the sample size is for the sampling from distribution, the means follow Normal Distribution more closely.
+
 ==4.2 STA-Probability==
 
 <div class="time-estimate">
