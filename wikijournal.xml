@@ -386,6 +386,24 @@ write.csv(outcomesOfMutation(codonWithC, "C", "A"), file="C_to_A_table.csv")
 
 {{Vspace}}
 =5 Structural Bioinformatics=
+==5.6 Molecular Forcefields==
+
+<div class="time-estimate">
+Time estimated: 15 min; taken 10 min; date started: 2019-10-25; date completed: 2019-10-25
+
+~~~~
+</div>
+
+;To calculate the energy of a biomolecule at a specific conformation
+
+;Molecular Mechanics Forcefields:
+:* e.g. GROMOS, CHARMM, AMBER etc.
+:* classical treatment of interactions specified by bonds, angles, dihedrals, vdW, Coulombic
+:* Entropy not directly accounted for
+
+;Empirical (Statistical) Forcefields:
+:* Energy: related to inversed Boltzmann of frequencies of observed states
+
 ==5.5 PDB File Analysis==
 
 <div class="time-estimate">
@@ -782,7 +800,92 @@ Time estimated: 1 h; taken 30 min; date started: 2019-10-15; date completed: 201
 
 {{Vspace}}
 =4 Background Knowledge and Concepts=
-==4.3 Probability Distributions==
+==4.4 STA-Significance==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 2 h; date started: 2019-10-25; date completed: 2019-10-26
+
+~~~~
+</div>
+
+;Probability for inference:
+Given a null hypothesis, the probability of the observations.
+Very small of probability of such observations or '''''more extreme observations''''' might mean the alternative to the null hypothesis would explain the observations.
+
+;Significance levels: threshold of such probabilities
+:* (Nothing really special about the 0.05)
+
+;Objective: Learning about statistical significance by going through FND-STA-Significance.R
+
+===4.4.1 The P-value===
+The probability of observing ''a value'' is vanishingly small. However, we still get some value.
+
+;By probability of an observation, we actually assumes that:
+:* The observation variable follows some kind of probability distribution
+:* The probability distribution can be integrated from some value to it's upper/lower bounds
+
+;P-value: By the probability of getting the observation (P-value), we mean the probability of the observation OR more extreme observations (integral from value to upper/lower bounds).
+
+;P-value can be one-sided or two-sided on the probability distribution
+
+Line 123: r is a vector of N numbers sampled from the normal distribution N(0,1). <code>(r<x)</code> is a vector of booleans at which TRUE if r<x or FALSE if r>x.
+
+<code>sum(r<x)</code> will treat TRUE as 1 and FALSE as 0, which gives the number of elements of r that's less than x.
+
+Line 151: The probability of a value drawn from r is less than or equal to x is:
+
+<code>sum(r<=x)/length(r)</code>
+
+===4.4.2 Determining P-value of an observation===
+
+;If analytical or numerical integration method is applicable, the significance of observation can be computed.
+
+;If not (e.g. unknown probability distribution?), simulation or permutation methods could be used to determine significance.
+:* '''Empirical P-value''': (r+1)/(N+1) (where r is the number of observed outcome equal or more extreme, and N is the number of sampling)
+
+Line 235: Recall that unlist() turns a list into a vector
+
+Line 239-245:
+<source lang="R">
+ED  <- grep("[ED]", v) #Get all the positions in v that is either E or D
+RKH <- grep("[RKH]", v) #Get all the positions in v that is either R, K, or H
+
+#Initiate a vector of numberic type that has the same length as the number of E or D in the sequence (variable ED)
+sep <- numeric(length(ED)) # this vector will hold the distances 
+for (i in seq_along(ED)) { #For each position of E or D
+  sep[i] <- min(abs(RKH - ED[i])) #Compute the distance to the closest positively charged residue and store it
+}
+</source>
+
+Line 287: A useful punchline to re-shuffle a vector:
+<code>w <- sample(v, length(v))</code>
+
+Line 307-309: To see the statistical significance, I would look at empirical P-value like:
+<source lang="R">
+((sum(chs > chSep(v))+1)/(N+1))
+</source>
+
+As it says, surprisingly, mean min charge separation observed is larger than the average we might expect from a random permutation.
+
+Well, even if we test the statistical significance of the observed being greater, the P-value still turns out to be 0.115, 
+
+failing to reject the null hypothesis that the observed being greater than random average is due to random chance at the level of 0.05.
+
+===4.4.3 Interpretation of statistical significance===
+;Misuse of P-values:
+A P-value of 0.05 does not mean alternative hypothesis to null is correct 95% of time.
+
+It means given the null hypothesis, there is 5% chance of getting the observation or more extreme observations. [https://www.nature.com/news/statisticians-issue-warning-over-misuse-of-p-values-1.19503]
+
+;Basically, it's not that simple such that  P < 0.05 for the observation means significant finding and vice versa.
+
+Don't make P=0.049 and P=0.051 to be fundamentally different. It's more favourable to see the science of statistical inference.
+
+That would involve more than just a P-value cut-off for observations, but appeal to the appropriate methods. As it is said, the difference between stat. sig. and stat. insig. may not be statistically significant [https://www.nature.com/articles/nn.2886]
+
+Consider: Statistical significance of interaction of variables terms and interaction tests, before and after treatment, assumptions
+
+==4.3 STA-Probability Distributions==
 
 <div class="time-estimate">
 Time estimated: 2 h; taken 2 h; date started: 2019-10-25; date completed: 2019-10-25
