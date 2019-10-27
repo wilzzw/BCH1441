@@ -1,4 +1,45 @@
 =3 Basic Bioinformatics and Databases=
+==3.8 Sequences==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 1.5 h; date started: 2019-10-26; date completed: 2019-10-26
+
+~~~~
+</div>
+
+;Sequences are a great abstraction of bio-macromolecules: computable, compact and understandable
+
+;There are limitations: ambiguity, limited information content (e.g. no modifications, no annotations), cross-comparison of related sequences
+
+;Chromosome/genome location annotations:
+Human's starts from the telomere of the short arm to the telomere of the long arm.
+
+e.g. 7p14.1 means '''chromosome 7, short arm, band 14 from telomere out (bands shown after Giemsa dye), subregion 1.
+
+;Important to keep in mind that sequences in biology are not static, and many processes can change/modify them.
+
+===3.8.1 Running through BIN-Sequence.R===
+;install.packages("stringi")
+
+;R-packages that manage biological sequences - Biostrings
+
+;Useful functions:
+:* Biostrings::DNAString(), Biostrings::RNAString(), Biostrings::AAString(): convert string sequence into a complex sequence object (can be converted back by as.string())
+:* <span style="color:red">substring(<string>, start, end): unlike substr(), start and end can both be vectors!</span>
+:* sprintf(): very cool. Also apparently vectorized. Support placeholders (%s: string %d: digit %f.n: fraction with n digits after the decimal shown)
+:* <span style="color:red">Use cat() to display things like '\n' properly</span>
+
+Some more string methods:
+:* tolower() OR toupper()
+:* stringi::stri_reverse() <span style="color:red">'''(Line 180: reverse() does not work for me for some reason?! But rev() works, though it reverses vector order though..)'''</span>
+
+ <span style="color:green">'''Solution: it seems like the line should be Biostrings::reverse()'''</span>
+
+:* chartr(old, new, <string>): change the characters in <string> that are in <code>old</code> into corresponding characters in <code>new</code>
+:* letters & LETTERS: built-in variables of vectors of lowercase and uppercase letters
+:* gsub(<pattern>, <replacement>, <string>): substitute <pattern> in <string> into <replacement>. Supports regex (A useful punchline: <code>s <- gsub("\\s", "", s)</code>)
+:* stringi::stri_match_all(<string>, regex = <regex>): match and extract all <regex> matching substrings in <string>
+
 ==3.7 Databases==
 <div class="time-estimate">
 Time estimated: 1 h; taken > 35 min; date started: 2019-10-21; date completed: 2019-10-21
