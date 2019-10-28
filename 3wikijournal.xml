@@ -1,5 +1,5 @@
 =3 Basic Bioinformatics and Databases=
-==3.10 Software Development for Research Labs==
+==3.11 Software Development for Research Labs==
 
 <div class="time-estimate">
 Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 2019-10-28
@@ -31,7 +31,7 @@ Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 
 
 ;Deployment and Maintenance (esp. for softwares used by many research labs)
 
-===3.10.1 Test-driven development (TDD)===
+===3.11.1 Test-driven development (TDD)===
 ;Objectives:
 :* Testing the codes is a must. TDD is a development methodology to ensure codes work as intended.
 :* Implement TDD as a process of development aside from finding bugs.
@@ -118,51 +118,9 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 ;Tests blocks may be put at the end of the code as supplement that normally does not gets run, but can be optionally activated during tests.
 
 
-==3.9 Sequences==
-
-<div class="time-estimate">
-Time estimated: 1.5 h; taken 1.5 h; date started: 2019-10-26; date completed: 2019-10-26
-
-[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:27, 28 October 2019 (EDT)
-</div>
-
-;Sequences are a great abstraction of bio-macromolecules: computable, compact and understandable
-
-;There are limitations: ambiguity, limited information content (e.g. no modifications, no annotations), cross-comparison of related sequences
-
-;Chromosome/genome location annotations:
-Human's starts from the telomere of the short arm to the telomere of the long arm.
-
-e.g. 7p14.1 means '''chromosome 7, short arm, band 14 from telomere out (bands shown after Giemsa dye), subregion 1.
-
-;Important to keep in mind that sequences in biology are not static, and many processes can change/modify them.
-
-===3.9.1 Running through BIN-Sequence.R===
-;install.packages("stringi")
-
-;R-packages that manage biological sequences - Biostrings
-
-;Useful functions:
-:* Biostrings::DNAString(), Biostrings::RNAString(), Biostrings::AAString(): convert string sequence into a complex sequence object (can be converted back by as.string())
-:* <span style="color:red">substring(<string>, start, end): unlike substr(), start and end can both be vectors!</span>
-:* sprintf(): very cool. Also apparently vectorized. Support placeholders (%s: string %d: digit %f.n: fraction with n digits after the decimal shown)
-:* <span style="color:red">Use cat() to display things like '\n' properly</span>
-
-Some more string methods:
-:* tolower() OR toupper()
-:* stringi::stri_reverse() <span style="color:red">'''(Line 180: reverse() does not work for me for some reason?! But rev() works, though it reverses vector order though..)'''</span>
-
- <span style="color:green">'''Solution: it seems like the line should be Biostrings::reverse()'''</span>
-
-:* chartr(old, new, <string>): change the characters in <string> that are in <code>old</code> into corresponding characters in <code>new</code>
-:* letters & LETTERS: built-in variables of vectors of lowercase and uppercase letters
-:* gsub(<pattern>, <replacement>, <string>): substitute <pattern> in <string> into <replacement>. Supports regex (A useful punchline: <code>s <- gsub("\\s", "", s)</code>)
-:* stringi::stri_match_all(<string>, regex = <regex>): match and extract all <regex> matching substrings in <string>
-
-
-==3.8 General Databases and Services for Bioinformatics==
+==3.10 General Databases and Services for Bioinformatics==
 ;Objective: Familiarize with the well-known commonly used databases and services and what they offer.
-===3.8.1 European Bioinformatics Institute (EBI)===
+===3.10.1 European Bioinformatics Institute (EBI)===
 
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 3.5 min; date started: 2019-10-28; date completed: 2019-10-28
@@ -170,7 +128,7 @@ Time estimated: 1.5 h; taken 3.5 min; date started: 2019-10-28; date completed: 
 ~~~~
 </div>
 
-;EBI: one of the largest, data for genomics and molecular biology, data integration and services, well-curated
+;EBI: one of the two largest, data for genomics and molecular biology, data integration and services, well-curated
 
 ;Notable new resources in 2018 [doi 10.1093/nar/gky1124]:
 :* Single cell expression atlas
@@ -299,8 +257,11 @@ Explore Uniprot entry G8JQ18.
 
 Conclusion: Mbp1_ERECY is poorly characterized with little information available. At least the genome sequence for this organism seems available.
 
+===3.10.2 National Center for Biotechnology Information (NCBI)===
+;NCBI: one of the two largest, data for genomics and molecular biology, data integration and services
 
-==3.7 Databases==
+
+==3.9 Databases==
 <div class="time-estimate">
 Time estimated: 1 h; taken > 35 min; date started: 2019-10-21; date completed: 2019-10-21
 
@@ -328,7 +289,7 @@ Time estimated: 1 h; taken > 35 min; date started: 2019-10-21; date completed: 2
 ;Data objects:
 :* apart from data objects themselves, real big databases have index tables, stored procedures for high throughput transactions, as well as dictionaries of configurations and statistics of uses
 
-==3.6 Storing Data==
+==3.8 Storing Data==
 
 <div class="time-estimate">
 Time estimated: 3 h; taken > 3 h; date started: 2019-10-17; date completed: 2019-10-20
@@ -336,7 +297,7 @@ Time estimated: 3 h; taken > 3 h; date started: 2019-10-17; date completed: 2019
 [[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 14:54, 21 October 2019 (EDT)
 </div>
 
-===3.6.1 Data representation===
+===3.8.1 Data representation===
 ;Bits: The most elementary representation of data (0 or 1)
 
 ;Data formats: specified for storing complex data
@@ -353,14 +314,14 @@ Time estimated: 3 h; taken > 3 h; date started: 2019-10-17; date completed: 2019
 :* Two types of contents: {objects} and key<nowiki>:</nowiki>value pairs
 :* Versatile data types and complexity for values
 
-===3.6.2 Implementation of relational data models===
+===3.8.2 Implementation of relational data models===
 * Computer file systems (represent the data model in terms of files and directory trees)
 
 * Place into spreadsheets (e.g. CSV), but analyze data by exporting data from CSV into e.g. R data frames
 
 * "Real" databases for large-scale, robust data requirements. (e.g. MySQL, Postgresql, dplyr...)
 
-===3.6.3 Running through BIN-Storing_data.R===
+===3.8.3 Running through BIN-Storing_data.R===
 ;Useful commands:
 :* '''rm()''': remove object from memory
 :* '''order(x)''': returns a vector of array indices of x ordered based on the items in x
@@ -454,6 +415,87 @@ toStore
 
 Protein sequence is correct. Copy and paste the whole sequence into Protein BLAST gives 100% match to the intended protein.
 
+
+==3.7 Biomolecular Function==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 25 min; date started: 2019-10-28; date completed: 2019-10-28
+
+~~~~
+</div>
+
+;Function: More than just the activity of biomolecules.
+:* Consider: in vitro vs in vivo functions, context/cell-dependent function, promiscuous functions
+:* function is more appropriately understood as a concept imposed by us to make sense of/explain/categorize observed biomolecular activities and behaviours.
+
+;Questions in bioinformatics pertaining to functions: define, represent, annotate, and predict
+
+;Functions can be:
+1) high-level (e.g. cell survival)
+
+2) intermediate (e.g. exocytotic pathway)
+
+3) specific (e.g. catalyze a specific reaction)
+
+However elusive biomolecular function might be, one thing for sure: functions are tied to evolution.
+:* Function can be understood as the aspect of the biomolecule behaviour under purifying selection
+
+;Annotation of biomolecular function: Depends on the molecule as well as the '''''database context'''''.
+:* e.g. function of an amino acid in contribution to a protein structure/stability, function of DNA-binding site in gene regulation etc.
+
+;Function representations:
+:* E.C. numbers: type of catalyzed reaction
+:* Pathways: as a member of collaborating biomolecular system
+:* Gene ontology (GO)/OBO: hierachial assembly of knowledge with relationships such as is_a, has_a
+
+;Prediction of biomolecular functions:
+:* Ab initio: e.g. structural patterns of residues
+:* Homology/annotation transfer
+:* Association: associated in networks of co-expression, co-regulation, PPI etc.
+
+
+==3.6 Sequences==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 1.5 h; date started: 2019-10-26; date completed: 2019-10-26
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:27, 28 October 2019 (EDT)
+</div>
+
+;Sequences are a great abstraction of bio-macromolecules: computable, compact and understandable
+
+;There are limitations: ambiguity, limited information content (e.g. no modifications, no annotations), cross-comparison of related sequences
+
+;Chromosome/genome location annotations:
+Human's starts from the telomere of the short arm to the telomere of the long arm.
+
+e.g. 7p14.1 means '''chromosome 7, short arm, band 14 from telomere out (bands shown after Giemsa dye), subregion 1.
+
+;Important to keep in mind that sequences in biology are not static, and many processes can change/modify them.
+
+===3.6.1 Running through BIN-Sequence.R===
+;install.packages("stringi")
+
+;R-packages that manage biological sequences - Biostrings
+
+;Useful functions:
+:* Biostrings::DNAString(), Biostrings::RNAString(), Biostrings::AAString(): convert string sequence into a complex sequence object (can be converted back by as.string())
+:* <span style="color:red">substring(<string>, start, end): unlike substr(), start and end can both be vectors!</span>
+:* sprintf(): very cool. Also apparently vectorized. Support placeholders (%s: string %d: digit %f.n: fraction with n digits after the decimal shown)
+:* <span style="color:red">Use cat() to display things like '\n' properly</span>
+
+Some more string methods:
+:* tolower() OR toupper()
+:* stringi::stri_reverse() <span style="color:red">'''(Line 180: reverse() does not work for me for some reason?! But rev() works, though it reverses vector order though..)'''</span>
+
+ <span style="color:green">'''Solution: it seems like the line should be Biostrings::reverse()'''</span>
+
+:* chartr(old, new, <string>): change the characters in <string> that are in <code>old</code> into corresponding characters in <code>new</code>
+:* letters & LETTERS: built-in variables of vectors of lowercase and uppercase letters
+:* gsub(<pattern>, <replacement>, <string>): substitute <pattern> in <string> into <replacement>. Supports regex (A useful punchline: <code>s <- gsub("\\s", "", s)</code>)
+:* stringi::stri_match_all(<string>, regex = <regex>): match and extract all <regex> matching substrings in <string>
+
+
 ==3.5 Abstractions==
 
 <div class="time-estimate">
@@ -484,6 +526,7 @@ Time estimated: 30 min; taken 35 min; date started: 2019-10-15; date completed: 
 
 ;Ontology: a set of terms in terms of controlled vocabularies and relationships between them
 :* define the semantics (e.g. "Is a ..." relationship)
+
 
 ==3.4 MYSPE ==
 
