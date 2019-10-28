@@ -350,3 +350,37 @@ expect_equal(calcGC("AATT"), 0)
 expect_true(all.equal(calcGC("ATGC"), 0.5))
 expect_equal(calcGC("AC"), 0.5)
 expect_equal(calcGC("CGCG"), 1)
+
+#Alternative genetic code task
+myDNA <- readLines("./data/S288C_YDL056W_MBP1_coding.fsa")[-1]
+myDNA <- paste0(myDNA, collapse = "")
+myDNA <- as.character(Biostrings::codons(Biostrings::DNAString(myDNA)))
+myDNA <- myDNA[-length(myDNA)]
+
+stdCode <- Biostrings::GENETIC_CODE
+
+N <- 200
+valSWGC <- numeric(N)
+
+set.seed(112358)
+for (i in 1:N) {
+    swGC <- swappedGC(stdCode)
+    x <- traRev(myAA, swGC)
+    x <- randMut(x)
+    x <- traFor(x, swGC)
+    valSWGC[i] <- evalMut(myAA, x)
+}
+set.seed(NULL)
+
+hist(valSTDC,
+     breaks = 15,
+     col = "palegoldenrod",
+     xlim = c(0, 400),
+     ylim = c(0, N/4),
+     main = "Standard vs. Swapped Genetic Code",
+     xlab = "Mutation penalty")
+
+hist(valSWGC,
+     col = "plum",
+     breaks = 60,
+     add = TRUE)
