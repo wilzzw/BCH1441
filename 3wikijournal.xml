@@ -1,4 +1,123 @@
 =3 Basic Bioinformatics and Databases=
+==3.9 Software Development for Research Labs==
+
+<div class="time-estimate">
+Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 2019-10-28
+
+~~~~
+</div>
+
+;In general, simpler than "real world software development"
+
+ General philosophy: Make implicit knowledge explicit
+
+;Collaboration platforms: make goals, progress, and responsibilities explicit.
+
+;Making plans: where now, what to achieve, how to achieve, with milestones
+
+;Software design: can take as much, if not more time as development.
+:* '''Architecture''' centric design process
+:* system modelling, [http://steipe.biochemistry.utoronto.ca/abc/index.php/SPN Structured Process Notation]
+:* clear design objectives, correct, robust, extensible, and maintainable
+:* separation of concerns (modularity, independence)
+
+;Software development:
+:* version control is a must.
+:* fail-safe vs fail-fast: which is more favourable is probably context-dependent. Is it more important to get the program running and not crash OR be explicit about improper steps [https://www.yegor256.com/2015/08/25/fail-fast.html]
+:* good coding style and keep them organized
+:* code reviews
+
+;Quality Assurance(QA): sort of like coordinator of the team and auditor
+
+;Deployment and Maintenance (esp. for softwares used by many research labs)
+
+===3.9.1 Test-driven development (TDD)===
+;Objectives:
+:* Testing the codes is a must. TDD is a development methodology to ensure codes work as intended.
+:* Implement TDD as a process of development aside from finding bugs.
+:* Clearly identify testable behaviours of the code
+
+;Typical stages of testing:
+1) '''Unit tests''': tests performed on the components of structured units that typically do one thing only without side-effects
+:* Unit tests test only one function's behaviour, better not have functional dependencies. That goes into integration tests.
+:* [http://blog.stevensanderson.com/2009/08/24/writing-great-unit-tests-best-and-worst-practises/ tips of writing unit tests]
+
+2) '''Integration tests''': integrated code units interact through interfaces under '''''contracts'''''. In integration testing, verify the contracts are accurately and completely fulfilled.
+:* "ensure the integrity of the interfaces that have been defined between units"
+
+3) '''Validation tests''': test and validate for successful execution
+
+4) '''Performance tests''': test for optimization, stability
+
+;Activity - Working through RPR-Unit_testing.R
+
+R has testthat package that can do unit testing.
+
+<source lang="R">
+install.packages("testthat")
+
+library(testthat) #Because there are too many functions associated with it
+</source>
+
+;Useful functions:
+:* testthat::expect_true() & testthat::expect_false(): throws an error if the argument functional evaluation does not return expected
+ <code>> expect_true(is.integer(NA))</code>
+ <code>Error: is.integer(NA) isn't true.</code>
+
+Line 74: The following returns FALSE
+<code>49*(1/49) == 1 </code>
+
+The reason is that the numbers are represented exactly in R only if the denominator is a power of 2. Otherwise they are rounded. [https://cran.r-project.org/doc/FAQ/R-FAQ.html#Why-doesn_0027t-R-think-these-numbers-are-equal_003f]
+
+This returns TRUE though: <code>49/49 == 1</code>
+
+There are other "unpredictable behaviours" when comparing whether two numbers are equal. Be safe and use:
+
+:* all.equal(a, b): returns TRUE if a and b are equal for all practical purposes. Circumvent "unpredictable behaviours"
+:* testthat::expect_equal(a, b): uses all.equal internally so use it with no worries..
+:* testthat::expect_identical(a, b): here's an option to distinguish a and b to the core..
+:* testthat::expect_warning(): throws an error if no warning message be thrown when evaluating the argument expression
+:* testthat::expect_error(<expr>, <err_msg>): throws an error if  <expr> does not throw the kind of error message in <err_msg> (See Line 113-116)
+
+:* testthat::test_that(<description>, {<test_code_blocks>}): A series of tests included in {<test_code_blocks>} are carried out. Used when it makes sense to collectively test and call the test a name: <description>
+
+<source lang="R">
+# Task: Write a function calcGC() that calculates GC content in a sequence.
+#       Hint: you could strsplit() the sequence into a vector, and count
+#       G's and C's; or you could use gsub("[AT]", "", <sequence>) to remove
+#       A's and T's, and use nchar() before and after to calculate the content
+#       from the length difference.
+#       Then write tests that:
+#          confirm that calcGC("AATT") is 0;
+#          confirm that calcGC("ATGC") is 0.5;
+#          confirm that calcGC("AC")   is 0.5;
+#          confirm that calcGC("CGCG") is 1;
+
+calcGC <- function(sequence) {
+    splitSeq <- unlist(strsplit(sequence, split=""))
+    totalLength <- length(splitSeq)
+    sel <- splitSeq == "G" | splitSeq == "C"
+    GCcontent <- length(splitSeq[sel])
+    GC <- GCcontent / totalLength
+    return(GC)
+}
+
+library(testthat)
+
+expect_equal(calcGC("AATT"), 0)
+expect_true(all.equal(calcGC("ATGC"), 0.5))
+expect_equal(calcGC("AC"), 0.5)
+expect_equal(calcGC("CGCG"), 1)
+
+</source>
+
+We can save tests in files organized in a test directory. To ensure tests be executed, there are these functions:
+:* testthat::test_file(<path_to_test>)
+:* testthat::test_dir(<path>): execute all tests in <path> (I wonder whether the function knows which ones are test scripts.. But either way, I wouldn't put non-tests in a given test dir..)
+
+;Tests blocks may be put at the end of the code as supplement that normally does not gets run, but can be optionally activated during tests.
+
+
 ==3.8 Sequences==
 
 <div class="time-estimate">

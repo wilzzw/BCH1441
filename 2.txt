@@ -60,3 +60,5 @@ get funded and doesn't get done.
 Seems like pdb is apparently kind of bad..
 
 x[a:b] <- n (n is single value. This results in assignment of a:b all as n)
+
+The complaints from the tech people becomes apparent if I compare what we have to deal with...

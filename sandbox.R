@@ -322,3 +322,31 @@ MYSPEtaxonomy.json:
 
 
 #p.d.f.
+
+
+# Task: Write a function calcGC() that calculates GC content in a sequence.
+#       Hint: you could strsplit() the sequence into a vector, and count
+#       G's and C's; or you could use gsub("[AT]", "", <sequence>) to remove
+#       A's and T's, and use nchar() before and after to calculate the content
+#       from the length difference.
+#       Then write tests that:
+#          confirm that calcGC("AATT") is 0;
+#          confirm that calcGC("ATGC") is 0.5;
+#          confirm that calcGC("AC")   is 0.5;
+#          confirm that calcGC("CGCG") is 1;
+
+calcGC <- function(sequence) {
+    splitSeq <- unlist(strsplit(sequence, split=""))
+    totalLength <- length(splitSeq)
+    sel <- splitSeq == "G" | splitSeq == "C"
+    GCcontent <- length(splitSeq[sel])
+    GC <- GCcontent / totalLength
+    return(GC)
+}
+
+library(testthat)
+
+expect_equal(calcGC("AATT"), 0)
+expect_true(all.equal(calcGC("ATGC"), 0.5))
+expect_equal(calcGC("AC"), 0.5)
+expect_equal(calcGC("CGCG"), 1)
