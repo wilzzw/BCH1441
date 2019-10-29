@@ -1,5 +1,5 @@
-=3 Basic Bioinformatics and Databases=
-==3.11 Software Development for Research Labs==
+=3 Intro to Bioinformatics and Databases=
+==3.12 Software Development for Research Labs==
 
 <div class="time-estimate">
 Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 2019-10-28
@@ -31,7 +31,7 @@ Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 
 
 ;Deployment and Maintenance (esp. for softwares used by many research labs)
 
-===3.11.1 Test-driven development (TDD)===
+===3.12.1 Test-driven development (TDD)===
 ;Objectives:
 :* Testing the codes is a must. TDD is a development methodology to ensure codes work as intended.
 :* Implement TDD as a process of development aside from finding bugs.
@@ -117,6 +117,28 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 
 ;Tests blocks may be put at the end of the code as supplement that normally does not gets run, but can be optionally activated during tests.
 
+
+==3.11 Function Databases for Bioinformatics==
+;Objective: Familiarize with databases with functional information and related information, as well as annotations.
+
+;EC (Enzyme Commission) numbers:
+:* Molecular function in terms of types of reactions.
+:* Hierachial classification into 4 levels (e.g. 2.4.1.11 transferase-glycosyl-hexosyl-11: Glycogen Synthase! The actual name would be a recommended name though. Not immediately obvious from that it does transferase-type reaction)
+:* Used as the standard annotation in PDB
+
+;Gene Ontology (GO):
+:* Categories: Cellular Component, Molecular Function, Biological Process
+:* Maintains pertinent controlled vocabularies
+:* Entities are connected through relationships such as is_a, has_a etc.
+:* Annotate individual genes in terms of generalized functions above
+:* General standard annotation for many databases
+
+;Other annotations of gene sets (e.g. pathways, generalized pathways, functional networks)
+:* e.g. databases: KEGG (saw this while doing research about yeast Mbp1 on NCBI), MetaCYC
+:* STRING database: integrated, cross-referenced tool for discovering through building networks of genome scale functional networks
+
+===3.11.1 Pathway Databases===
+;MetaCyc
 
 ==3.10 General Databases and Services for Bioinformatics==
 ;Objective: Familiarize with the well-known commonly used databases and services and what they offer.
