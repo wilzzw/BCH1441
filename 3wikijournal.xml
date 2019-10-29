@@ -123,9 +123,9 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 ===3.10.1 European Bioinformatics Institute (EBI)===
 
 <div class="time-estimate">
-Time estimated: 1.5 h; taken 3.5 min; date started: 2019-10-28; date completed: 2019-10-28
+Time estimated: 1.5 h; taken 3.5 h; date started: 2019-10-28; date completed: 2019-10-28
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 17:14, 28 October 2019 (EDT)
 </div>
 
 ;EBI: one of the two largest, data for genomics and molecular biology, data integration and services, well-curated
@@ -255,10 +255,114 @@ Explore Uniprot entry G8JQ18.
 </div>
 </div>
 
-Conclusion: Mbp1_ERECY is poorly characterized with little information available. At least the genome sequence for this organism seems available.
+;Conclusion: Mbp1_ERECY is poorly characterized with little information available. At least the genome sequence for this organism seems available.
 
 ===3.10.2 National Center for Biotechnology Information (NCBI)===
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 2 h; date started: 2019-10-28; date completed: 2019-10-28
+
+~~~~
+</div>
+
 ;NCBI: one of the two largest, data for genomics and molecular biology, data integration and services
+
+;Entrez: NCBI uses this integrated database retrieval system. E-utilities support its programming interface. [doi: 10.1093/nar/gky1069]
+
+;Well-known/Notable services as of 2019: PubMed, PubMedLabs, PMC, PubChem, BLAST...
+
+This is helpful for my own records (Entrez databases available from NCBI) [doi 10.1093/nar/gky1124]:
+
+[[File:NCBI_data.png|600px]]
+
+;Activity 1 - Entrez search Mbp1 protein
+
+1. Go to https://www.ncbi.nlm.nih.gov/
+
+2. Search "mbp1" under all databases.
+
+3. We get databases under 6 categories (Literature, Genes, Proteins, Genomes, Genetics, Chemicals)
+
+4. Go to Proteins > Protein. There are 836 records. We get a list of GenBankID'ed entries of protein information that has "Mbp1" as keyword.
+
+ Problem with such a simple keyword search: Many other unrelated proteins are also called Mbp1. There's a lot of ambiguity and the search is too non-specific.
+
+5. [https://www.ncbi.nlm.nih.gov/books/NBK3837/ Entrez help page] has many tips of querying and descriptions of databases.
+:* Query syntax also supports capitalized BOOLEAN OPERATORS, wildcards (*), "exact matches", (grouping)
+:* Does not seem to support regex
+:* '''Additionally, there is <nowiki>[indexed fields]</nowiki>''' (e.g. <nowiki>horse[Organism]</nowiki>. explore options under Advanced Search)
+:* Can have ranges by using range operator <code>:</code> (e.g. 110:500[Sequence Length])
+:* Some special query interpretation abilities as well such as the interpretation of "stopwords" resulting in automatic field mapping.
+:* MeSH and Organism fields are controlled vocabularies. Each PubMed record has some MeSH terms associated (as well as taxonomy?). "Queries are automatically mapped to these vocabularies whenever possible" [https://www.ncbi.nlm.nih.gov/books/NBK3837/].
+
+Another good reference compiled by users of this course are [http://steipe.biochemistry.utoronto.ca/abc/students/index.php/Entrez here]
+
+6. Now, search <code>mbp1[protein name] AND "Saccharomyces cerevisiae"[organism]</code>. Get 2 entries.
+
+7. Go to the entry with Accession CAA98618.1. We get a GenBankFF formatted entry.
+
+8. There is a link called "Identical Proteins". There are many identical sequences stored in NCBI.
+
+<span style="color:red">I think there's an error in the [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-NCBI#Protein_Sequence learning module content]. XP_ should be inferred/hypothetical whereas NC_ should be genomic.</span>
+
+'''SwissProt is probably the best annotated and curated.'''[http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-NCBI#Protein_Sequence]
+
+;* Some of the entries are indeed identical (but different sources). Some other ones are not exactly "identical" as they come from different '''''strains'''''.
+
+ The RefSeqID for Mbp1 protein is NP_010227.1
+
+ The UniprotID for Mbp1 protein is P39678.1
+
+9. In Identical Proteins, follow the RefSeq protein record NP_010227.1
+
+10. On the right side, there are a couple functionalities.
+
+ '''Analyze this sequence > Identify conserved domains''': 
+ * Protein classification (in terms of domains), graphical view of protein sequence with mapped & annotated domain regions, domain hits with detailed descriptions, sequence alignments, and E-value
+ * References
+
+ '''Protein 3D Structure''':
+ * No direct panel of comparison of structural determination parameters and quality but are available in each individual entry
+ * Can view 3D structure in iCn3D (I don't like it), find similar structures, link to PubMed publication record, links to GenBank protein entries, Conserved Protein Domain Family entries.
+
+ '''Pathways for the MBP1 gene > Cell cycle - yeast''':
+ * Dense verbal description of the pathway system, accompanied by a complicated clickable KEGG pathway map.
+ * Associated genes, proteins, small molecules and citations
+
+ '''<span style="color:red">Related Information > Proteins with Similar Sequence NO LONGER EXISTS!</span>''' Redirected to Smart BLAST.
+
+;Conclusion: Again, plentiful of cross-references. But nothing beats their literature database PubMed!
+
+;Activity 2 - Explore PubMed
+
+1. Go to the [https://www.ncbi.nlm.nih.gov/protein/NP_010227.1 NCBI Mbp1 record NP_010227.1]
+
+2. On the right, Related Information > PubMed (PubMed articles cited by this protein sequence record). There are 2 entries.
+
+3. Related Information > PubMed(Weighted). Practically, this might be what I'm looking for the most. Not directly cited by the record, but find many relevant information as well. 67 entries.
+
+4. Doc for PubMed https://www.ncbi.nlm.nih.gov/books/NBK3827/. It'd be good to be able to search better.
+
+5. Search in PubMed <code>Mbp1[TI] AND Biochemistry[TA]</code> gives me 3 entries. Voila.
+
+ Articles: 
+ Thermodynamics and specificity of the Mbp1-DNA interaction.
+ Characterization of the DNA-binding domains from the yeast cell-cycle transcription factors Mbp1 and Swi4.
+
+;Activity 3 - Explore Mbp1_ERECY in NCBI databases
+
+1. Search protein with RefSeqID XP_003645298. "Hypothetical protein"
+
+ '''Analyze this sequence > Identify conserved domains''': 
+ * Two different annotations were found compared to SC Mbp1. They are Ank_2 and SMC_prok_B super family (SbcC super family in SC). Both have KilA-N and ANKYR.
+
+ '''Protein 3D Structure''': does not exist (no surprise)
+
+ '''Pathways for the Ecym_2783 gene > Cell cycle - yeast ...''': Looks like annotation transfer..
+
+ PubMed result == PubMed(Weighted) result. Both points to one article {{#pmid:22384365}}
+
+;Conclusion: Again, little is known about Mbp1_ERECY..
 
 
 ==3.9 Databases==
