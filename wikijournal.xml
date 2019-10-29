@@ -1135,8 +1135,8 @@ Time estimated: 1 h; taken 150 min; date started: 2019-10-10; date completed: 20
 :* [https://pubs.acs.org/doi/10.1021/bi702339q Thermodynamics of DNA-binding]
 
 {{Vspace}}
-=3 Basic Bioinformatics and Databases=
-==3.11 Software Development for Research Labs==
+=3 Intro to Bioinformatics and Databases=
+==3.12 Software Development for Research Labs==
 
 <div class="time-estimate">
 Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 2019-10-28
@@ -1168,7 +1168,7 @@ Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 
 
 ;Deployment and Maintenance (esp. for softwares used by many research labs)
 
-===3.11.1 Test-driven development (TDD)===
+===3.12.1 Test-driven development (TDD)===
 ;Objectives:
 :* Testing the codes is a must. TDD is a development methodology to ensure codes work as intended.
 :* Implement TDD as a process of development aside from finding bugs.
@@ -1253,6 +1253,137 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 :* testthat::test_dir(<path>): execute all tests in <path> (I wonder whether the function knows which ones are test scripts.. But either way, I wouldn't put non-tests in a given test dir..)
 
 ;Tests blocks may be put at the end of the code as supplement that normally does not gets run, but can be optionally activated during tests.
+
+
+==3.11 Function Databases for Bioinformatics==
+;Objective: Familiarize with databases with functional information and related information, as well as annotations.
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 110 min; date started: 2019-10-29; date completed: 2019-10-29
+
+~~~~
+</div>
+
+;EC (Enzyme Commission) numbers:
+:* Molecular function in terms of types of reactions.
+:* Hierachial classification into 4 levels (e.g. 2.4.1.11 transferase-glycosyl-hexosyl-11: Glycogen Synthase! The actual name would be a recommended name though. Not immediately obvious from that it does transferase-type reaction)
+:* Used as the standard annotation in PDB
+
+;Gene Ontology (GO):
+:* Categories: Cellular Component, Molecular Function, Biological Process
+:* Maintains pertinent controlled vocabularies
+:* Entities are connected through relationships such as is_a, has_a etc.
+:* Annotate individual genes in terms of generalized functions above
+:* General standard annotation for many databases
+
+;Other annotations of gene sets (e.g. pathways, generalized pathways, functional networks)
+:* e.g. databases: KEGG (saw this while doing research about yeast Mbp1 on NCBI), MetaCYC
+:* STRING database: integrated, cross-referenced tool for discovering through building networks of genome scale functional networks
+
+===3.11.1 Pathway databases===
+;MetaCyc: 
+:* Enzymes, reactions, compounds, metabolic pathways, richly curated
+:* Evidence is experimentally validated [doi 10.1093/nar/gkx935]
+:* Can be used by applications to do high throughput computation/prediction of metabolic networks (e.g. PGDB, available through BioCyc)
+
+;Activity 1 - Navigate MetaCyc
+
+1. Go to https://metacyc.org/
+
+2. On the top right, "change organism database". Select "Saccharomyces cerevisiae S288c"
+
+3. We end up in BioCyc yeastCyc info summary. First a table of Replicons with gene statistics. Then there is a table of information available below.
+
+4. "Metabolism" > "Cellular Overview"
+
+Conclusions:
+:* We get a map of pathway systems grouped into some large categories. Zooming in will see symbols (legends available) turn into substrate names. Individual pathways also get names.
+:* On the right there are a lot of isolated pathways? All very short. Maybe they are just less well-integrated with the rest major pathways.
+:* Notice the brown boundary represents cell boundary. There are transport involved pathways on them.
+
+
+;Reactome:
+:* Focused on mannual annotation of human pathways [doi 10.1093/nar/gkx1132]
+:* Uses proper models to construct an extended pathways with signal transduction, transport, DNA replication etc. included.
+:* New as of 2018: Enhanced High Level Diagrams, Neo4j graph database structure
+
+;Activity 2- Navigate Reactome
+
+1. Go to https://reactome.org/
+
+2. "Pathway Browser"
+
+3. On the left "Event Hierachy", Expand "Cell Cycle" > Click "Cell Cyle Mitotic". This zooms in.
+
+4. Click the round icon "Open Pathway Diagram" next to the search bar. This will load the diagram of the pathway (basically the cell cycle!)
+
+5. Double click "Mitotic G1-G1/S Phases" will display detailed pathway diagram for it. With just a single click, can view a lot of decriptions beneath.
+
+6. Under "Molecules", we see participating molecules in this pathway. External cross-references proteins (Uniprot), compounds (ChEBI), and DNA/RNA (ENSEMBL). List downloadable.
+
+7. Under "Expression", there are tissue-specific expression levels.
+
+
+;WikiPathways [doi  10.1093/nar/gkx1064]:
+:* Has mostly been on genes and proteins. As of 2018, expanded to metabolism.
+:* Sounds more or less similar to the ones already seen
+:* The tand-out feature: Open source & collaborative. Available on github.
+
+;Activity 3 - Navigate WikiPathways
+
+1. Go to https://www.wikipathways.org/index.php/WikiPathways
+
+2. Search "Mbp1". One pathway found (Cell Cycle and Cell Division - Saccharomyces cerevisiae).
+
+3. Can click on a protein and link to lots of annotations and external cross-references, as well as other pathways it is involved in.
+
+
+;KEGG (Kyoto Encyclopedia of Genes and Genomes) [doi 10.1093/nar/gky962]:
+:* KEGG pathway maps. Some other implemented modules (e.g. KEGG Ontology) enable mapping to transfer to other cellular organisms.
+:* New as of 2018: KEGG NETWORKS (more below).
+:* Take into account that the database of health information of KEGG expanding, making treatment of human as a single species in mapping unreasonable.
+:* In a nutshell: iseased state as perturbed networks
+
+;Activity 4 - Navigate KEGG Pathways
+
+1. Go to KEGG Pathways https://www.genome.jp/kegg/pathway.html
+
+2. Select Organism prefix "sce". Search keyword "Mbp1"
+
+3. Get one pathway (Cell cycle in yeast) sce04111
+
+4. Clicking on the proteins will get external cross-referenced protein information.
+
+===3.11.2 Functional PPI databases===
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 30 min; date started: 2019-10-29; date completed: 2019-10-29
+
+~~~~
+</div>
+
+;Many of such databases exist. However, there is still needs for better annoatated confidence, interactiveness, visualizability, and data comprehensiveness [doi 10.1186/s12859-015-0615-z]
+
+(I recall somewhere in Uniprot where it cross-reference PPI databases and was cautioned that the results could be very different -- inconsistency?)
+
+;STRING: An outstanding PPI database. Current version 11 as of 2019. [doi 10.1093/nar/gky1131]
+:* integrated PPI info from various sources, consistently ''scored'', with computational predictions as well.
+:* Both physical and functional interactions.
+:* New to 2019: input genome-wide datasets to visualize the subsets in the context of bigger interaction networks.
+
+;Activity 1 - Navigate STRING database
+
+1. Go to https://string-db.org/cgi/input.pl
+
+2. Search Protein "Mbp1" and Organism "Saccharomyces cerevisiae"
+
+3. Voila! A network of interactions. By clicking "+More" I can see the network but expanded into bigger context. Undo with "-Less"
+
+4. Click the node "SKN7". There is a summary and external cross-references. Structure is available. Otherwise, there are SWISS-MODEL homology models as well??! (with identity scores)
+
+5. Clicking edges can give a lot more details about the interactions, such as confidence score for functional association and binding, evidence.
+
+6. Downloadables are available. Both plain text TXT and database SQL files?
 
 
 ==3.10 General Databases and Services for Bioinformatics==
@@ -1399,7 +1530,7 @@ Explore Uniprot entry G8JQ18.
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 2 h; date started: 2019-10-28; date completed: 2019-10-28
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 23:33, 28 October 2019 (EDT)
 </div>
 
 ;NCBI: one of the two largest, data for genomics and molecular biology, data integration and services
@@ -1500,6 +1631,50 @@ Another good reference compiled by users of this course are [http://steipe.bioch
  PubMed result == PubMed(Weighted) result. Both points to one article {{#pmid:22384365}}
 
 ;Conclusion: Again, little is known about Mbp1_ERECY..
+
+
+===3.10.3 Other specific organismal databases===
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 25 min; date started: 2019-10-29; date completed: 2019-10-29
+
+~~~~
+</div>
+
+Here's a well-known one: '''Saccharomyces Genome Database (SGD)'''
+
+;Activity 1 - Explore Mbp1 on SGD
+
+1. Go to the entry for Mbp1 on SGD https://www.yeastgenome.org/locus/S000002214
+
+2. Mostly the same kinds of information you'd expect, starting out with a nice description.
+:* A nice specialized info: Null expression and overexpression phenotypes are available
+:* Mannually curated "Summary Paragraph" very nice and informative of the protein.
+
+3. Under "Protein", there is ''Median Abundance''. More useful details under "Protein Details" with downloadables.
+
+4. On top: "Analyze" > "Gene Lists". Supply the following identifiers from yeast and "Create List":
+
+ YAR014C YBR040W YBR200W YCL027W YCR089W YDL223C YDR085C YDR141C
+ YER125W YER133W YER149C YHR102W YHR135C YHR158C YIL129C YKL048C
+ YKL189W YKR031C YLL021W YLR229C YLR313C YLR332W YMR232W YNL154C
+ YNR032C-A YOL111C YOR326W YPL123C YPR194C
+
+(Summary downloadable. List savable)
+
+5. Go back to the beginning. "Analyze" > "GO Slim Mapper"
+
+6. Supply the above list of genes as query input. GO Set set to "Yeast Go-Slim:function". AND "Select All Terms..." Then submit form.
+
+7. Gave me set of GO IDs that reflect molecular/enzymatic activities to which each gene is assigned. But there is no big picture about the list of genes (if there are any at all..)
+
+8. Go back, instead set GO Set to "Yeast Go-Slim:function". AND "Select All Terms..." Then submit form.
+
+9. Clearer now that 27/29 genes are assigned to "cell morphogenesis" GO term.
+
+10. <span style="color:red">There is no "Download Results" anymore!</span> Even better, I can download them in multiple optional formats (e.g. HTML, plain text...).
+
+I will write a R-script to process the files in the future when needed. ~~~~
 
 
 ==3.9 Databases==
@@ -1662,7 +1837,7 @@ Protein sequence is correct. Copy and paste the whole sequence into Protein BLAS
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 25 min; date started: 2019-10-28; date completed: 2019-10-28
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 23:33, 28 October 2019 (EDT)
 </div>
 
 ;Function: More than just the activity of biomolecules.

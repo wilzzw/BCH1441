@@ -143,7 +143,7 @@ Time estimated: 1.5 h; taken 110 min; date started: 2019-10-29; date completed: 
 :* e.g. databases: KEGG (saw this while doing research about yeast Mbp1 on NCBI), MetaCYC
 :* STRING database: integrated, cross-referenced tool for discovering through building networks of genome scale functional networks
 
-===3.11.1 Pathway Databases===
+===3.11.1 Pathway databases===
 ;MetaCyc: 
 :* Enzymes, reactions, compounds, metabolic pathways, richly curated
 :* Evidence is experimentally validated [doi 10.1093/nar/gkx935]
@@ -216,6 +216,37 @@ Conclusions:
 3. Get one pathway (Cell cycle in yeast) sce04111
 
 4. Clicking on the proteins will get external cross-referenced protein information.
+
+===3.11.2 Functional PPI databases===
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 30 min; date started: 2019-10-29; date completed: 2019-10-29
+
+~~~~
+</div>
+
+;Many of such databases exist. However, there is still needs for better annoatated confidence, interactiveness, visualizability, and data comprehensiveness [doi 10.1186/s12859-015-0615-z]
+
+(I recall somewhere in Uniprot where it cross-reference PPI databases and was cautioned that the results could be very different -- inconsistency?)
+
+;STRING: An outstanding PPI database. Current version 11 as of 2019. [doi 10.1093/nar/gky1131]
+:* integrated PPI info from various sources, consistently ''scored'', with computational predictions as well.
+:* Both physical and functional interactions.
+:* New to 2019: input genome-wide datasets to visualize the subsets in the context of bigger interaction networks.
+
+;Activity 1 - Navigate STRING database
+
+1. Go to https://string-db.org/cgi/input.pl
+
+2. Search Protein "Mbp1" and Organism "Saccharomyces cerevisiae"
+
+3. Voila! A network of interactions. By clicking "+More" I can see the network but expanded into bigger context. Undo with "-Less"
+
+4. Click the node "SKN7". There is a summary and external cross-references. Structure is available. Otherwise, there are SWISS-MODEL homology models as well??! (with identity scores)
+
+5. Clicking edges can give a lot more details about the interactions, such as confidence score for functional association and binding, evidence.
+
+6. Downloadables are available. Both plain text TXT and database SQL files?
 
 
 ==3.10 General Databases and Services for Bioinformatics==
@@ -362,7 +393,7 @@ Explore Uniprot entry G8JQ18.
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 2 h; date started: 2019-10-28; date completed: 2019-10-28
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 23:33, 28 October 2019 (EDT)
 </div>
 
 ;NCBI: one of the two largest, data for genomics and molecular biology, data integration and services
@@ -463,6 +494,50 @@ Another good reference compiled by users of this course are [http://steipe.bioch
  PubMed result == PubMed(Weighted) result. Both points to one article {{#pmid:22384365}}
 
 ;Conclusion: Again, little is known about Mbp1_ERECY..
+
+
+===3.10.3 Other specific organismal databases===
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 25 min; date started: 2019-10-29; date completed: 2019-10-29
+
+~~~~
+</div>
+
+Here's a well-known one: '''Saccharomyces Genome Database (SGD)'''
+
+;Activity 1 - Explore Mbp1 on SGD
+
+1. Go to the entry for Mbp1 on SGD https://www.yeastgenome.org/locus/S000002214
+
+2. Mostly the same kinds of information you'd expect, starting out with a nice description.
+:* A nice specialized info: Null expression and overexpression phenotypes are available
+:* Mannually curated "Summary Paragraph" very nice and informative of the protein.
+
+3. Under "Protein", there is ''Median Abundance''. More useful details under "Protein Details" with downloadables.
+
+4. On top: "Analyze" > "Gene Lists". Supply the following identifiers from yeast and "Create List":
+
+ YAR014C YBR040W YBR200W YCL027W YCR089W YDL223C YDR085C YDR141C
+ YER125W YER133W YER149C YHR102W YHR135C YHR158C YIL129C YKL048C
+ YKL189W YKR031C YLL021W YLR229C YLR313C YLR332W YMR232W YNL154C
+ YNR032C-A YOL111C YOR326W YPL123C YPR194C
+
+(Summary downloadable. List savable)
+
+5. Go back to the beginning. "Analyze" > "GO Slim Mapper"
+
+6. Supply the above list of genes as query input. GO Set set to "Yeast Go-Slim:function". AND "Select All Terms..." Then submit form.
+
+7. Gave me set of GO IDs that reflect molecular/enzymatic activities to which each gene is assigned. But there is no big picture about the list of genes (if there are any at all..)
+
+8. Go back, instead set GO Set to "Yeast Go-Slim:function". AND "Select All Terms..." Then submit form.
+
+9. Clearer now that 27/29 genes are assigned to "cell morphogenesis" GO term.
+
+10. <span style="color:red">There is no "Download Results" anymore!</span> Even better, I can download them in multiple optional formats (e.g. HTML, plain text...).
+
+I will write a R-script to process the files in the future when needed. ~~~~
 
 
 ==3.9 Databases==
@@ -625,7 +700,7 @@ Protein sequence is correct. Copy and paste the whole sequence into Protein BLAS
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 25 min; date started: 2019-10-28; date completed: 2019-10-28
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 23:33, 28 October 2019 (EDT)
 </div>
 
 ;Function: More than just the activity of biomolecules.
