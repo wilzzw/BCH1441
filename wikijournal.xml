@@ -1258,12 +1258,6 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 ==3.11 Function Databases for Bioinformatics==
 ;Objective: Familiarize with databases with functional information and related information, as well as annotations.
 
-<div class="time-estimate">
-Time estimated: 1.5 h; taken 110 min; date started: 2019-10-29; date completed: 2019-10-29
-
-~~~~
-</div>
-
 ;EC (Enzyme Commission) numbers:
 :* Molecular function in terms of types of reactions.
 :* Hierachial classification into 4 levels (e.g. 2.4.1.11 transferase-glycosyl-hexosyl-11: Glycogen Synthase! The actual name would be a recommended name though. Not immediately obvious from that it does transferase-type reaction)
@@ -1281,6 +1275,13 @@ Time estimated: 1.5 h; taken 110 min; date started: 2019-10-29; date completed: 
 :* STRING database: integrated, cross-referenced tool for discovering through building networks of genome scale functional networks
 
 ===3.11.1 Pathway databases===
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 110 min; date started: 2019-10-29; date completed: 2019-10-29
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:29, 29 October 2019 (EDT)
+</div>
+
 ;MetaCyc: 
 :* Enzymes, reactions, compounds, metabolic pathways, richly curated
 :* Evidence is experimentally validated [doi 10.1093/nar/gkx935]
@@ -1359,7 +1360,7 @@ Conclusions:
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 30 min; date started: 2019-10-29; date completed: 2019-10-29
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:29, 29 October 2019 (EDT)
 </div>
 
 ;Many of such databases exist. However, there is still needs for better annoatated confidence, interactiveness, visualizability, and data comprehensiveness [doi 10.1186/s12859-015-0615-z]
@@ -1638,7 +1639,7 @@ Another good reference compiled by users of this course are [http://steipe.bioch
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 25 min; date started: 2019-10-29; date completed: 2019-10-29
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:29, 29 October 2019 (EDT)
 </div>
 
 Here's a well-known one: '''Saccharomyces Genome Database (SGD)'''
@@ -1873,9 +1874,9 @@ However elusive biomolecular function might be, one thing for sure: functions ar
 ==3.6 Sequences==
 
 <div class="time-estimate">
-Time estimated: 1.5 h; taken 1.5 h; date started: 2019-10-26; date completed: 2019-10-26
+Time estimated: 3 h; taken 190 min; date started: 2019-10-26; date completed: 2019-10-29
 
-[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:27, 28 October 2019 (EDT)
+~~~~
 </div>
 
 ;Sequences are a great abstraction of bio-macromolecules: computable, compact and understandable
@@ -1894,6 +1895,8 @@ e.g. 7p14.1 means '''chromosome 7, short arm, band 14 from telomere out (bands s
 
 ;R-packages that manage biological sequences - Biostrings
 
+(pretty nice. JUST USE IT!)
+
 ;Useful functions:
 :* Biostrings::DNAString(), Biostrings::RNAString(), Biostrings::AAString(): convert string sequence into a complex sequence object (can be converted back by as.string())
 :* <span style="color:red">substring(<string>, start, end): unlike substr(), start and end can both be vectors!</span>
@@ -1910,6 +1913,66 @@ Some more string methods:
 :* letters & LETTERS: built-in variables of vectors of lowercase and uppercase letters
 :* gsub(<pattern>, <replacement>, <string>): substitute <pattern> in <string> into <replacement>. Supports regex (A useful punchline: <code>s <- gsub("\\s", "", s)</code>)
 :* stringi::stri_match_all(<string>, regex = <regex>): match and extract all <regex> matching substrings in <string>
+
+===3.6.2 Going through RPR-Biostrings.R===
+;Useful functions:
+:* Biostrings::readDNAStringSet(<path>): can read single- or multi-sequence FASTA file to get a set of DNAStringSet class. Can subset it like a list.
+:* Biostrings::uniqueLetters()
+:* Biostrings::alphabetFrequency() OR Biostrings::letterFrequency(<XString>, <letters>): count letter frequency
+:* Biostrings::dinucleotideFrequency() & Biostrings::trinucleotideFrequency()
+:* Biostrings::subseq(<XString>, <start>, <end>)
+:* Biostrings::reverseComplement()
+:* Biostrings::translate(): (returns an AAString object)
+:* Biostrings::toString(<XString>)
+:* Biostrings::Views(<XString>, start, end): returns a viewing of several substrings defined by start and end (the return value can be named, though it doesn't show it but it's there..)
+:* Biostrings::AAStringSet(<vector_of_XStrings>): create a string set object
+:* Biostrings::width(<StringSet>): get vector of '''lengths''' directly!
+
+(If Biostrings::length(<StringSet>) is applied, you'll get the number of XStrings in <StringSet> and not applied vectorized. This might be because <StringSet> acts like a list, not vector)
+
+'''It is generally advisable to import by <code>library(Biostrings)</code> because of potentially many dependencies.'''
+
+Line 131: <code>length(biosDNAseq)</code> gives the number of "BString" elements!
+
+Line 133: <code>nchar(biosDNAseq)</code> only works with <code>library(Biostrings)</code>!
+
+Line 157: Nice! I can shuffle the sequence very easily when working with Biostrings by simply using <code>sample()</code>
+
+Line 166: Nice! Biostrings support direct subsetting.
+
+Line 177-179: Apparently a DNAString is IDENTICAL to an RNAString if contents are all the same except T vs U..
+
+===3.6.3 FASTA sequence manipulation===
+;Objective: work with FASTA sequences in R by going through RPR-FASTA.R
+
+Commonly used extension for FASTA is .fsa
+
+;Useful functions:
+:* rle(<x>): run length encoding. Encode a vector with consecutive repeated elements into a different format. $lengths returns vector of lengths of repeats. $values returns vector of repeated elements in <x>.
+:* cumsum(): returns a vector of cumulative sums.
+:* grepl(<pattern>, <vector>): returns a vector with TRUE wherever in the <vector> matches <pattern> otherwise FALSE (constrast with grep() which returns indices)
+:* textConnection(<object>): write object into a "decoy textfile" in memory, so that it can be passed into functions/operations that expect a file.
+
+;Activity 1 - Reading FASTA
+Line 49: <code>myFASTA <- readLines("./data/S288C_YDL056W_MBP1_coding.fsa")</code> (that warning message..)
+
+<span style="color:red">Important! readlines() gets rid of "\n" after operating on a file.</span>
+
+<span style="color:red">Make sure to be clear about the assumption about the file read. Best to comment it in the code</span>
+
+(Remember said that plain-text format is not very good for this?)
+
+Line 145: <code>(starts <- c(1, (cumsum(runs$lengths)[-length(runs$lengths)] + 1)))</code>
+:* <code>length(runs$lengths)</code>: number of sections
+
+;Activity 2 - Interpreting FASTA
+
+(Quite straightforward. Often we split the strings for analysis)
+
+;Activity 3 - Writing FASTA
+
+Line 268-269:
+It doesn't seem to matter.. Although for example if <code>nchar(s) == 90</code>, <code>starts</code> will miss 91, which does not exist anyways.
 
 
 ==3.5 Abstractions==
