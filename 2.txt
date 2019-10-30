@@ -63,4 +63,4 @@ x[a:b] <- n (n is single value. This results in assignment of a:b all as n)
 
 The complaints from the tech people becomes apparent if I compare what we have to deal with...
 
-Graphs! graphs every where! I imagine with graph theory this becomes a lot more powerful.
+Graphs! graphs every where! I imagine with graph theory this becomes a lot more powerful. (functional interaction database)

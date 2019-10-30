@@ -1,5 +1,37 @@
 =4 Background Knowledge and Concepts=
-==4.4 STA-Significance==
+==4.6 STA-Information Theory==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 30 min; date started: 2019-10-29; date completed: 2019-10-30
+
+~~~~
+</div>
+
+;Motivation: 
+Information is there when there is discrepancy between observation and generic expectation. (Claude Shannon)
+
+e.g. Observed sequence distribution different from expected generic or stochastic sequence distribution.
+There is information there. Perhaps something about the sequence (functional significance).
+
+An intuition for the quantity ''H'' to measure production of information...
+
+If a set of events have probabilities <math>p_1</math>, <math>p_2</math>, ..., <math>p_n</math>, then ''H'' as a function of the probabilities should:
+* ''H'' should be continuous
+* If all <math>p_i</math>'s are equal, 'H' is a monotonic increasing function of <math>n</math>
+* ''H'' is independent of the sequence of choices to observe a particular distribution
+
+;There is only one functional form for 'H' that has all of the above. It is defined as the [https://en.wikipedia.org/wiki/Entropy_(information_theory) information entropy].
+
+Special case: if all probabilities are equal, <math>H=\log(n)</math>
+
+;Definition of Information (rigorous):
+Difference between the entropy of a distribution expected and the entropy of the entropy actually observed.
+:* Beware that what the expected distribution is will depend on context
+:* Also beware that small sample size always overestimate observed entropy (recall pseudocounts).
+
+;Example application in bioinformatics - [https://en.wikipedia.org/wiki/Sequence_logo sequence logo plot] (i.e. unexpected biases in amino acid preference.. information about function and evolution?)
+
+==4.5 STA-Significance==
 
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 2 h; date started: 2019-10-25; date completed: 2019-10-26
@@ -16,7 +48,7 @@ Very small of probability of such observations or '''''more extreme observations
 
 ;Objective: Learning about statistical significance by going through FND-STA-Significance.R
 
-===4.4.1 The P-value===
+===4.5.1 The P-value===
 The probability of observing ''a value'' is vanishingly small. However, we still get some value.
 
 ;By probability of an observation, we actually assumes that:
@@ -35,7 +67,7 @@ Line 151: The probability of a value drawn from r is less than or equal to x is:
 
 <code>sum(r<=x)/length(r)</code>
 
-===4.4.2 Determining P-value of an observation===
+===4.5.2 Determining P-value of an observation===
 
 ;If analytical or numerical integration method is applicable, the significance of observation can be computed.
 
@@ -70,7 +102,7 @@ Well, even if we test the statistical significance of the observed being greater
 
 failing to reject the null hypothesis that the observed being greater than random average is due to random chance at the level of 0.05.
 
-===4.4.3 Interpretation of statistical significance===
+===4.5.3 Interpretation of statistical significance===
 ;Misuse of P-values:
 A P-value of 0.05 does not mean alternative hypothesis to null is correct 95% of time.
 
@@ -84,7 +116,7 @@ That would involve more than just a P-value cut-off for observations, but appeal
 
 Consider: Statistical significance of interaction of variables terms and interaction tests, before and after treatment, assumptions
 
-==4.3 STA-Probability Distributions==
+==4.4 STA-Probability Distributions==
 
 <div class="time-estimate">
 Time estimated: 2 h; taken 2 h; date started: 2019-10-25; date completed: 2019-10-25
@@ -100,13 +132,13 @@ Time estimated: 2 h; taken 2 h; date started: 2019-10-25; date completed: 2019-1
 
 ;install.packages("plotrix")
 
-===4.3.1 Probability functions in R: utilities===
+===4.4.1 Probability functions in R: utilities===
 * d...: value of p.d.f. at a given outcome x value
 * p...: cumulative probability up to x
 * q...: value of x at which the given quantile cut-off occurs
 * r...: randomly sample from a probability distribution
 
-===4.3.2 Some important distributions===
+===4.4.2 Some important distributions===
 ;Poisson distribution: pois(n, p)
 :* n: number of occurance
 :* p: average probability of occurance
@@ -117,11 +149,11 @@ Time estimated: 2 h; taken 2 h; date started: 2019-10-25; date completed: 2019-1
 ;Normal distribution: norm(mean, var)
 :* Central Limit Theorem (CLT): averages of samples drawn from distributions tend to follow Normal Distribution
 
-===4.3.3 Quantile analyses===
+===4.4.3 Quantile analyses===
 Line 260-286:
 CLT observation - It appears that the larger the sample size is for the sampling from distribution, the means follow Normal Distribution more closely.
 
-===4.3.4 Chi-sq test for comparing discrete distributions===
+===4.4.4 Chi-sq test for comparing discrete distributions===
 ;Reminder of what chi-sq test does:
 R-code line <code>View(rbind(as.vector(countsL1),as.vector(countsL2)))</code>
 
@@ -137,7 +169,7 @@ In R: chisq.test()
 
 [https://stats.stackexchange.com/questions/113692/test-identicality-of-discrete-distributions For comparing discrete distributions, there are important caveats!]
 
-===4.3.5 Kullback-Leibler divergence/relative entropy method for comparing discrete distributions===
+===4.4.5 Kullback-Leibler divergence/relative entropy method for comparing discrete distributions===
 Compare bt two inputs of probability mass functions.
 
 <code>sum(log(p / q))</code>
@@ -152,12 +184,12 @@ Ways to get around it:
 :* Probability "bracketing"
 :* Adding pseudo-counts (e.g. Laplace prior, Jeffreys prior...)
 
-===4.3.6 Kolmogorov-Smirnov test for comparing continuous distributions===
+===4.4.6 Kolmogorov-Smirnov test for comparing continuous distributions===
 Null hypothesis is that two samples were taken from the same distribution.
 
 In R: ks.test()
 
-==4.2 STA-Probability==
+==4.3 STA-Probability==
 
 <div class="time-estimate">
 Time estimated: 1 h; taken 70 min; date started: 2019-10-16; date completed: 2019-10-16
@@ -202,6 +234,10 @@ k <- 0:(N-5)
 Pk <- dbinom(k, N-5, p)
 kAvg <- k * Pk # I get an average of 732.4207 restriction sites
 </source>
+
+==4.2 BIO-Homology==
+
+
 
 ==4.1 BIO-Cell Cycle==
 

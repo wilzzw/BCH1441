@@ -1,0 +1,162 @@
+The following content is submitted for credit for the learning unit [BIN-Storing_data]
+
+Load the ABC-unit R-project and:
+<source lang="R">
+init()
+</source>
+
+=Question 1=
+<source lang="R">
+# ==   1.3  Task: submit for credit (part 1/2)  ================================
+
+
+#    Write and submit code that adds another philosopher to the datamodel:
+#       Immanuel Kant, (1724 - 1804), Enlightenment Philosophy.
+#       Works: Critique of Pure Reason (1781), Critique of Judgement (1790)
+#    Write and submit code that lists the books in alphabetical order,
+#    followed by the author and the year of publishing. Format your output like:
+#    "Analects" - Kongzi (220 BCE)
+#    Show the result.
+</source>
+
+
+<source lang="R">
+#There are functions and variables (e.g. philDB) that I need from a state right before this question
+#So I source BIN-Storing_data.R Line 1-269...
+#EXCEPT: I commented out Line 135-136 because those are intentionally problematic for demonstration purposes
+
+#source("1-269_BIN-Storing_data.R")
+
+#Rewrite/overwrite autoincrement() with adjustable increment
+#If default, it is the same as the autoincrement() before overwriting
+autoincrement <- function(table, incr=1) {
+  return(max(table$id) + incr)
+}
+
+#Adding new person and give it an ID by increment
+newPersonID <- autoincrement(philDB$person) 
+#Make a data frame object with the new philosopher's information
+newPhil <- data.frame(id = newPersonID,
+                      name = "Immanuel Kant",
+                      born = "1724",
+                      died = "1804",
+                      school = "Enlightenment",
+                      stringsAsFactors = FALSE)
+#Append the new data frame to the person table in philDB
+philDB$person <- rbind(philDB$person, newPhil)
+
+#Adding two new books and give them IDs by increment
+newBooksID <- c(autoincrement(philDB$books), autoincrement(philDB$books, 2))
+#Make a data frame object with the new books' information
+newBooks <- data.frame(id = newBooksID,
+                       title = c("Critique of Pure Reason", "Critique of Judgement"),
+                       published = c("1781", "1790"),
+                       stringsAsFactors = FALSE)
+#Append the new data frame to the book table in philDB
+philDB$books <- rbind(philDB$books, newBooks)
+
+#Create new junction (works) table entries
+#And then append them to the works table in philDB
+for (i in seq_along(newBooksID)) {
+    workAssign <- data.frame(id = autoincrement(philDB$works), personID = newPersonID, bookID = newBooksID[i])
+    philDB$works <- rbind(philDB$works, workAssign)
+}
+
+#Sort book titles alphabetically and rearrange books table accordingly in philDB
+alphabetSort <- order(philDB$books$title)
+df_sortedBooks <- philDB$books[alphabetSort,]
+
+#Get ready for each book, gather their information by cross-referencing and print them out
+for (i in seq_along(df_sortedBooks$id)) {
+    bookid <- df_sortedBooks$id[i]
+    title <- df_sortedBooks$title[i]
+    yearPublished <- df_sortedBooks$published[i]
+
+    selectAssign <- philDB$works$bookID == bookid
+    personid <- philDB$works$personID[selectAssign]
+    selectPhil <- philDB$person$id == personid
+    author <- philDB$person$name[selectPhil]
+
+    cat(sprintf("\"%s\" - ", title))
+    cat(sprintf("%s", author))
+    cat(sprintf(" (%s)", yearPublished))
+    cat("\n")
+}
+</source>
+
+The output looks like:
+
+ "Analects" - Kongzi (220 BCE)
+ "Being and Time" - Martin Heidegger (1927)
+ "Critique of Judgement" - Immanuel Kant (1790)
+ "Critique of Pure Reason" - Immanuel Kant (1781)
+ "Daodejing" - Laozi (530 BCE)
+ "On the Way to Language" - Martin Heidegger (1959)
+ "Zhuangzi" - Zhuangzi (300 BCE)
+
+=Question 2=
+<source lang="R">
+# ==   3.4  Task: submit for credit (part 2/2)  ================================
+
+
+# - On your submission page, note the E-value of your protein and link
+#     to its NCBI protein database page.
+# - Copy and paste the contents of your two JSON files on your submission
+#     page on the Student Wiki
+# - Execute the two commands below and show the result on your submission page
+
+biCode(myDB$taxonomy$species) %in% biCode(MYSPE)
+myDB$protein$taxonomyID %in% myDB$taxonomy$ID[(myDB$taxonomy$species == MYSPE)]
+</source>
+
+
+The E-value is so small that it is rounded to 0.0
+
+NCBI page: https://www.ncbi.nlm.nih.gov/protein/XP_003645298.1?report=genbank&log$=protalign&blast_rank=1&RID=UT6SVB5U014
+
+;JSON files:
+
+MBP1_ERECY.json:
+ [
+   { "name" : "MBP1_ERECY",
+     "RefSeqID" : "XP_003645298",
+     "UniProtID" : "G8JQ18",
+     "taxonomyID" : 931890,
+     "sequence" : [
+        "MSSTSVASRDQIYSAKYSGVEVYEFIHPTGSIMKRKADDWVNATHILKAAKFAKAKRTRILEKEVIKDIH",
+        "EKVQGGFGKYQGTWVPLDIARRLAEKFDVLEELRPLFDFSQRDGSASPPQAPKHHHASRSDSTKKGTGKS",
+        "PSGALNNASGSVIPKRRGRPPRSKKLDRIPASGDAALQRSRSDVTGFHKPSITISTISSHNLPSIQSTLQ",
+        "RGVNIDEQQHYQDKLQQQISQQKYEELDIEDGLSSDIETNLAYIAEGPVGSNRLNTQLMTGKEEPVSSSS",
+        "SLPSSPSDFSAPVPFDTQRVGSATSPIGAMLPRYSMQSRPPTSDLDQKVNDYLAKLVDYFINSEMQNTNA",
+        "VPIELLNPPHSTPYIDAWIDSEHHTAFHWACAMGNLPIVEALLQAGASHRAVNHAGETPLMRASMFHNSY",
+        "TKRTYPRIFQLLQDTVFDIDSQSQTVVHHIVKRRSNTQSALYYLDVLLSKIKDFSPQYRIETLINTQDDK",
+        "GNTPLHIAAINGDKKFFQTLLGSGALSTLKNYDGVTADVFINNKFSRTLNYSEHSYHYGNGTTHSPASTS",
+        "TGAVITGPAGAAAASASASFIHTGDMFPSQAATSVSRAIPEVINLMKDMADSYQGLYQDRSQELQSIKKM",
+        "LKSMNNTVASVDIKILETLDIKKYEQIGQTMEDITQAIDELQSRFTVKQKCLMNILEKGQRIQLQRLINE",
+        "QEQEIDKHQEESESKSGPSINPNLITGIKELAILQLRRKAKIKQMLELLCGNSKVQKFRKMISQGTDMEL",
+        "DEVDNFLDVILQQLNDDNEAKKINNPNGVT"]
+   }
+ ]
+
+MYSPEtaxonomy.json:
+ [
+   { "ID" : 931890,
+     "species" : "Eremothecium cymbalariae"}
+ ]
+
+Note: Before sourcing Line 284-604 of BIN-Storing_data.R, to reproduce the following outputs, <code>library(jsonlite)</code> is required.
+
+Otherwise Line 426 which calls "./scripts/ABC-createRefDB.R" will fail.
+
+Also, need to <code>source("makeProteinDB.R")</code> again when re-creating myDB.
+
+Output for <code>biCode(myDB$taxonomy$species) %in% biCode(MYSPE)</code>:
+ > biCode(myDB$taxonomy$species) %in% biCode(MYSPE)
+  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
+
+Output for <code>myDB$protein$taxonomyID %in% myDB$taxonomy$ID[(myDB$taxonomy$species == MYSPE)]</code>:
+ > myDB$protein$taxonomyID %in% myDB$taxonomy$ID[(myDB$taxonomy$species == MYSPE)]
+  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [14] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [27] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [40] FALSE FALSE FALSE FALSE FALSE  TRUE

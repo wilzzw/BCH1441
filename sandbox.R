@@ -174,35 +174,53 @@ philDB$person$school
 
 #1.3 Task
 #source the file from Line 1 to Line 269
+
+#There are functions and variables (e.g. philDB) that I need from a state right before this question
+#So I source BIN-Storing_data.R Line 1-269...
+#EXCEPT: I commented out Line 135-136 because those are intentionally problematic for demonstration purposes
+
+#source("1-269_BIN-Storing_data.R")
+
+#Rewrite/overwrite autoincrement() with adjustable increment
+#If default, it is the same as the autoincrement() before overwriting
 autoincrement <- function(table, incr=1) {
   return(max(table$id) + incr)
 }
 
-newPersonID <- autoincrement(philDB$person)
+#Adding new person and give it an ID by increment
+newPersonID <- autoincrement(philDB$person) 
+#Make a data frame object with the new philosopher's information
 newPhil <- data.frame(id = newPersonID,
                       name = "Immanuel Kant",
                       born = "1724",
                       died = "1804",
                       school = "Enlightenment",
                       stringsAsFactors = FALSE)
+#Append the new data frame to the person table in philDB
 philDB$person <- rbind(philDB$person, newPhil)
 
+#Adding two new books and give them IDs by increment
 newBooksID <- c(autoincrement(philDB$books), autoincrement(philDB$books, 2))
+#Make a data frame object with the new books' information
 newBooks <- data.frame(id = newBooksID,
                        title = c("Critique of Pure Reason", "Critique of Judgement"),
                        published = c("1781", "1790"),
                        stringsAsFactors = FALSE)
+#Append the new data frame to the book table in philDB
 philDB$books <- rbind(philDB$books, newBooks)
 
+#Create new junction (works) table entries
+#And then append them to the works table in philDB
 for (i in seq_along(newBooksID)) {
     workAssign <- data.frame(id = autoincrement(philDB$works), personID = newPersonID, bookID = newBooksID[i])
     philDB$works <- rbind(philDB$works, workAssign)
 }
 
-
+#Sort book titles alphabetically and rearrange books table accordingly in philDB
 alphabetSort <- order(philDB$books$title)
 df_sortedBooks <- philDB$books[alphabetSort,]
 
+#Get ready for each book, gather their information by cross-referencing and print them out
 for (i in seq_along(df_sortedBooks$id)) {
     bookid <- df_sortedBooks$id[i]
     title <- df_sortedBooks$title[i]
