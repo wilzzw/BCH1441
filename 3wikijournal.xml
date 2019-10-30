@@ -538,7 +538,7 @@ Here's a well-known one: '''Saccharomyces Genome Database (SGD)'''
 
 10. <span style="color:red">There is no "Download Results" anymore!</span> Even better, I can download them in multiple optional formats (e.g. HTML, plain text...).
 
-I will write a R-script to process the files in the future when needed. ~~~~
+I will write a R-script to process the files in the future when needed. [[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:57, 29 October 2019 (EDT)
 
 
 ==3.9 Databases==
@@ -739,7 +739,7 @@ However elusive biomolecular function might be, one thing for sure: functions ar
 <div class="time-estimate">
 Time estimated: 3 h; taken 190 min; date started: 2019-10-26; date completed: 2019-10-29
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 18:57, 29 October 2019 (EDT)
 </div>
 
 ;Sequences are a great abstraction of bio-macromolecules: computable, compact and understandable

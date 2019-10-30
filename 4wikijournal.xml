@@ -17,10 +17,10 @@ An intuition for the quantity ''H'' to measure production of information...
 
 If a set of events have probabilities <math>p_1</math>, <math>p_2</math>, ..., <math>p_n</math>, then ''H'' as a function of the probabilities should:
 * ''H'' should be continuous
-* If all <math>p_i</math>'s are equal, 'H' is a monotonic increasing function of <math>n</math>
+* If all <math>p_i</math>'s are equal, ''H'' is a monotonic increasing function of <math>n</math>
 * ''H'' is independent of the sequence of choices to observe a particular distribution
 
-;There is only one functional form for 'H' that has all of the above. It is defined as the [https://en.wikipedia.org/wiki/Entropy_(information_theory) information entropy].
+;There is only one functional form for ''H'' that has all of the above. It is defined as the [https://en.wikipedia.org/wiki/Entropy_(information_theory) information entropy].
 
 Special case: if all probabilities are equal, <math>H=\log(n)</math>
 
@@ -237,6 +237,86 @@ kAvg <- k * Pk # I get an average of 732.4207 restriction sites
 
 ==4.2 BIO-Homology==
 
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 75 min; date started: 2019-10-30; date completed: 2019-10-30
+
+~~~~
+</div>
+
+;Homology: Two genes are homologous iff they have a common ancestor (derived from the same ancestor)
+:* <span style="color:red">The one and only definition. A yes or no question.</span>
+
+;Not to be confused with similarity, which can be quantified from 0-100%.
+:* Homology '''''often''''' implies similarity in structure and function (especially structure), and by extension, sequences.
+
+;Not to be confused with analogy. Two genes are analogous due to convergent evolution. Similar in structure/function but not from a common ancestor.
+
+Conserved residues among homologs are illuminating, as they might be the determinants of structure and function, given that sequence identity among homologs are not always very high.
+
+;Homologs can be divided into two categories:
+:* '''Orthologs''': diverged with speciation (under the same selective pressure, so the function is usually conserved)
+:* '''Paralogs''': diverged with duplication (under reduced or no selective pressure, so the function is usually not conserved)
+
+New functionalization from paralogs:
+:* Neofunctionalization: acquiring new function
+:* Subfunctionalization: still original function, but in different patterns (e.g. times, signal responses, tissue specific)
+
+;Homology algebra:
+Commutative and transitive
+
+;Inference of homology:
+:* Sequence similarity (e.g. >=25% similarity is too unlikely to be random) -- Probably the most important.
+:* Structural similarity
+
+ Things to consider:
+ 1. Sequence similarity? Coverage is full or partial?
+ 2. Structure similarity?
+ 3. Patterns of conserved sequences from alignment
+ 4. Similarity in function?
+
+;Complications & challenges:
+Partial homology often occurs -- often it only makes sense to talk about the evolutionary history of individual domains. Not the whole protein.
+
+Domain boundaries are not often clear, leading to difficulty in inference, computation, and annotation.
+:* A helpful database for that matter: CDART(Conserved Domain Architecture Retrieval Tool) by the NCBI
+
+===4.3.1 Defining orthologs===
+The most accurate method would be constructing evolutionary trees. However, this is not always practical.
+
+Alternatives are available based on approximations or precomputed results.
+
+;Objectives: Finding orthologs of yeast Mbp1 via non-evolutionary tree methods.
+
+;Activity 1 - Reciprocal Best Match (RBM)
+Essentially, BLAST the gene/protein on the target genome/proteome, find the best hit, and BLAST the gene/protein "back". If they form a reciprocal match, then it implies orthology.
+
+1. Go to protein BLAST
+
+2. BLAST with query field as "XP_003645298" in database refseq, and within species "Saccharomyces cerevisiae (taxid:4932)".
+
+3. The top hit is NP_010227.1 (S. cerevisiae Mbp1)
+
+Conclusion: 
+XP_003645298 is orthologous to NP_010227.1 (S. cerevisiae Mbp1) by the RBM criterion.
+
+ RBM works probably due to the commutativenesss of homology. The two proteins are in different species. => Orthologs
+ There is a key assumption though (I think..): The top hit from BLAST is a sufficient (enough) condition for homology.
+
+;Activity 2 - Orthology by annotation
+Use precomputed information -- NCBI has HomoloGene database with precomputed related groups of genes. Annotated in RefSeq protein entries.
+
+1. Go to the Proten entry in NCBI for Mbp1_MYSPE https://www.ncbi.nlm.nih.gov/protein/XP_003645298.1
+
+2. Sometimes I can expect HomoloGene annotation on the right under "Related Information". But this is not available for this entry..
+
+3. View the HomoloGene entry for S. cerevisiae Mbp1 https://www.ncbi.nlm.nih.gov/homologene/?term=NP_010227
+
+4. There are a list of putative homologous genes with protein BLAST options built in AND conserved domain information.
+
+;Other databases for homology inference:
+:* eggNOG (evolutionary genealogy of genes: Non-supervised Orthologous Groups)
+:* OrthoDB
+:* OMA (the Orthologous Matrix): based on precomputed, with syntenny information
 
 
 ==4.1 BIO-Cell Cycle==
