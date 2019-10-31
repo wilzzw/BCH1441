@@ -890,7 +890,7 @@ Time estimated: 1 h; taken 30 min; date started: 2019-10-15; date completed: 201
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 30 min; date started: 2019-10-29; date completed: 2019-10-30
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:33, 30 October 2019 (EDT)
 </div>
 
 ;Motivation: 
@@ -903,10 +903,10 @@ An intuition for the quantity ''H'' to measure production of information...
 
 If a set of events have probabilities <math>p_1</math>, <math>p_2</math>, ..., <math>p_n</math>, then ''H'' as a function of the probabilities should:
 * ''H'' should be continuous
-* If all <math>p_i</math>'s are equal, 'H' is a monotonic increasing function of <math>n</math>
+* If all <math>p_i</math>'s are equal, ''H'' is a monotonic increasing function of <math>n</math>
 * ''H'' is independent of the sequence of choices to observe a particular distribution
 
-;There is only one functional form for 'H' that has all of the above. It is defined as the [https://en.wikipedia.org/wiki/Entropy_(information_theory) information entropy].
+;There is only one functional form for ''H'' that has all of the above. It is defined as the [https://en.wikipedia.org/wiki/Entropy_(information_theory) information entropy].
 
 Special case: if all probabilities are equal, <math>H=\log(n)</math>
 
@@ -1126,7 +1126,7 @@ kAvg <- k * Pk # I get an average of 732.4207 restriction sites
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 75 min; date started: 2019-10-30; date completed: 2019-10-30
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:33, 30 October 2019 (EDT)
 </div>
 
 ;Homology: Two genes are homologous iff they have a common ancestor (derived from the same ancestor)
@@ -1252,7 +1252,7 @@ Time estimated: 1 h; taken 150 min; date started: 2019-10-10; date completed: 20
 
 {{Vspace}}
 =3 Intro to Bioinformatics and Databases=
-==3.12 Software Development for Research Labs==
+==3.13 Software Development for Research Labs==
 
 <div class="time-estimate">
 Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 2019-10-28
@@ -1284,7 +1284,7 @@ Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 
 
 ;Deployment and Maintenance (esp. for softwares used by many research labs)
 
-===3.12.1 Test-driven development (TDD)===
+===3.13.1 Test-driven development (TDD)===
 ;Objectives:
 :* Testing the codes is a must. TDD is a development methodology to ensure codes work as intended.
 :* Implement TDD as a process of development aside from finding bugs.
@@ -1370,6 +1370,387 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 
 ;Tests blocks may be put at the end of the code as supplement that normally does not gets run, but can be optionally activated during tests.
 
+==3.12 Data Integration==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 160 min; date started: 2019-10-30; date completed: 2019-10-31
+
+~~~~
+</div>
+
+;Data entity-relationship networks are mapped through their unique IDs (recall data models).
+
+;Data integration is the biggest challenge in bioinformatics.
+:* Cross-referencing is everywhere
+
+Challenges and efforts to overcome them:
+* Data Redundancy: e.g. GenBank vs RefSeq (recall). In EBI ,there is '''UniRef''' that clusters sequence redundancy based on similarity (100%, 90%, 50%)
+* Data integration across different schemas via Federated Databases (distinct databases with their own schemas, but distributed queries and integrate the search results)
+
+: e.g. Entrez in NCBI. UniprotKB in EBI
+
+;Ensembl: 
+An EBI's model organism genome data integration project. Access and retieve via the BioMart tool.
+
+===3.12.1 A data integration project: Ensembl via BioMart===
+;Objective:
+Familiarize with BioMart tool through the R-interface package '''biomartr''' through its [https://cran.r-project.org/web/packages/biomartr/vignettes/Functional_Annotation.html vignettes].
+
+<source lang="R">
+install.packages("biomartr")
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+Warning in install.packages :
+  dependency ‘biomaRt’ is not available
+also installing the dependencies ‘backports’, ‘ellipsis’, ‘zeallot’, ‘utf8’, ‘vctrs’, ‘fansi’, ‘pillar’, ‘glue’, ‘tidyselect’, ‘BH’, ‘plogr’, ‘hms’, ‘clipr’, ‘bitops’, ‘R.oo’, ‘R.methodsS3’, ‘tibble’, ‘data.table’, ‘dplyr’, ‘readr’, ‘downloader’, ‘RCurl’, ‘XML’, ‘stringr’, ‘purrr’, ‘R.utils’, ‘philentropy’, ‘fs’
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/backports_1.1.5.zip'
+Content type 'application/zip' length 68649 bytes (67 KB)
+downloaded 67 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/ellipsis_0.3.0.zip'
+Content type 'application/zip' length 44567 bytes (43 KB)
+downloaded 43 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/zeallot_0.1.0.zip'
+Content type 'application/zip' length 62222 bytes (60 KB)
+downloaded 60 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/utf8_1.1.4.zip'
+Content type 'application/zip' length 215426 bytes (210 KB)
+downloaded 210 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/vctrs_0.2.0.zip'
+Content type 'application/zip' length 828252 bytes (808 KB)
+downloaded 808 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/fansi_0.4.0.zip'
+Content type 'application/zip' length 221572 bytes (216 KB)
+downloaded 216 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/pillar_1.4.2.zip'
+Content type 'application/zip' length 182567 bytes (178 KB)
+downloaded 178 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/glue_1.3.1.zip'
+Content type 'application/zip' length 173305 bytes (169 KB)
+downloaded 169 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/tidyselect_0.2.5.zip'
+Content type 'application/zip' length 627063 bytes (612 KB)
+downloaded 612 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/BH_1.69.0-1.zip'
+Content type 'application/zip' length 19008275 bytes (18.1 MB)
+downloaded 18.1 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/plogr_0.2.0.zip'
+Content type 'application/zip' length 18872 bytes (18 KB)
+downloaded 18 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/hms_0.5.2.zip'
+Content type 'application/zip' length 111527 bytes (108 KB)
+downloaded 108 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/clipr_0.7.0.zip'
+Content type 'application/zip' length 52125 bytes (50 KB)
+downloaded 50 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/bitops_1.0-6.zip'
+Content type 'application/zip' length 38469 bytes (37 KB)
+downloaded 37 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/R.oo_1.22.0.zip'
+Content type 'application/zip' length 967788 bytes (945 KB)
+downloaded 945 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/R.methodsS3_1.7.1.zip'
+Content type 'application/zip' length 77739 bytes (75 KB)
+downloaded 75 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/tibble_2.1.3.zip'
+Content type 'application/zip' length 337301 bytes (329 KB)
+downloaded 329 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/data.table_1.12.6.zip'
+Content type 'application/zip' length 2254534 bytes (2.2 MB)
+downloaded 2.2 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/dplyr_0.8.3.zip'
+Content type 'application/zip' length 3266839 bytes (3.1 MB)
+downloaded 3.1 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/readr_1.3.1.zip'
+Content type 'application/zip' length 1589773 bytes (1.5 MB)
+downloaded 1.5 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/downloader_0.4.zip'
+Content type 'application/zip' length 24983 bytes (24 KB)
+downloaded 24 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/RCurl_1.95-4.12.zip'
+Content type 'application/zip' length 2974210 bytes (2.8 MB)
+downloaded 2.8 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/XML_3.98-1.20.zip'
+Content type 'application/zip' length 4610084 bytes (4.4 MB)
+downloaded 4.4 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/stringr_1.4.0.zip'
+Content type 'application/zip' length 217158 bytes (212 KB)
+downloaded 212 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/purrr_0.3.3.zip'
+Content type 'application/zip' length 426232 bytes (416 KB)
+downloaded 416 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/R.utils_2.9.0.zip'
+Content type 'application/zip' length 1410270 bytes (1.3 MB)
+downloaded 1.3 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/philentropy_0.3.0.zip'
+Content type 'application/zip' length 835055 bytes (815 KB)
+downloaded 815 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/fs_1.3.1.zip'
+Content type 'application/zip' length 982376 bytes (959 KB)
+downloaded 959 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/biomartr_0.9.0.zip'
+Content type 'application/zip' length 616123 bytes (601 KB)
+downloaded 601 KB
+
+package ‘backports’ successfully unpacked and MD5 sums checked
+package ‘ellipsis’ successfully unpacked and MD5 sums checked
+package ‘zeallot’ successfully unpacked and MD5 sums checked
+package ‘utf8’ successfully unpacked and MD5 sums checked
+package ‘vctrs’ successfully unpacked and MD5 sums checked
+package ‘fansi’ successfully unpacked and MD5 sums checked
+package ‘pillar’ successfully unpacked and MD5 sums checked
+package ‘glue’ successfully unpacked and MD5 sums checked
+package ‘tidyselect’ successfully unpacked and MD5 sums checked
+package ‘BH’ successfully unpacked and MD5 sums checked
+package ‘plogr’ successfully unpacked and MD5 sums checked
+package ‘hms’ successfully unpacked and MD5 sums checked
+package ‘clipr’ successfully unpacked and MD5 sums checked
+package ‘bitops’ successfully unpacked and MD5 sums checked
+package ‘R.oo’ successfully unpacked and MD5 sums checked
+package ‘R.methodsS3’ successfully unpacked and MD5 sums checked
+package ‘tibble’ successfully unpacked and MD5 sums checked
+package ‘data.table’ successfully unpacked and MD5 sums checked
+package ‘dplyr’ successfully unpacked and MD5 sums checked
+package ‘readr’ successfully unpacked and MD5 sums checked
+package ‘downloader’ successfully unpacked and MD5 sums checked
+package ‘RCurl’ successfully unpacked and MD5 sums checked
+package ‘XML’ successfully unpacked and MD5 sums checked
+package ‘stringr’ successfully unpacked and MD5 sums checked
+package ‘purrr’ successfully unpacked and MD5 sums checked
+package ‘R.utils’ successfully unpacked and MD5 sums checked
+package ‘philentropy’ successfully unpacked and MD5 sums checked
+package ‘fs’ successfully unpacked and MD5 sums checked
+package ‘biomartr’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+C:\Users\Wilson\AppData\Local\Temp\RtmpugqjZJ\downloaded_packages
+</code>
+</div>
+</div>
+
+Error: this package depends on biomaRt. So I still have to install it.
+
+<source lang="R">
+install.packages("biomaRt")
+</source>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Error messages'''''
+<div class="mw-collapsible-content">
+<code>
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+Warning in install.packages :
+  package ‘biomaRt’ is not available (for R version 3.6.1)
+</code>
+</div>
+</div>
+
+Has nothing to do with the Rtools issue. You just gonna install biomaRt a bit differently.
+
+<span style="color:red">On the website, the line <code>source("http://bioconductor.org/biocLite.R")</code> does not work anymore.</span>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Error messages'''''
+<div class="mw-collapsible-content">
+<code>
+Error: With R version 3.5 or greater, install Bioconductor packages using BiocManager; see https://bioconductor.org/install
+</code>
+</div>
+</div>
+
+Eventually, the following procedure worked for me:
+
+<code>
+install.packages("BiocManager")
+BiocManager::install("biomaRt")
+</code>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/BiocManager_1.30.9.zip'
+Content type 'application/zip' length 100245 bytes (97 KB)
+downloaded 97 KB
+
+package ‘BiocManager’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+C:\Users\Wilson\AppData\Local\Temp\RtmpugqjZJ\downloaded_packages
+
+Bioconductor version 3.9 (BiocManager 1.30.9), R 3.6.1 (2019-07-05)
+Installing package(s) 'biomaRt'
+also installing the dependencies ‘bit’, ‘bit64’, ‘blob’, ‘memoise’, ‘Biobase’, ‘DBI’, ‘RSQLite’, ‘prettyunits’, ‘AnnotationDbi’, ‘progress’
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/bit_1.1-14.zip'
+Content type 'application/zip' length 248571 bytes (242 KB)
+downloaded 242 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/bit64_0.9-7.zip'
+Content type 'application/zip' length 551687 bytes (538 KB)
+downloaded 538 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/blob_1.2.0.zip'
+Content type 'application/zip' length 44536 bytes (43 KB)
+downloaded 43 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/memoise_1.1.0.zip'
+Content type 'application/zip' length 36885 bytes (36 KB)
+downloaded 36 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/Biobase_2.44.0.zip'
+Content type 'application/zip' length 2421976 bytes (2.3 MB)
+downloaded 2.3 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/DBI_1.0.0.zip'
+Content type 'application/zip' length 889249 bytes (868 KB)
+downloaded 868 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/RSQLite_2.1.2.zip'
+Content type 'application/zip' length 2265825 bytes (2.2 MB)
+downloaded 2.2 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/prettyunits_1.0.2.zip'
+Content type 'application/zip' length 33620 bytes (32 KB)
+downloaded 32 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/AnnotationDbi_1.46.1.zip'
+Content type 'application/zip' length 5224938 bytes (5.0 MB)
+downloaded 5.0 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/progress_1.2.2.zip'
+Content type 'application/zip' length 84996 bytes (83 KB)
+downloaded 83 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/biomaRt_2.40.5.zip'
+Content type 'application/zip' length 620819 bytes (606 KB)
+downloaded 606 KB
+
+package ‘bit’ successfully unpacked and MD5 sums checked
+package ‘bit64’ successfully unpacked and MD5 sums checked
+package ‘blob’ successfully unpacked and MD5 sums checked
+package ‘memoise’ successfully unpacked and MD5 sums checked
+package ‘Biobase’ successfully unpacked and MD5 sums checked
+package ‘DBI’ successfully unpacked and MD5 sums checked
+package ‘RSQLite’ successfully unpacked and MD5 sums checked
+package ‘prettyunits’ successfully unpacked and MD5 sums checked
+package ‘AnnotationDbi’ successfully unpacked and MD5 sums checked
+package ‘progress’ successfully unpacked and MD5 sums checked
+package ‘biomaRt’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+C:\Users\Wilson\AppData\Local\Temp\RtmpugqjZJ\downloaded_packages
+Installation path not writeable, unable to update packages: boot, foreign, KernSmooth, mgcv, nlme
+Old packages: 'digest', 'rlang'
+Update all/some/none? [a/s/n]: 
+a
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/digest_0.6.22.zip'
+Content type 'application/zip' length 242655 bytes (236 KB)
+downloaded 236 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/rlang_0.4.1.zip'
+Content type 'application/zip' length 1104621 bytes (1.1 MB)
+downloaded 1.1 MB
+
+package ‘digest’ successfully unpacked and MD5 sums checked
+package ‘rlang’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+C:\Users\Wilson\AppData\Local\Temp\RtmpugqjZJ\downloaded_packages
+</code>
+</div>
+</div>
+
+Now <code>library(biomartr)</code> should work..
+
+Useful functions in biomartr [https://cran.r-project.org/web/packages/biomartr/vignettes/Functional_Annotation.html]:
+:* biomartr::getMarts(): list all available databases in biomart
+:* biomartr::getDatasets(mart=<database_name_str>): returns a tibble object? (list all datasets in the database with dataset, description, and version)
+:* biomartr::getAttributes(mart=<database>, dataset=<dataset>): retrieve available attributes
+:* biomartr::getFilters(mart=<database>, dataset=<dataset>): see available filters for <dataset> that can be used as biomartr() query options.
+:* biomartr::organismBM(organism=<organism>): get a whole list of databases(marts)-datasets where annotations exist for the <organism> (organism centric query).
+:* biomartr::organismAttributes(<organism>, topic=<topic>): get a table of attribute names, datasets and marts available for <organism>. The topic option helps search related to <topic> (e.g. "id", "homolog").
+:* biomartr::organismFilters(<organism>, topic=<topic>)
+:* biomartr::getProteome(db=<database>, organism=<organism>, path=<path>): retrieve proteome data and store in <path>. Returns <path>.
+:* biomartr::read.proteome(<path>, format)
+:* biomartr::biomart(genes, mart, dataset, attributes, filters): '''The main query function'''. In filters, specify the query key (type. e.g. "refseq_peptide"). Cross-reference to attributes. 
+:* biomartr::getGO(): Querying GO
+
+:* options(tibble.print_max = Inf): show all elements of a data frame
+
+;Overall I did not quite enjoy biomartr.. The codes are slow and the documentation is not super easy to follow or intuitive. At least it gets the jobs done.
+
+===3.12.2 Working through BIN-Data_integration.R===
+;Objective: Use httr package in R to ID-map through Uniprot API
+
+:* httr::POST(<url>, body): send query POST request to <url>. The query is specified in body, which is a named list.
+::* For Uniprot ID-mapping, the url is "https://www.uniprot.org/mapping/"
+::* For Uniprot ID-mapping, the body of query has the structure: from, to, format, query. query stores the actual vector supplied to the query field.
+
+:* httr::content(<response>): argument is a response object, e.g. created by httr::POST().
+::* To display query result, use <code>cat(httr::content(<response>))</code>
+:* httr::status_code(<response>): if not 200, error occurred
+
+Line 94:
+A great punchline/idiom <code>read.delim(file = textConnection(httr::content(response)), sep = "\t", stringsAsFactors = FALSE)</code>
+
+This turns response of POST request ultimately to a data frame. How nice!
+
+Line 99-103:
+There is no 3 columns (I thought one of the queries is a dummy?). Also the column names are already "From" and "To".
+
+'''I will have UniProtIDmap() upon workspace setup. So nice!'''
+
+<source lang="R">
+# task: map the three genes to their UniProt Identifier.
+myIDs$uID[match(myQuery, myIDs$refID)]
+</source>
+
+Another useful function:
+:* match(<x>, table): returns a vector of indices of table at each position of <x> where a match is made. NA is no match is found.
 
 ==3.11 Function Databases for Bioinformatics==
 ;Objective: Familiarize with databases with functional information and related information, as well as annotations.
