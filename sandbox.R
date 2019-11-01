@@ -402,3 +402,15 @@ hist(valSWGC,
      col = "plum",
      breaks = 60,
      add = TRUE)
+
+#1.1  Task - fetchUniProtSeq() function
+fetchUniProtSeq <- function(UniProtID) {
+    URL <- sprintf("http://www.uniprot.org/uniprot/%s.fasta", UniProtID)
+    response <- httr::GET(URL)
+    if (httr::status_code(response) == 200) {
+        sequence <- dbSanitizeSequence(strsplit(as.character(response), "\n"))
+    } else {
+        sequence <- character(0)
+    }
+    return(sequence)
+}

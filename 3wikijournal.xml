@@ -117,6 +117,30 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 
 ;Tests blocks may be put at the end of the code as supplement that normally does not gets run, but can be optionally activated during tests.
 
+==3.13 Scripting of Data Downloads from Databases==
+
+10 min
+
+;UniProt:
+I have done this before. In R very easy with httr::GET()
+
+A function to download FASTA sequence from UniProt given UniProtID:
+<source lang="R">
+#1.1  Task - fetchUniProtSeq() function
+fetchUniProtSeq <- function(UniProtID) {
+    URL <- sprintf("http://www.uniprot.org/uniprot/%s.fasta", UniProtID)
+    response <- httr::GET(URL)
+    if (httr::status_code(response) == 200) {
+        sequence <- dbSanitizeSequence(strsplit(as.character(response), "\n"))
+    } else {
+        sequence <- character(0)
+    }
+    return(sequence)
+}
+</source>
+
+
+
 ==3.12 Data Integration==
 
 <div class="time-estimate">
