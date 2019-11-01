@@ -471,6 +471,135 @@ write.csv(outcomesOfMutation(codonWithC, "C", "A"), file="C_to_A_table.csv")
 
 {{Vspace}}
 =5 Structural Bioinformatics=
+==5.7 Protein Structural Domains==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 2.5 h; date started: 2019-10-30; date completed: 2019-10-31
+
+~~~~
+</div>
+
+;Domains:
+Compact, somewhat independent, efficient folding, modular protein organization
+:* ''Often'' domains have distinct functions
+:* Useful for identifying folding units, understanding evolutionary history, predicting protein function, classifying proteins
+
+;Larger proteins tend to have more than 1 domains.
+:* Sizes of domains average to about 100 residues long
+
+;Identification of domains depends on the explicit definition being used:
+:* sequence domain: sequence inheritance
+:* functional domain: modularized functional units
+:* structural domain: based on atomic contacts (e.g. contact maps - hierarchial structural units of protein. may see subdomains)
+
+===5.7.1 Domain databases===
+;CATH:
+Hierarchial classification of domains based off PDB. Mostly automated
+:* Divide proteins into domains by: DETECTIVE, DOMAK, PUU
+:* Manually curate and resolve conflicts arised from 3 streams of domain divisions (drawback: does not scale well this way..)
+:* Classify domains into classes, homology, topology and architecture by: CATHEDRAL and SSAP
+
+* '''DOMAK''': algorithm splits protein into units such that it max. intra-unit contacts and min. inter-unit-contacts
+* '''DETECTIVE''': algorithm finds recognizable hydrophobic cores and with their shells to constitute domains
+* '''PUU''': algorithm max. intra-unit contacts and min. inter-unit-contacts by building a "folding tree"
+
+* '''CATHEDRAL''': fast prescreening domains against a database (based on secondary structure elements?)
+* '''SSAP''': gives accurate structural alignment for domains
+
+'''Domain swapping''' complicates issue..
+
+Another related classification - protein families/superfamilies
+
+However, boundaries between families are not always obvious, 
+and within family might be non-homologous sequences due to convergent evolution.
+
+;CDD (Conserved Domain Database):
+Integrated domain database tool by NCBI. Combining structural domains from CATH and SCOP (discontinued), and sequence domains from Pfam.
+:* Sequences are cross-referenced in many sequence databases.
+:* ?Are structural domains cross-referenced as well?
+
+PDB cross-references all of CATH, SCOP, Pfam.
+
+;Activity 1 - Explore CATH database with Mbp1 protein
+1. Go to http://www.cathdb.info/ and search "1BM8"
+
+2. There are matching CATH superfamilies, domains, and PDB references.
+
+3. The '''CATH ID''' (hierarchial) is 3.10.260.10
+
+4. On the top, "Browse"
+
+5. Under CATH classification, the protein (domain) is Alpha Beta-Roll
+
+6. Under "3.10 Roll", there are lots of different topologies. Each one has a representative fold that can be clicked, and viewed to the left.
+
+7. Each 3rd level group (topology group) pretty much consist of a non-homologous group. 3.10.260 points to Mlu1-box binding protein -- DNA binding domain
+
+8 The 4th level groups the same topology group into different homology groups. e.g. 3.10.260.10 points to Transcription regulator HTH, APSES-type DNA-binding domain
+
+9. On the left you can "Go to Superfamily". I guess at the homology level would be what we call "superfamily"? There are useful tools in the link.
+
+;Activity 2 - Explore CDD with Mbp1_ERECY
+1. Go to the [https://www.ncbi.nlm.nih.gov/protein/XP_003645298.1?report=genbank&log$=protalign&blast_rank=1&RID=UT6SVB5U014 NCBI entry for Mbp1_ERECY]
+
+2. On the right, "CDD Search Results"
+
+3. For each entry/accession of domain annotation, can link to the domain entry with description, statistics, and protein sequence alignments
+
+4. "Search for similar domain architectures" redirects to CDART. Supposedly a very useful tool.
+
+===5.7.2 Domain boundaries===
+;Objective:
+Explore the fluid definitions of domain boundaries.
+
+;Activity - Explore domain boundaries of APSES and KilA-N in 1BM8 PDB structure.
+1. <code>open 1bm8</code> and use "Interactive 1" preset to view as ribbons in rainbow colours.
+
+2. Go to '''InterPro''' (EBI's tool) at http://www.ebi.ac.uk/interpro/ and search "P39678" by text.
+
+3. Under "Domain" and "Repeat", aligned to the N-terminus I can find IPR003163 (5-111), IPR018004 (22-88), PF04383 (23-88), and additionally SM01252 (22-105)
+:* ?What is SMART domain?
+
+4. The domains are not quite clickable, but they do seem to describe the same protein, albeit somewhat different boundaries.
+
+5. If I were to use NCBI to identify conserved domains for S. cerevisiae Mbp1, I get a slightly different definition for the N-terminal domain annotation "KilA-N" as 19-93
+
+'''Even though the annotation ID is also Pfam PF04383, it is different from what I get from EBI!'''
+
+6. In Chimera, colour the whole chain white. Then, colour the protein in terms of different domain definitions
+
+Resulting picture:
+
+[[File:domain_boundaries.png|500px]]
+* Yellow - IPR003163 (5-111)
+* Orange - PF04383 (19-93)
+* Red - PF04383 (23-88)
+
+It becomes apparent that the latter two definitions are missing out a helix and a anti-parallel beta-hairpin.
+
+If you ask me, I think this is a big deal because the helix looks like a part of a helix-turn-helix in the structure,
+
+and the beta-hairpin stacks along another beta-sheet common in three definitions.
+
+'''I would certainly expect inclusion of those segments affect the folding of this unit!'''
+
+7. Hide all ribbons. Show Atoms/bonds for the protein. Change the radius of bonds to 0.4 under Inspect > Bonds menu bottom right.
+
+8. "Tools" > "Surface/Binding Analysis" > "FindHbond" with Line width set to 5.0
+
+Most of the hydrogen bonds are formed involving backbones. In particular, the aforementioned beta-sheet components has all three colours participating:
+
+[[File:bb_hb.jpg|500px]]
+
+Backbone to backbone hydrogen bonds reveal that a series of anti-parallel beta-sheets (left side of the structure image) that are incomplete in orange and red definitions.
+
+[[File:sc_hb.jpg|500px]]
+
+There are barely any sidechain-sidechain hydrogen bonds. Alpha carbons are artificially joined by long bond-like representations.
+
+;Conclusion:
+'''Do not blindly trust any domain boundary definition! They are rather arbitrary. Inspect structure if available.'''
+
 ==5.6 Molecular Forcefields==
 
 <div class="time-estimate">
@@ -1375,7 +1504,7 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 160 min; date started: 2019-10-30; date completed: 2019-10-31
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:48, 31 October 2019 (EDT)
 </div>
 
 ;Data entity-relationship networks are mapped through their unique IDs (recall data models).
@@ -2735,7 +2864,7 @@ Another version (if my idea of "double-joint" works/is a thing.. this would allo
 
 {{Vspace}}
 =2 Introduction to R=
-==2.9 Final Notes on Coding Style==
+==2.10 Final Notes on Coding Style==
 ;General principles: clarity, readability, don't get witty, generality, explicitly (ok, the last two are kind of a stretch with the rhyme)
 
 ;Comments: Use LOTS of comments. Not just what but also why. Indent to format nicely.
@@ -2754,6 +2883,66 @@ Another version (if my idea of "double-joint" works/is a thing.. this would allo
 
 ;set.seed() to allow reproducible results from codes involving random processes for debugging purposes.
 :* set.seed(NULL) to re-initiate with a new seed
+
+==2.9 Regular Expressions==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 110 min; date started: 2019-10-31; date completed: 2019-10-31
+
+~~~~
+</div>
+
+;Useful functions:
+:* gsub(<pattern>, <sub>, <string>): substitute substrings in <string> that match <pattern> (regex) with <sub>
+:* strsplit(<string>, <split>): '''the <split> supports regex pattern'''
+
+;A special note about escaping special meanings in R:
+<span style="color:red">Always use <code>"\\"</code> to properly escape</span>
+ Reason: The regex parser in R somwhow when it sees "\", it expects "\n" or "\t" (as a single character) and not anything else.
+ Therefore, an extra escape is needed to tell the parser to treat the second "\" as it is before interpreting regex (how awful..).
+
+:* Can cat() the expression to see what the regex interpreter actually "sees"
+
+;Escape character can also turn on metacharacters:
+:* <code>\w</code>: word character (A-Z OR a-z OR 0-9 OR "_")
+:* <code>\W</code>: NOT word character
+:* <code>\s</code>: " " OR "\n" OR "\t"
+:* <code>\S</code>: NOT space character
+:* <code>\b</code>: word boundary?
+
+;A useful punchline:
+<code>"^\\s*#"</code> (all lines that are commented out)
+
+<span style="color:red">'''The strsplit() example in the [http://steipe.biochemistry.utoronto.ca/abc/index.php/RPR-RegEx#strsplit.28.29 course unit] is problematic!'''</span>
+
+The line <code>s <- "~`!@#$%^&*()_-=+[{]}\|;:',<.>/?"</code> should actually be:
+<code>s <- "~`!@#$%^&*()_-=+[{]}\\|;:',<.>/?"</code>
+
+Otherwise an error will occur saying it cannot understand "\|".
+
+;Functions used to find regex matches:
+:* regexpr(<pattern>, <string>): find one match
+:* gregexpr(<pattern>, <string>): find all matches
+
+The above two functions return a "match" object. It has attributes match.length and index.type
+* match.length is a vector of indices where the match begins
+* index.type is a vector of lengths of matches
+
+:* regexec(<pattern>, <string>): in addition to do what regexpr() can do, if the <pattern> contains sub-expressions in parentheses, it will also return attributes of substring matching the pattern inside it [https://bookdown.org/rdpeng/rprogdatascience/regular-expressions.html].
+
+;The matches can be retrieved via:
+:* regmatches(<string>, <match>): <match> is an object returned by one of the above regex matching functions 
+
+;Other libraries of R handling regex worth checking out: stringr, ore
+
+===2.9.1 Practice of Regex in R with RPR-RegEx.R===
+Line 66-67:
+Fetch UniProt ID
+<source lang="R">
+patt <- "\\|(.*)\\|"
+m <- regexec(patt, s)
+(UniProtID <- regmatches(s, m)[[1]][2])
+</source>
 
 ==2.8 Plotting==
 ;Plenty of examples [http://www.r-graph-gallery.com here].
