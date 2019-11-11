@@ -1,0 +1,82 @@
+=8 Gene Expression and Functional Bioinformatics=
+==8.2 The Gene Expression Omnibus (GEO) database==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 1.5 h; date started: 2019-11-11; date completed: 2019-11-11
+
+~~~~
+</div>
+
+;Retrieving GEO record:
+GEO Accession Number
+:* Types: Series (GSExxx), Sample (GSMxxx), Platform (GPLxxx) and DataSet (GDSxxx)
+
+<span style="color:red">Key things to know for this session are these entry types</span>
+
+Keyword search among databases
+:* GEO DataSets: search for studies of interest. Entries/records commonly have Organism, Experiment Type & Design.
+:* GEO Profiles: search for expression profile of genes
+
+;Activity 1 - Give GEO Profiles a Try with MBP1
+1. Search NCBI - GEO Profiles with the query "Mbp1 AND (Saccharomyces cerevisiae[Organism])"
+
+2. Entries are annotated with GPLxxx platforms, GDSxxx datasets, dataset type, SGD ID for the protein YDL056W, and name "MBP1".
+There is also a thumbnail clickable showing expression levels in all samples with graphics. Curated?
+
+;GEO-BLAST:
+Database contains all sequences from Microarrays participating in GEO DataSet from GenBank?
+
+;GEO DataSet:
+:* Can find info of other genes in this DataSet
+:* Can compare 2 sets of samples with statistical tests
+:* Can cluster heatmaps
+:* Protocol and distribution of values of samples are viewable
+
+;GEO Profile:
+I use https://www.ncbi.nlm.nih.gov/geoprofiles/16205984 as an example of GEO profile to inspect.
+:* Can find profile neighbours, aka get profiles of genes of similar expression pattern '''within the same DataSet''' (based on Pearson corr. coeff. but it would be nice if the coeff. are displayed..)
+:* Can find up-to-20 chromosome neighbours in the same DataSet
+:* Other neighbours: Sequence neighbours (based on BLAST seq. similarity), homologene neighbours (from the same HomoloGene group)
+:* Find pathway/cluster though "Pathways + GO"? <span style="color:red">I didn't see a "Find Pathways" button.. </span>
+
+;GEO2R:
+Analysis and visualization tools. Can be found in accession display for a GEO entry. Based on R-language.
+
+;Genome Data Viewer:
+Visualization.. Zoom in and zoom out?
+
+;Downloads:
+Often from GEO Series. Downloadable formats:
+:* SOFT (Simple Omnibus Format in Text): plain-text
+:* MINiML (MIAME Notation in Markup Language): XML
+:* Series Matrix File(s): ?
+
+==8.1 Analysis of Gene Expression==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 20 min; date started: 2019-11-11; date completed: 2019-11-11
+
+~~~~
+</div>
+
+;Experiment:
+1. Microarrays: Detect mRNA levels by probes on a chip
+
+2. RNA Sequencing: More direct and more prevalent nowadays. Align fragments to reference genome. However, converting reads of mRNA fragments to counts require "stochastic weighting".
+: In addition, alignment to the reference genome should be "splice-aware" 
+
+;Types of data files/formats:
+:* SAM (sequence alignment map) & BAM (binary SAM) files: mapping of reads to the genome
+:* BED files: specifies regions of interest in SAM/BAM. Extensive annotation and subsetting.
+
+;Conversion of reads to counts:
+e.g. RPKM, FPKM
+
+;Expression databases:
+:* GEO (NCBI): microarray and RNA-seq expression data
+:* Expression Atlas (EMBL-EBI)
+
+;Key questions:
+Expressions and differential expressions of genes
+
+{{Vspace}}
