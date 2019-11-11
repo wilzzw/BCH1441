@@ -414,3 +414,68 @@ fetchUniProtSeq <- function(UniProtID) {
     }
     return(sequence)
 }
+
+#Task - fetchScanProsite() function
+fetchScanProsite <- function(UniProtID) {
+    URL <- "https://prosite.expasy.org/cgi-bin/prosite/PSScan.cgi"
+    #idk whether all other options will be the same for all requests.. Fingers crossed.
+    response <- httr::POST(URL,
+                           body = list(meta = "opt1",
+                                       meta1_protein = "opt1",
+                                       seq = UniProtID,
+                                       skip = "on",
+                                       output = "tabular"))
+    if (httr::status_code(response) == 200) {
+        lines <- unlist(strsplit(httr::content(response, "text"), "\\n"))
+        patt <- sprintf("\\|%s\\|", UniProtID)
+        lines <- lines[grep(patt, lines)]
+        features <- data.frame()
+        for (line in lines) {
+        tokens <- unlist(strsplit(line, "\\t|\\|"))
+        features <- rbind(features,
+                    data.frame(uID   =  tokens[2],
+                               start =  as.numeric(tokens[4]),
+                               end   =  as.numeric(tokens[5]),
+                               psID  =  tokens[6],
+                               psName = tokens[7],
+                               stringsAsFactors = FALSE))
+}
+    } else {
+        features <- character(0)
+    }
+    return(features)
+}
+
+#Task - fetchNCBItaxData() function
+fetchNCBItaxData <- function(refSeqID) {
+    eUtilsBase <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+
+    #URL to get GI number
+    URL <- paste(eUtilsBase,
+             "esearch.fcgi?", 
+             "db=protein",    
+             "&term=", refSeqID,
+             sep="")
+    myXML <- xml2::read_xml(URL)
+
+    #I have to error check a bit differently than the ones above, as the request structure changed
+    #source("RPR-eUtils_XML.R") #Dependency on the node2text() function in the sourced code
+    GID <- node2text(myXML, "Id")
+    URL <- paste0(eUtilsBase,
+            "esummary.fcgi?",
+            "db=protein",
+            "&id=",
+            GID,
+            "&version=2.0")
+    myXML <- xml2::read_xml(URL)
+    taxID <- node2text(myXML, "TaxId")
+    organism <- node2text(myXML, "Organism")
+
+    #Turns out to meet the requirement, I do not need to check for error.
+    #If the retrieval is unsuccessful, node2text() anything will return character(0)
+    #So that works for me here.
+    outputList <- list(taxID, organism)
+    names(outputList) <- c("TaxId", "Organism")
+    
+    return(outputList)
+}

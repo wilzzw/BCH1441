@@ -119,7 +119,11 @@ We can save tests in files organized in a test directory. To ensure tests be exe
 
 ==3.13 Scripting of Data Downloads from Databases==
 
-10 min
+<div class="time-estimate">
+Time estimated: 2 h; taken 125 min; date started: 2019-11-03; date completed: 2019-11-11
+
+~~~~
+</div>
 
 ;UniProt:
 I have done this before. In R very easy with httr::GET()
@@ -139,7 +143,144 @@ fetchUniProtSeq <- function(UniProtID) {
 }
 </source>
 
+;ScanProsite POST
+:* Search expert curated motifs in PROSITE (ExPASy)
 
+The objective here is to automatically retrieve info from PROSITE.
+
+However, I do not know the parameters to construct such GET request. So I will inspect the HTML code for an example output page.
+
+1. Go to https://prosite.expasy.org/scanprosite/
+
+2. Put "P39678" in the Protein Sequence query field. Select "Table" as output option. Then, "START THE SCAN".
+
+3. An output page is displayed. Can view domain names and definitions displayed in plain text. Alternatively, there is a link "Graphics View"
+
+ From tech people's words (Josh C.), Chrome stands out for being the best browser for developers. Fortunately I use Chrome as well.
+
+4. On the query-entry page of ccanProsite (https://prosite.expasy.org/scanprosite/), "More Tools" > "Developer Tools". Select the tab "Elements" to view code. <span style="color:red">(not "View" > "Developer" > "View Source" as stated in the course instructions..)</span>
+
+5. "START THE SCAN"
+
+6. Under the "Network" tab, Find and click "PSScan.cgi" which contains form data, and go to the "Headers" tab.
+
+7. Find "Form Data" under the tab. Found form-key & value pairs
+
+ meta: opt1
+ meta1_protein: opt1
+ seq: P39678
+ skip: on
+ output: tabular
+ submit: START THE SCAN
+
+8. Now, use the information above to retrieve data from PROSITE. Instructions and tasks are in "RPR-PROSITE_POST.R". Supply key-value pairs to <code>httr::POST</code> function.
+
+9. Retieving and cleaning-up the string contents is done by some regex filtering. A useful function would look like:
+
+<source lang="R">
+# Task: write a function that takes as input a UniProt ID, fetches the
+# features it contains from ScanProsite and returns a list as given above, or
+# a list of length 0 if there is an error.
+
+#Pretty much a copy and paste from Dr. B. Steipe's code in RPR-PROSITE_POST.R
+#With my addition of handling status code errors. Same as my fetchUniProtSeq()
+fetchScanProsite <- function(UniProtID) {
+    URL <- "https://prosite.expasy.org/cgi-bin/prosite/PSScan.cgi"
+    #idk whether all other options will be the same for all requests.. Fingers crossed.
+    response <- httr::POST(URL,
+                           body = list(meta = "opt1",
+                                       meta1_protein = "opt1",
+                                       seq = UniProtID,
+                                       skip = "on",
+                                       output = "tabular"))
+    if (httr::status_code(response) == 200) {
+        lines <- unlist(strsplit(httr::content(response, "text"), "\\n"))
+        patt <- sprintf("\\|%s\\|", UniProtID)
+        lines <- lines[grep(patt, lines)]
+        features <- data.frame()
+        for (line in lines) {
+        tokens <- unlist(strsplit(line, "\\t|\\|"))
+        features <- rbind(features,
+                    data.frame(uID   =  tokens[2],
+                               start =  as.numeric(tokens[4]),
+                               end   =  as.numeric(tokens[5]),
+                               psID  =  tokens[6],
+                               psName = tokens[7],
+                               stringsAsFactors = FALSE))
+        }
+    } else {
+        features <- character(0)
+    }
+    return(features)
+}
+#fetchScanProsite("P39678") == dbFetchPrositeFeatures("P39678") returns all TRUEs!
+</source>
+
+;NCBI Entrez eUtils API
+
+Somewhat limited data can be retieved similarly with ease from NCBI. The format is in XML.
+
+[https://www.ncbi.nlm.nih.gov/books/NBK25500/ QuickStart Handbook of E-utilities]
+
+Instructions are in "RPR-eUtils_and_XML.R"
+:* Retrieval is via RefSeqID
+
+This method uses a lot of R-package <code>xml2</code>. Some useful functions:
+:* xml2::read_xml(<url>): returns a list
+:* xml2::as_list()
+:* xml2::xml_find_all(<doc>, "//"<tag>): <doc> is the list-like object obtained from <code>xml2::read_xml()</code>
+:* xml2::xml_text()
+
+Line 70-79:
+URL assembled will lead to the XML formatted entry for the entity specified by RefSeqID.
+
+Line 94-123:
+What on earth is the <id> tag?? The ID stored in the variable <code>GID</code>. I have never encountered anything like this.
+
+'''Turns out it is the GI number, or GenInfo number of NCBI. For each new sequence NCBI processes (even if it's an update), it gets a new GI number.'''
+
+'''See more at https://www.ncbi.nlm.nih.gov/genbank/sequenceids/'''
+
+Can also end this session by writing data download from NCBI into a function:
+
+<source lang="R">
+# Task: write a function that takes as input a RefSeq ID, fetches the taxonomy
+# information, returns a list with taxID and organism, if the operation is
+# successful, or a list of length 0 if there is an error.
+
+fetchNCBItaxData <- function(refSeqID) {
+    eUtilsBase <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+
+    #URL to get GI number
+    URL <- paste(eUtilsBase,
+             "esearch.fcgi?", 
+             "db=protein",    
+             "&term=", refSeqID,
+             sep="")
+    myXML <- xml2::read_xml(URL)
+
+    #I have to error check a bit differently than the ones above, as the request structure changed
+    #source("RPR-eUtils_XML.R") #Dependency on the node2text() function in the sourced code
+    GID <- node2text(myXML, "Id")
+    URL <- paste0(eUtilsBase,
+            "esummary.fcgi?",
+            "db=protein",
+            "&id=",
+            GID,
+            "&version=2.0")
+    myXML <- xml2::read_xml(URL)
+    taxID <- node2text(myXML, "TaxId")
+    organism <- node2text(myXML, "Organism")
+
+    #Turns out to meet the requirement, I do not need to check for error.
+    #If the retrieval is unsuccessful, node2text() anything will return character(0)
+    #So that works for me here.
+    outputList <- list(taxID, organism)
+    names(outputList) <- c("TaxId", "Organism")
+    
+    return(outputList)
+}
+</source>
 
 ==3.12 Data Integration==
 
