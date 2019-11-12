@@ -60,7 +60,7 @@ Samples are taken at time points throughout the cell cycle. Cells were (obviousl
 
 9. From the tab "Value Distribution", the expression distribution of samples are more or less unbiased:
 
-[[File:expr_boxplt.jpg|500px]]
+[[File:expr_boxplt.jpg|300px]]
 
 10. Under "GEO2R", look at "Top 250".
 
@@ -83,7 +83,7 @@ Results are expected to change.
 
 12. Search the query "(Mbp1 OR Swi6 OR Swi4 OR Nrm1 OR Cln1 OR Clb6 OR Act1 OR Alg9) AND GSE3635" in GEO Profiles.
 
-13. Go to entry of MBP1. The graphical view of expression over time is more apparently cyclic. Can probably fit with a sine curve or calculate time-correlation.
+13. Go to [https://www.ncbi.nlm.nih.gov/geo/tools/profileGraph.cgi?ID=GDS2347:YDL056W entry of MBP1]. The graphical view of expression over time is more apparently cyclic. Can probably fit with a sine curve or calculate time-correlation.
 
 14. R-scripts used for analysis is available for GEO2R
 
