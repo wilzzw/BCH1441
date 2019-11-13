@@ -67,3 +67,6 @@ Graphs! graphs every where! I imagine with graph theory this becomes a lot more 
 
 Homology: promiscuity pg 5
 CFTR channel
+
+alignment: statistical mechanics, frequency from the lab, middle alignment
+start from a alignment, iteratively adjust

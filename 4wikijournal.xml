@@ -1,5 +1,5 @@
 =4 Background Knowledge and Concepts=
-==4.6 STA-Information Theory==
+==4.7 STA-Information Theory==
 
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 30 min; date started: 2019-10-29; date completed: 2019-10-30
@@ -30,6 +30,30 @@ Difference between the entropy of a distribution expected and the entropy of the
 :* Also beware that small sample size always overestimate observed entropy (recall pseudocounts).
 
 ;Example application in bioinformatics - [https://en.wikipedia.org/wiki/Sequence_logo sequence logo plot] (i.e. unexpected biases in amino acid preference.. information about function and evolution?)
+
+==4.6 STA-Multiple Testing==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 25 min; date started: 2019-11-12; date completed: 2019-11-12
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 11:45, 12 November 2019 (EST)
+</div>
+
+;Family-wise error rate:
+Probability of having at least one false positives in a family of observations
+
+There is a problem with setting false positive threshold for each observation. The chance of having at least one false positives is a lot higher than the threshold.
+
+Corrections have been devised.
+
+;Bonferroni multiple adjustment:
+For N observations, each will be applied a false positive threshold of overall FWER divided by N.
+:* Not technically incorrect, but too conservative
+
+;False discovery rate approach:
+More adapted approach. Through accepting a certain number of false positives
+:* Tend to overemphasize the ones with low standard deviation values over the ones with consistently strong significances
+:* The standard approach for differential gene expression analysis
 
 ==4.5 STA-Significance==
 

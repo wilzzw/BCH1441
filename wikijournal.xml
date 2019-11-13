@@ -16,7 +16,7 @@ __TOC__
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 1.5 h; date started: 2019-11-11; date completed: 2019-11-11
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 23:59, 11 November 2019 (EST)
 </div>
 
 Data come from high throughput methods.
@@ -1175,7 +1175,7 @@ Time estimated: 1 h; taken 30 min; date started: 2019-10-15; date completed: 201
 
 {{Vspace}}
 =4 Background Knowledge and Concepts=
-==4.6 STA-Information Theory==
+==4.7 STA-Information Theory==
 
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 30 min; date started: 2019-10-29; date completed: 2019-10-30
@@ -1206,6 +1206,30 @@ Difference between the entropy of a distribution expected and the entropy of the
 :* Also beware that small sample size always overestimate observed entropy (recall pseudocounts).
 
 ;Example application in bioinformatics - [https://en.wikipedia.org/wiki/Sequence_logo sequence logo plot] (i.e. unexpected biases in amino acid preference.. information about function and evolution?)
+
+==4.6 STA-Multiple Testing==
+
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 25 min; date started: 2019-11-12; date completed: 2019-11-12
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 11:45, 12 November 2019 (EST)
+</div>
+
+;Family-wise error rate:
+Probability of having at least one false positives in a family of observations
+
+There is a problem with setting false positive threshold for each observation. The chance of having at least one false positives is a lot higher than the threshold.
+
+Corrections have been devised.
+
+;Bonferroni multiple adjustment:
+For N observations, each will be applied a false positive threshold of overall FWER divided by N.
+:* Not technically incorrect, but too conservative
+
+;False discovery rate approach:
+More adapted approach. Through accepting a certain number of false positives
+:* Tend to overemphasize the ones with low standard deviation values over the ones with consistently strong significances
+:* The standard approach for differential gene expression analysis
 
 ==4.5 STA-Significance==
 
@@ -1542,7 +1566,74 @@ Time estimated: 1 h; taken 150 min; date started: 2019-10-10; date completed: 20
 
 {{Vspace}}
 =3 Intro to Bioinformatics and Databases=
-==3.13 Software Development for Research Labs==
+==3.15 Sequence Alignments==
+===3.15.1 The sequence alignment problem===
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 20 min; date started: 2019-11-13; date completed: 2019-11-13
+
+~~~~
+</div>
+
+Much of bioinformatics is based on inference from similarities.
+
+e.g. sequence similarity and inference of homology:
+If sequences are significantly more similar than expected by chance, we typically hypothesize shared ancestry and conservation.
+
+To measure sequence similarity, a pre-requisite is typically the '''alignment of sequences'''
+
+;Alignment:
+A notation for mapping between a pair of amino acids. The mapping should have meanings.
+
+Typically, the alignment is such to maximize similarity between corresponding positions of amino acids.
+
+'''Correct alignment have meaningful matching of amino acids, from which biological inferences can be made (e.g. descending from a common ancestor)'''
+
+Complications:
+Insertion and deletion, multiple alignment possibilities, unclear what is the "true" alignment
+
+Strategies:
+Minimize gap lengths, avoid aligning non-equivalent residues, maximize similarity of aligned sequences
+:* All have caveats by themselves
+
+'''Superposition of 3D structures''' can be used as the basis of "true alignment". However, it does not tell the evolutionary history of sequence change.
+
+===3.15.2 Amino acid similarity===
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 50 min; date started: 2019-11-13; date completed: 2019-11-13
+
+~~~~
+</div>
+
+;Ways to model amino acid similarity:
+:* identity-only, biophysical, required number of nucleotide changes, amino acids in similar context, other empirical...
+
+;There are many ways to qualify similar amino acids, but quantifying similarity is not straightforward.
+:* Function of an amino acid depends on context OR multiple functions are possible (Still, sequence alignment would typically be independent of context)
+:* Can think of amino acid similarity system as a ''model'', abstracted into a '''scoring matrix'''
+:* Each kind of similarity model would constitute an instance of a scoring matrix
+
+Biophysical similarity turns out to be the least obvious, for that score will depend on different biophysical properties, and how to weight them is not clear.
+
+Instead of first principle similarity, often empirical similarities are adopted.
+:* i.e. empirical probability of substitution, based on evolution of point mutations
+:* [https://en.wikipedia.org/wiki/BLOSUM BLOSUM vs PAM]? (PAM from global alignment of closely related proteins and extrapolate to greater evolutionary divergence. BLOSUM from local alignment of motifs and does not extrapolate)
+
+BLOSUM also incorporates/considers more evolutionarily distant sequences?
+
+;Activity - Inspect BLOSUM62 matrix (the typical go-to option)
+:* Not all identical pairs are equal. e.g. Ser-Ser is lower than His-His, meaning that His is probably more likely conserved.
+:* Pairs of similar biophysical properties tend to have higher scores (even positive). e.g. Lys-Leu is -2 while Ile-Leu is 2
+:* (A key difference between PAM and BLOSUM) Arg-Trp is low/penalized in BLOSUM, while quite high in Arg-Trp in PAM, due to the ease of mutation.
+
+ Biophysical properties of R and W are very different, 
+ yet they seem like they would also often be having their own conserved functions related to their respective biophysical properties.
+ I suspect the ease of mutation R-W makes the random R and W in closely related sequences easily interchanged.
+ While in distantly related sequences, with conserved motifs considered, 
+ R or W are unlikely to be randomly there and hence have respective conserved functions that would not be easily interchanged.
+
+
+==3.14 Software Development for Research Labs==
 
 <div class="time-estimate">
 Time estimated: 2.5 h; taken 115 min; date started: 2019-10-27; date completed: 2019-10-28
