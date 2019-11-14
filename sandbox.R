@@ -479,3 +479,85 @@ fetchNCBItaxData <- function(refSeqID) {
     
     return(outputList)
 }
+
+#Oral exam code
+N <- 100000
+
+#A named vector whose names are codons and elements are one-letter-code of corresponding amino acids
+GENCODE <- Biostrings::GENETIC_CODE
+NUCLEOTIDES <- c("A", "G", "C", "T")
+MUTATION_TYPES <- c("synonymous", "missense", "nonsense")
+
+#mRNA sequences
+load(file = "./data/ABC-INT-Mutation_impact.RData")
+
+translateCodon <- function(codon) {
+    aa <- GENCODE[codon]
+    return(aa)
+}
+
+#Skipped checking the case where before == after
+typeOfMutation <- function(before, after) {
+    aaBefore <- translateCodon(before)
+    aaAfter <- translateCodon(after)
+    if (aaBefore == aaAfter) {
+        return("synonymous")
+    } else if (aaAfter == "*") {
+        return("nonsense")
+    } else {
+        return("missense")
+    }
+}
+
+pointMutate <- function(nucleoSeq) {
+    codonMutate <- sample(1:length(nucleoSeq), 1) #Find a codon position to mutate
+    posMutate <- sample(1:3, 1) #Find a position within the selected codon to mutate
+    beforeCodon <- nucleoSeq[codonMutate]
+    splitCodon <- unlist(strsplit(beforeCodon, split=""))
+    beforeNucleotide <- splitCodon[posMutate]
+    mutatePossible <- NUCLEOTIDES[NUCLEOTIDES != beforeNucleotide]
+    afterNucleotide <- sample(mutatePossible, 1)
+    splitCodon[posMutate] <- afterNucleotide
+    afterCodon <- paste0(splitCodon, collapse="")
+    #print(beforeCodon)
+    #print(afterCodon)
+    mutType <- typeOfMutation(beforeCodon, afterCodon)
+    return(mutType)
+
+    #nucleoSeq[codonMutate] <- afterCodon
+    #return(nucleoSeq)
+}
+
+#Start Mutating and collecting results!
+resultKRAS <- character(0)
+resultPTPN11 <- character(0)
+resultOR1A1 <- character(0)
+
+set.seed(1000)
+for (i in 1:N) {
+    resultKRAS[i] <- pointMutate(KRascodons)
+    resultPTPN11[i] <- pointMutate(PTPN11codons)
+    resultOR1A1[i] <- pointMutate(OR1A1codons)
+}
+set.seed(NULL)
+
+freqMut <- function(result, mutType) {
+    numMutType <- length(result[result == mutType])
+    proportionMutType <- numMutType / N
+    return(proportionMutType)
+}
+
+for (m in MUTATION_TYPES) {
+    cat(sprintf("%s: %s", m, freqMut(resultKRAS, m)))
+    cat("\n")
+}
+
+for (m in MUTATION_TYPES) {
+    cat(sprintf("%s: %s", m, freqMut(resultPTPN11, m)))
+    cat("\n")
+}
+
+for (m in MUTATION_TYPES) {
+    cat(sprintf("%s: %s", m, freqMut(resultOR1A1, m)))
+    cat("\n")
+}
