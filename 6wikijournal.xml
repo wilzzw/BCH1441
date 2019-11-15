@@ -1,4 +1,57 @@
 =6 Genes and Genome=
+==6.3 Mutation Impact==
+;Activity:
+Simulate point mutations of three genes (KRas, PTPN11, OR1A1) related to oncogenesis and analyze the outcomes of these mutations.
+
+1. Build an R-code to perform such simulation experiment and compile the frequencies of each type of mutations:
+[[User:Zhi Wei Zeng/ABC-INT-Mutation_impact| Link to the R-code for the activity]]
+
+2. Modify and build on the R-code to plot the data from simulated mutation frequency distribution and frequency distribution obtained from IntOGen.
+
+I excluded a splice-site mutation found in the database of PTPN11. Not applicable here.
+
+Outcomes of simulated mutation type frequencies:
+               KRas  PTPN11   OR1A1
+ synonymous 0.20638 0.21112 0.23323
+ missense   0.74205 0.74102 0.73326
+ nonsense   0.05157 0.04786 0.03351
+
+[[File:simulated.jpg]]
+
+Mutation type frequencies obtained from IntOGen:
+                   KRas     PTPN11      OR1A1
+ synonymous 0.008658009 0.13306452 0.32989691
+ missense   0.990043290 0.84677419 0.62371134
+ nonsense   0.001298701 0.02016129 0.04639175
+
+[[File:from_IntOGen.jpg]]
+
+Distribution for KRas according to the database seems wildly different than my simulated results. As for PTPN11 and OR1A1, somewhat different but not as much.
+
+3. To quantify the difference in distributions, I decide to use Kullback–Leibler divergence method.
+
+<source lang="R">
+#This code should continue from the "Link to the R-code for the activity"
+#Compute KL-divergence. Without considering the lengths of p and q
+KL_Div <- function(p, q) {
+    val <- sum(p * log(p / q))
+    return(val)
+}
+
+#For KRas...
+(KL_Div(freqDistributions[,"KRas"], databaseFreqDistributions[,"KRas"])) #0.6303814
+
+#For PTPN11...
+(KL_Div(freqDistributions[,"PTPN11"], databaseFreqDistributions[,"PTPN11"])) #0.0399703
+
+#For OR1A1...
+(KL_Div(freqDistributions[,"OR1A1"], databaseFreqDistributions[,"OR1A1"])) #0.02687701
+</source>
+
+;Conclusions:
+:* KL-divergence value for my simulated distribution vs IntOGen database is much larger for KRas than for PTPN11 and OR1A1. I am tempted to say that there is important difference for KRas but not the other two.
+:* I have not determined how unlikely are my KL-divergence values. To do that, I will  simulate P-values for them.
+
 ==6.2 Genetic Code Optimality==
 ;Objective: Do a computational experiment outlined in RPR-Genetic_code_optimality.R to study how nature arrived at the universal genetic code
 

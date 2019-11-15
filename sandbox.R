@@ -483,14 +483,14 @@ fetchNCBItaxData <- function(refSeqID) {
 #Oral exam code
 N <- 100000
 
-#A named vector whose names are codons and elements are one-letter-code of corresponding amino acids
-GENCODE <- Biostrings::GENETIC_CODE
+GENCODE <- Biostrings::GENETIC_CODE #A named vector whose names are codons and elements are one-letter-code of corresponding amino acids
 NUCLEOTIDES <- c("A", "G", "C", "T")
 MUTATION_TYPES <- c("synonymous", "missense", "nonsense")
 
 #mRNA sequences
-load(file = "./data/ABC-INT-Mutation_impact.RData")
+load(file = "./data/ABC-INT-Mutation_impact.RData") #Get mRNA in terms of +strand DNA sequence data for 3 genes
 
+#Translate codons into one-letter code of amino acids
 translateCodon <- function(codon) {
     aa <- GENCODE[codon]
     return(aa)
@@ -510,18 +510,18 @@ typeOfMutation <- function(before, after) {
 }
 
 pointMutate <- function(nucleoSeq) {
-    codonMutate <- sample(1:length(nucleoSeq), 1) #Find a codon position to mutate
-    posMutate <- sample(1:3, 1) #Find a position within the selected codon to mutate
-    beforeCodon <- nucleoSeq[codonMutate]
-    splitCodon <- unlist(strsplit(beforeCodon, split=""))
-    beforeNucleotide <- splitCodon[posMutate]
-    mutatePossible <- NUCLEOTIDES[NUCLEOTIDES != beforeNucleotide]
-    afterNucleotide <- sample(mutatePossible, 1)
-    splitCodon[posMutate] <- afterNucleotide
-    afterCodon <- paste0(splitCodon, collapse="")
+    codonMutate <- sample(1:length(nucleoSeq), 1)                   #Find a codon position to mutate
+    posMutate <- sample(1:3, 1)                                     #Find a position within the selected codon to mutate
+    beforeCodon <- nucleoSeq[codonMutate]                           #Save the codon before mutation
+    splitCodon <- unlist(strsplit(beforeCodon, split=""))           #Split nucleotide letters for substitution. unlist() turns it into a vector of characters
+    beforeNucleotide <- splitCodon[posMutate]                       #Record the nucleotide to be mutated
+    mutatePossible <- NUCLEOTIDES[NUCLEOTIDES != beforeNucleotide]  #Make sure mutation happens by excluding the same nucleotide as before mutation
+    afterNucleotide <- sample(mutatePossible, 1)                    #Randomly mutate into ...
+    splitCodon[posMutate] <- afterNucleotide                        #Mutate!
+    afterCodon <- paste0(splitCodon, collapse="")                   #concat into codon after mutation
     #print(beforeCodon)
     #print(afterCodon)
-    mutType <- typeOfMutation(beforeCodon, afterCodon)
+    mutType <- typeOfMutation(beforeCodon, afterCodon)              #Categorize the type of mutation it just underwent
     return(mutType)
 
     #nucleoSeq[codonMutate] <- afterCodon
@@ -541,23 +541,70 @@ for (i in 1:N) {
 }
 set.seed(NULL)
 
+#Calculate the frequency of each type of mutation
 freqMut <- function(result, mutType) {
     numMutType <- length(result[result == mutType])
     proportionMutType <- numMutType / N
     return(proportionMutType)
 }
 
+#Collect frequencies
+freqDistributions <- data.frame(KRas = numeric(length(MUTATION_TYPES)),
+                                PTPN11 = numeric(length(MUTATION_TYPES)),
+                                OR1A1 = numeric(length(MUTATION_TYPES)),
+                                row.names = MUTATION_TYPES)
+
+#Frequency data collected from IntOGen
+#Exclude any splice mutations
+databaseFreqDistributions <- data.frame(KRas = c(20/2310, 2287/2310, 3/2310),
+                                        PTPN11 = c(33/248, 210/248, 5/248),
+                                        OR1A1 = c(64/194, 121/194, 9/194),
+                                        row.names = MUTATION_TYPES)
+
+cat("KRas mutations:")
+cat("\n")
 for (m in MUTATION_TYPES) {
-    cat(sprintf("%s: %s", m, freqMut(resultKRAS, m)))
+    freq <- freqMut(resultKRAS, m)
+    freqDistributions[m, "KRas"] <- freq
+    cat(sprintf("%s: %s", m, freq))
     cat("\n")
 }
 
+cat("PTPN11 mutations:")
+cat("\n")
 for (m in MUTATION_TYPES) {
+    freq <- freqMut(resultPTPN11, m)
+    freqDistributions[m, "PTPN11"] <- freq
     cat(sprintf("%s: %s", m, freqMut(resultPTPN11, m)))
     cat("\n")
 }
 
+cat("OR1A1 mutations:")
+cat("\n")
 for (m in MUTATION_TYPES) {
+    freq <- freqMut(resultOR1A1, m)
+    freqDistributions[m, "OR1A1"] <- freq
     cat(sprintf("%s: %s", m, freqMut(resultOR1A1, m)))
     cat("\n")
 }
+
+#Plot
+#Method adopted from Sven Hohenstein's answer at https://stackoverflow.com/questions/20349929/stacked-bar-plot-in-r
+barplot(as.matrix(freqDistributions))
+barplot(as.matrix(databaseFreqDistributions))
+
+
+#Compute KL-divergence. Without considering the lengths of p and q
+KL_Div <- function(p, q) {
+    val <- sum(p * log(p / q))
+    return(val)
+}
+
+#For KRas...
+(KL_Div(freqDistributions[,"KRas"], databaseFreqDistributions[,"KRas"])) #0.6303814
+
+#For PTPN11...
+(KL_Div(freqDistributions[,"PTPN11"], databaseFreqDistributions[,"PTPN11"])) #0.0399703
+
+#For OR1A1...
+(KL_Div(freqDistributions[,"OR1A1"], databaseFreqDistributions[,"OR1A1"])) #0.02687701
