@@ -600,11 +600,31 @@ KL_Div <- function(p, q) {
     return(val)
 }
 
+obsDiv <- numeric(0)
+
 #For KRas...
-(KL_Div(freqDistributions[,"KRas"], databaseFreqDistributions[,"KRas"])) #0.6303814
+(obsDiv["KRas"] <- KL_Div(freqDistributions[,"KRas"], databaseFreqDistributions[,"KRas"])) #0.6303814
 
 #For PTPN11...
-(KL_Div(freqDistributions[,"PTPN11"], databaseFreqDistributions[,"PTPN11"])) #0.0399703
+(obsDiv["PTPN11"] <- KL_Div(freqDistributions[,"PTPN11"], databaseFreqDistributions[,"PTPN11"])) #0.0399703
 
 #For OR1A1...
-(KL_Div(freqDistributions[,"OR1A1"], databaseFreqDistributions[,"OR1A1"])) #0.02687701
+(obsDiv["OR1A1"] <- KL_Div(freqDistributions[,"OR1A1"], databaseFreqDistributions[,"OR1A1"])) #0.02687701
+
+#Simulate P-values
+#First, I will simulate the distribution of the KL-Divergence
+gene <- "KRas"
+N <- 1000
+nSample <- 100
+truePMF <- freqDistributions[,gene]
+
+divs <- numeric(N)
+for (i in 1:N) {
+  x <- table(sample(MUTATION_TYPES, nSample, replace = TRUE, prob=truePMF))
+  divs[i] <- KLdiv(truePMF, pmfPC(x, MUTATION_TYPES))
+}
+
+#Now, how many are as extreme as the value, or more extreme?
+(moreExtreme <- sum(divs >= obsDiv[gene]))
+#P-value
+(Pval <- moreExtreme / length(divs))

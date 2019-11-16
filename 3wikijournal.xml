@@ -4,7 +4,7 @@
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 20 min; date started: 2019-11-13; date completed: 2019-11-13
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:52, 13 November 2019 (EST)
 </div>
 
 Much of bioinformatics is based on inference from similarities.
@@ -35,7 +35,7 @@ Minimize gap lengths, avoid aligning non-equivalent residues, maximize similarit
 <div class="time-estimate">
 Time estimated: 1 h; taken 50 min; date started: 2019-11-13; date completed: 2019-11-13
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:52, 13 November 2019 (EST)
 </div>
 
 ;Ways to model amino acid similarity:
@@ -64,6 +64,19 @@ BLOSUM also incorporates/considers more evolutionarily distant sequences?
  I suspect the ease of mutation R-W makes the random R and W in closely related sequences easily interchanged.
  While in distantly related sequences, with conserved motifs considered, 
  R or W are unlikely to be randomly there and hence have respective conserved functions that would not be easily interchanged.
+
+===3.15.3 Optimal sequence alignment===
+
+20 min
+
+Inference of homology based on sequence similarity requires proper alignment (ideally the "correct" alignment)
+
+'''The "correct/true" alignment cannot be obtained. The best thing we can do is obtain an optimal alignment'''
+
+;The logic:
+True alignment is not as "optimal" as the optimal (best possible) alignment. If even the optimal alignment cannot support homology, then the true alignment cannot either.
+:* Does it mean that if optimal alignment supports homology, true alignment '''''might''''' support homology?
+
 
 
 ==3.14 Software Development for Research Labs==
