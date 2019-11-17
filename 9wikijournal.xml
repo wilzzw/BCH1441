@@ -69,7 +69,7 @@ BLOSUM also incorporates/considers more evolutionarily distant sequences?
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 140 min; date started: 2019-11-14; date completed: 2019-11-17
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:56, 17 November 2019 (EST)
 </div>
 
 Inference of homology based on sequence similarity requires proper alignment (ideally the "correct" alignment)
@@ -183,7 +183,7 @@ Have not done "BIN-FUNC-Annotation". Follow the instructions in 4.1.1
 
 Line 337:
 <div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
-<span style="color:red">'''''Error messagess'''''</span>
+<span style="color:red">'''''Error messages'''''</span>
 <div class="mw-collapsible-content">
 <code>
 Error: lexical error: invalid char in json text.
@@ -198,5 +198,104 @@ Error: lexical error: invalid char in json text.
 to <code>myDB <- dbAddAnnotation(myDB, fromJSON("../ERECY-Annotations.json"))</code>. My bad..
 
 Finally, working as intended.
+
+==9.4 BLAST (Basic Local Alignment Search Tool)==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 105 min; date started: 2019-11-17; date completed: 2019-11-17
+
+~~~~
+</div>
+
+;Motivation:
+The sequence alignment computation learned so far does not scale very well (<math>O(n^2)</math>)
+
+This makes searching on database scale or genome scale, which for some purposes is necessary, too slow (e.g. finding orthologs vis reciprocal best-match).
+
+;BLAST (comes to the rescue..)
+:* '''Fast''': use of index table of database "words". Divide sequence into "query words", map to similar "words", extend to high scoring segment pairs (HSPs), assemble HSPs into alignments
+:* Heuristic: not optimal. Also not the most sensitive
+
+;BLAST parameters:
+:* algorithm
+:* scoring parameters
+:* filters and masking
+
+;BLAST results:
+:* A '''hit''' is an alignment with one or more HSPs found.
+:* Outputs are ranked by scores (quality of alignment). Scores are calculated based on scoring matrix specified. Also sum of pairscores minus gap penalties.
+:* Note that scores are in '''bits'''. A normalized measure by NCBI allowing comparison of scores among different choices of matrices.
+:* Percent identity, percent similarity, gap fraction
+:* E-value: significance of alignment
+
+;E-value:
+:* '''It is a significance measure of the alignment score'''
+:* The E-value for a given alignment score is the expectation value for (the number of alignments with score equal or better occuring in a hypothetical database)
+:: This hypothetical database is such that it does not contain a homologous sequence (therefore E-value depends on database size)
+:* Sort of like a chance of false homology
+
+ Caution: E-value is not a full replacement for judgement based on biological intuition. It's just one of the useful pieces of information.
+
+ Always check the annotations (if available) and the actual alignment. Weigh in information not captured by E-value.
+
+;Final notes:
+:* Typical approaches when too many uninformative hits: restrict the database (e.g. refSeq or organism specific ones), search with substrings, E-value criterion (proceed this with caution)
+:* Typical approaches when too few hits: search with domains (increase sensitivity), database restrictions, E-value bars, loosen scoring matrix, PSI-BLAST
+:* Judiciously including extra information helps with search sensitivity
+
+;Activity - Unravel the orthology between Mbp1_SACCE and Mbp1_ERECY via RBM
+
+1. Go to https://blast.ncbi.nlm.nih.gov/Blast.cgi and "Protein BLAST"
+
+2. Use "XP_003645298" as query sequence. Select database "refseq_protein". Restrict "Organism" to "Saccharomyces cerevisiae (taxid:4932)"
+
+3. BLAST!
+
+4. Top hit is NP_010227.1. Score is 703. E-value is 0.0
+
+;Conclusion:
+:* Orthology between Mbp1_SACCE and Mbp1_ERECY confirmed via RBM.
+
+:* In the past, Boris encountered a perhaps rare cases where DNA-binding domain annotation is corrupted. Keep in mind this could actually happen?!
+
+Issues pertaining to Mbp1 APSES domain annotations out there:
+:* APSES annotation no longer exists in pFam. It has merged with KilA-N due to discovered homology. However, InterPro still has APSES.
+:* Inconsistency between CDD and SMART annotations of "pFam 04383" domain (expected though..)
+:* We will consider 4-102 of NP_010227 sequence as APSES domain. Apparently KilA-N annotation misses the almost conserved & structurally defined N-terminus of APSES in fungi..
+
+5. Go back to Protein BLAST. Use the APSES of Mbp1_SACCE as sequence query (FASTA):
+
+ >APSES_MBP1 Residues 4-102 of S. cerevisiae Mbp1
+ QIYSARYSGVDVYEFIHSTGSIMKRKKDDWVNATHILKAANFAKAKRTRI
+ LEKEVLKETHEKVQGGFGKYQGTWVPLNIAKQLAEKFSVYDQLKPLFDF
+
+6. Select "refseq_protein" as the "Database". Use the taxid "931890" as "Organism".
+
+7. BLAST!
+
+8. The top hit is indeed XP_003645298.1. Great! Forward confirmed (E-value 2e-50, score 167, sequence identity 83.84%).
+
+9. Cautioned that it's not ideal to use the sequence from BLAST alignment to do reverse search, as BLAST is not optimal alignment.
+
+Shall use optimal alignment to determine best alignment and use that to define domain boundaries for ERECY.
+
+10. Retrieve APSES of ERECY sequence definitions from optimal alignment obtained from #9.3 (11-109) and use this for reverse search (Procedures following "BIN-ALI-BLAST.R")
+
+(Though it turns out that non-optimal alignment produced by BLAST is also 11-109. Secretly laughing in bioinformatics..)
+
+Line 70:
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+<span style="color:red">'''''Error message'''''</span>
+<div class="mw-collapsible-content">
+<code>
+Error in requireNamespace(httr, quietly = TRUE) : object 'httr' not found
+</code>
+</div>
+</div>
+
+<span style="color:green">'''Solution:'''</span> Line 34 in "BLAST.R", httr should be a string "httr".
+
+Line 91:
+Top hit is "NP_010227.1", the Mbp1_SACCE. Confirmed RBM of APSES for Mbp1_ERECY!
 
 {{Vspace}}

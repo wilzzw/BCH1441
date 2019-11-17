@@ -14,6 +14,307 @@ The relevant contents of the oral exam can be found at [[#6.3_Mutation_Impact]]
 __TOC__
 
 {{Vspace}}
+=9 Sequence Alignments=
+==9.1 The sequence alignment problem==
+<div class="time-estimate">
+Time estimated: 0.5 h; taken 20 min; date started: 2019-11-13; date completed: 2019-11-13
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:52, 13 November 2019 (EST)
+</div>
+
+Much of bioinformatics is based on inference from similarities.
+
+e.g. sequence similarity and inference of homology:
+If sequences are significantly more similar than expected by chance, we typically hypothesize shared ancestry and conservation.
+
+To measure sequence similarity, a pre-requisite is typically the '''alignment of sequences'''
+
+;Alignment:
+A notation for mapping between a pair of amino acids. The mapping should have meanings.
+
+Typically, the alignment is such to maximize similarity between corresponding positions of amino acids.
+
+'''Correct alignment have meaningful matching of amino acids, from which biological inferences can be made (e.g. descending from a common ancestor)'''
+
+Complications:
+Insertion and deletion, multiple alignment possibilities, unclear what is the "true" alignment
+
+Strategies:
+Minimize gap lengths, avoid aligning non-equivalent residues, maximize similarity of aligned sequences
+:* All have caveats by themselves
+
+'''Superposition of 3D structures''' can be used as the basis of "true alignment". However, it does not tell the evolutionary history of sequence change.
+
+==9.2 Amino acid similarity==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 50 min; date started: 2019-11-13; date completed: 2019-11-13
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:52, 13 November 2019 (EST)
+</div>
+
+;Ways to model amino acid similarity:
+:* identity-only, biophysical, required number of nucleotide changes, amino acids in similar context, other empirical...
+
+;There are many ways to qualify similar amino acids, but quantifying similarity is not straightforward.
+:* Function of an amino acid depends on context OR multiple functions are possible (Still, sequence alignment would typically be independent of context)
+:* Can think of amino acid similarity system as a ''model'', abstracted into a '''scoring matrix'''
+:* Each kind of similarity model would constitute an instance of a scoring matrix
+
+Biophysical similarity turns out to be the least obvious, for that score will depend on different biophysical properties, and how to weight them is not clear.
+
+Instead of first principle similarity, often empirical similarities are adopted.
+:* i.e. empirical probability of substitution, based on evolution of point mutations
+:* [https://en.wikipedia.org/wiki/BLOSUM BLOSUM vs PAM]? (PAM from global alignment of closely related proteins and extrapolate to greater evolutionary divergence. BLOSUM from local alignment of motifs and does not extrapolate)
+
+BLOSUM also incorporates/considers more evolutionarily distant sequences?
+
+;Activity - Inspect BLOSUM62 matrix (the typical go-to option)
+:* Not all identical pairs are equal. e.g. Ser-Ser is lower than His-His, meaning that His is probably more likely conserved.
+:* Pairs of similar biophysical properties tend to have higher scores (even positive). e.g. Lys-Leu is -2 while Ile-Leu is 2
+:* (A key difference between PAM and BLOSUM) Arg-Trp is low/penalized in BLOSUM, while quite high in Arg-Trp in PAM, due to the ease of mutation.
+
+ Biophysical properties of R and W are very different, 
+ yet they seem like they would also often be having their own conserved functions related to their respective biophysical properties.
+ I suspect the ease of mutation R-W makes the random R and W in closely related sequences easily interchanged.
+ While in distantly related sequences, with conserved motifs considered, 
+ R or W are unlikely to be randomly there and hence have respective conserved functions that would not be easily interchanged.
+
+==9.3 Optimal sequence alignment==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 140 min; date started: 2019-11-14; date completed: 2019-11-17
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:56, 17 November 2019 (EST)
+</div>
+
+Inference of homology based on sequence similarity requires proper alignment (ideally the "correct" alignment)
+
+'''The "correct/true" alignment cannot be obtained. The best thing we can do is obtain an optimal alignment'''
+
+;The logic:
+True alignment is not as "optimal" as the optimal (best possible) alignment. If even the optimal alignment cannot support homology, then the true alignment cannot either.
+:* Does it mean that if optimal alignment supports homology, true alignment '''''might''''' support homology?
+
+(By optimal we mean maximizing sequence similarity score under a particular evolutionary model)
+
+'''For a given alignment, can quantify sequence similarity as the sum of pairwise matching scores'''
+:* Pairscores of pairing possibilities can be tabulated as a matrix
+
+;"Proving" homology: under a particular model of evolution, if it is sufficiently improbable that a given sequence similarity is due to random chance, then we assume homology of the most likely explanation.
+
+;Generating the optimal sequence alignment:
+:* Generate all possible alignments is an intractable problem. Complications due to existence of '''indels (sequence insertion/deletion)'''
+:* Instead, we use an approach that make use of a path matrix. But there is an '''assumption'''
+ Assumption/Premise: Alignment score = Sum of Pairscores - Penalty for Indels
+
+This is the independence assumption. The alignment score for each aligned pair is independent of each other.
+
+Any alignment can be represented as a path in the path matrix.
+
+;The method - Needleman–Wunsch algorithm
+:* Implements dynamic programming principles
+
+;A note on modelling indels:
+:* Indels are infrequent evolutionary events
+:* Indels cannot be modelled with mechanistic considerations
+:* Often, a simple penalty score function is used to model indels in sequence alignment: <math>w(l) = a + bl</math> (affine gap model)
+:* Two parameters <math>a</math> and <math>b</math>: <math>a</math> imposes a "fixed cost" for having an indel. <math>b</math> parametrizes that longer indels are less frequent
+:* Despite analysis showing that gap length distribution appears to be log-based, proposed log-labsed gap functions do not seem to improve alignment in practice [Cartwright, 2006]
+
+Penalty scores from gap functions can be applied easily in Needleman–Wunsch path matrix method.
+
+;Global vs local alignments:
+:* Beware! A mathematically optimal alignment can be generated from just any two sequences. It's meaningless to generate alignment between two non-conserved or nonhomologous sequences
+:* If the lengths are very different, or clearly sequences are multi-domain, or only domains have homology, local alignment is more favourable > Smith–Waterman algorithm
+:* Local alignment used especially when insertion of domains would make gap penalty unreasonably large
+:* Use global alignment for whole-length homologous sequences, bridging segments of high divergence?, discovering islands of similarity
+
+;Final notes:
+:* Impact of penalty function will depend on the scoring matrix as well.
+:* Things to consider reporting: matrix, gap penalty functions, algorithm/methodology of alignment, percent identity
+:* The 25% homology rule-of-thumb. But not a replacement for judicious analysis. Evidence for homology can stem from many other sources of similarities (e.g. structural, functional, sequence features etc.)
+
+;Tools for sequence alignment:
+:* EMBOSS tools: Needle (optimal global), Water (optimal local), stretcher, matcher, supermatcher
+
+;Activity 1 - Explore EMBOSS tools and explore the impact of gap function parameters
+
+1. Get sequences for MBP1 of Saccharomyces cerevisiae as well as of MYSPE from stored data
+
+<source lang="R">
+library(jsonlite)
+source("../makeProteinDB.R")
+
+#Get MBP1_SACCE sequence
+sel <- myDB$protein$name == "MBP1_SACCE"
+myDB$protein$sequence[sel]
+
+#Get MBP1_ERECY sequence
+sel <- myDB$protein$name == paste0("MBP1_", biCode(MYSPE))
+myDB$protein$sequence[sel]
+</source>
+
+2. Go to EMBOSS tools https://www.ebi.ac.uk/Tools/emboss/
+
+3. Launch "Water". Paste sequence for "MBP1_SACCE" and "MBP1_ERECY" as two sequences to be aligned. Start job with all other default settings.
+
+4. Inspect and download as "emboss_water-I20191117-044521-0763-24891350-p1m.txt"
+
+5. The N-terminus domain is very well aligned. The overall sequence identity is 47.4%. The N-terminus region is obviously well above 25% sequence identity.
+
+6. Redo the same alignment. But under "More Options", set "Gap Open" to 25 and "Gap Extend" to 5.0
+
+7. Inspect and download as "emboss_water-I20191117-045631-0075-96632173-p1m.txt"
+
+;Conclusions:
+:* Under the 25%-rule, the APSES domain of the two sequences considered are homologous
+:* Increasing gap penalty here reduces both number and total amount of the gaps (12 vs 6; 12.5% vs 4.8%)
+:* Somehow sequence identity did not seem to change after increasing the gap penalty (47.4% vs 47.3%). However, the alignment score decreased a lot (1883 vs 1563)
+
+8. Do exactly the same, except now Launch "Needle" with all default settings.
+
+9. Inspect and download result as "emboss_needle-I20191117-050738-0877-87249423-p2m.txt"
+
+;Conclusions:
+:* Global alignment captures the N-terminus excellent alignment as well. The sequence identity and alignment scores are not heavily compromised (46.8% and 1878)
+:* The entire sequences were used here. There is an N-terminal indel.
+:* Percent gaps: 13.2%
+
+;Activity 2 - Explore Biostrings Pairwise sequence alignment tools in R with "BIN-ALI-Optimal_sequence_alignment.R"
+
+Useful functions:
+:* Biostrings::pairwiseAlignment(<pattern>, <subject>): <pattern>, <subject> are sequences to be aligned. Can be vectors of characters or XString objects. <subject> vector can only be length 1
+:: Useful additional arguments: type, substitutionMatrix, gapOpening, gapExtension
+:: Returns an incredibly complicated class of object "PairwiseAlignmentsSingleSubject"
+:* Biostrings::writePairwiseAlignments(<alignment_object>): <alignment_object> is of class "PairwiseAlignmentsSingleSubject"
+:* seqinr::s2c(<string>): string to a vector of characters
+
+Useful syntax:
+:* @: class attributes?
+
+Line 228: <code>type="Overlap"</code>??
+
+Have not done "BIN-FUNC-Annotation". Follow the instructions in 4.1.1
+
+Line 337:
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+<span style="color:red">'''''Error messages'''''</span>
+<div class="mw-collapsible-content">
+<code>
+Error: lexical error: invalid char in json text.
+                                      <MYSPE>-Annotations.json
+                    (right here) ------^ 
+</code>
+</div>
+</div>
+
+<span style="color:green">'''Solution:'''</span> Change Line 8 in "makeProteinDB.R" from <code>myDB <- dbAddAnnotation(myDB, fromJSON("<MYSPE>-Annotations.json"))</code>
+
+to <code>myDB <- dbAddAnnotation(myDB, fromJSON("../ERECY-Annotations.json"))</code>. My bad..
+
+Finally, working as intended.
+
+==9.4 BLAST (Basic Local Alignment Search Tool)==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 105 min; date started: 2019-11-17; date completed: 2019-11-17
+
+~~~~
+</div>
+
+;Motivation:
+The sequence alignment computation learned so far does not scale very well (<math>O(n^2)</math>)
+
+This makes searching on database scale or genome scale, which for some purposes is necessary, too slow (e.g. finding orthologs vis reciprocal best-match).
+
+;BLAST (comes to the rescue..)
+:* '''Fast''': use of index table of database "words". Divide sequence into "query words", map to similar "words", extend to high scoring segment pairs (HSPs), assemble HSPs into alignments
+:* Heuristic: not optimal. Also not the most sensitive
+
+;BLAST parameters:
+:* algorithm
+:* scoring parameters
+:* filters and masking
+
+;BLAST results:
+:* A '''hit''' is an alignment with one or more HSPs found.
+:* Outputs are ranked by scores (quality of alignment). Scores are calculated based on scoring matrix specified. Also sum of pairscores minus gap penalties.
+:* Note that scores are in '''bits'''. A normalized measure by NCBI allowing comparison of scores among different choices of matrices.
+:* Percent identity, percent similarity, gap fraction
+:* E-value: significance of alignment
+
+;E-value:
+:* '''It is a significance measure of the alignment score'''
+:* The E-value for a given alignment score is the expectation value for (the number of alignments with score equal or better occuring in a hypothetical database)
+:: This hypothetical database is such that it does not contain a homologous sequence (therefore E-value depends on database size)
+:* Sort of like a chance of false homology
+
+ Caution: E-value is not a full replacement for judgement based on biological intuition. It's just one of the useful pieces of information.
+
+ Always check the annotations (if available) and the actual alignment. Weigh in information not captured by E-value.
+
+;Final notes:
+:* Typical approaches when too many uninformative hits: restrict the database (e.g. refSeq or organism specific ones), search with substrings, E-value criterion (proceed this with caution)
+:* Typical approaches when too few hits: search with domains (increase sensitivity), database restrictions, E-value bars, loosen scoring matrix, PSI-BLAST
+:* Judiciously including extra information helps with search sensitivity
+
+;Activity - Unravel the orthology between Mbp1_SACCE and Mbp1_ERECY via RBM
+
+1. Go to https://blast.ncbi.nlm.nih.gov/Blast.cgi and "Protein BLAST"
+
+2. Use "XP_003645298" as query sequence. Select database "refseq_protein". Restrict "Organism" to "Saccharomyces cerevisiae (taxid:4932)"
+
+3. BLAST!
+
+4. Top hit is NP_010227.1. Score is 703. E-value is 0.0
+
+;Conclusion:
+:* Orthology between Mbp1_SACCE and Mbp1_ERECY confirmed via RBM.
+
+:* In the past, Boris encountered a perhaps rare cases where DNA-binding domain annotation is corrupted. Keep in mind this could actually happen?!
+
+Issues pertaining to Mbp1 APSES domain annotations out there:
+:* APSES annotation no longer exists in pFam. It has merged with KilA-N due to discovered homology. However, InterPro still has APSES.
+:* Inconsistency between CDD and SMART annotations of "pFam 04383" domain (expected though..)
+:* We will consider 4-102 of NP_010227 sequence as APSES domain. Apparently KilA-N annotation misses the almost conserved & structurally defined N-terminus of APSES in fungi..
+
+5. Go back to Protein BLAST. Use the APSES of Mbp1_SACCE as sequence query (FASTA):
+
+ >APSES_MBP1 Residues 4-102 of S. cerevisiae Mbp1
+ QIYSARYSGVDVYEFIHSTGSIMKRKKDDWVNATHILKAANFAKAKRTRI
+ LEKEVLKETHEKVQGGFGKYQGTWVPLNIAKQLAEKFSVYDQLKPLFDF
+
+6. Select "refseq_protein" as the "Database". Use the taxid "931890" as "Organism".
+
+7. BLAST!
+
+8. The top hit is indeed XP_003645298.1. Great! Forward confirmed (E-value 2e-50, score 167, sequence identity 83.84%).
+
+9. Cautioned that it's not ideal to use the sequence from BLAST alignment to do reverse search, as BLAST is not optimal alignment.
+
+Shall use optimal alignment to determine best alignment and use that to define domain boundaries for ERECY.
+
+10. Retrieve APSES of ERECY sequence definitions from optimal alignment obtained from #9.3 (11-109) and use this for reverse search (Procedures following "BIN-ALI-BLAST.R")
+
+(Though it turns out that non-optimal alignment produced by BLAST is also 11-109. Secretly laughing in bioinformatics..)
+
+Line 70:
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+<span style="color:red">'''''Error message'''''</span>
+<div class="mw-collapsible-content">
+<code>
+Error in requireNamespace(httr, quietly = TRUE) : object 'httr' not found
+</code>
+</div>
+</div>
+
+<span style="color:green">'''Solution:'''</span> Line 34 in "BLAST.R", httr should be a string "httr".
+
+Line 91:
+Top hit is "NP_010227.1", the Mbp1_SACCE. Confirmed RBM of APSES for Mbp1_ERECY!
+
+{{Vspace}}
 =8 Gene Expression and Functional Bioinformatics=
 ==8.3 Differential Expression Analysis==
 
@@ -1623,207 +1924,6 @@ Time estimated: 1 h; taken 150 min; date started: 2019-10-10; date completed: 20
 
 {{Vspace}}
 =3 Intro to Bioinformatics and Databases=
-==3.15 Sequence Alignments==
-===3.15.1 The sequence alignment problem===
-<div class="time-estimate">
-Time estimated: 0.5 h; taken 20 min; date started: 2019-11-13; date completed: 2019-11-13
-
-[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:52, 13 November 2019 (EST)
-</div>
-
-Much of bioinformatics is based on inference from similarities.
-
-e.g. sequence similarity and inference of homology:
-If sequences are significantly more similar than expected by chance, we typically hypothesize shared ancestry and conservation.
-
-To measure sequence similarity, a pre-requisite is typically the '''alignment of sequences'''
-
-;Alignment:
-A notation for mapping between a pair of amino acids. The mapping should have meanings.
-
-Typically, the alignment is such to maximize similarity between corresponding positions of amino acids.
-
-'''Correct alignment have meaningful matching of amino acids, from which biological inferences can be made (e.g. descending from a common ancestor)'''
-
-Complications:
-Insertion and deletion, multiple alignment possibilities, unclear what is the "true" alignment
-
-Strategies:
-Minimize gap lengths, avoid aligning non-equivalent residues, maximize similarity of aligned sequences
-:* All have caveats by themselves
-
-'''Superposition of 3D structures''' can be used as the basis of "true alignment". However, it does not tell the evolutionary history of sequence change.
-
-===3.15.2 Amino acid similarity===
-
-<div class="time-estimate">
-Time estimated: 1 h; taken 50 min; date started: 2019-11-13; date completed: 2019-11-13
-
-[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:52, 13 November 2019 (EST)
-</div>
-
-;Ways to model amino acid similarity:
-:* identity-only, biophysical, required number of nucleotide changes, amino acids in similar context, other empirical...
-
-;There are many ways to qualify similar amino acids, but quantifying similarity is not straightforward.
-:* Function of an amino acid depends on context OR multiple functions are possible (Still, sequence alignment would typically be independent of context)
-:* Can think of amino acid similarity system as a ''model'', abstracted into a '''scoring matrix'''
-:* Each kind of similarity model would constitute an instance of a scoring matrix
-
-Biophysical similarity turns out to be the least obvious, for that score will depend on different biophysical properties, and how to weight them is not clear.
-
-Instead of first principle similarity, often empirical similarities are adopted.
-:* i.e. empirical probability of substitution, based on evolution of point mutations
-:* [https://en.wikipedia.org/wiki/BLOSUM BLOSUM vs PAM]? (PAM from global alignment of closely related proteins and extrapolate to greater evolutionary divergence. BLOSUM from local alignment of motifs and does not extrapolate)
-
-BLOSUM also incorporates/considers more evolutionarily distant sequences?
-
-;Activity - Inspect BLOSUM62 matrix (the typical go-to option)
-:* Not all identical pairs are equal. e.g. Ser-Ser is lower than His-His, meaning that His is probably more likely conserved.
-:* Pairs of similar biophysical properties tend to have higher scores (even positive). e.g. Lys-Leu is -2 while Ile-Leu is 2
-:* (A key difference between PAM and BLOSUM) Arg-Trp is low/penalized in BLOSUM, while quite high in Arg-Trp in PAM, due to the ease of mutation.
-
- Biophysical properties of R and W are very different, 
- yet they seem like they would also often be having their own conserved functions related to their respective biophysical properties.
- I suspect the ease of mutation R-W makes the random R and W in closely related sequences easily interchanged.
- While in distantly related sequences, with conserved motifs considered, 
- R or W are unlikely to be randomly there and hence have respective conserved functions that would not be easily interchanged.
-
-===3.15.3 Optimal sequence alignment===
-
-<div class="time-estimate">
-Time estimated: 1.5 h; taken 140 min; date started: 2019-11-14; date completed: 2019-11-17
-
-~~~~
-</div>
-
-Inference of homology based on sequence similarity requires proper alignment (ideally the "correct" alignment)
-
-'''The "correct/true" alignment cannot be obtained. The best thing we can do is obtain an optimal alignment'''
-
-;The logic:
-True alignment is not as "optimal" as the optimal (best possible) alignment. If even the optimal alignment cannot support homology, then the true alignment cannot either.
-:* Does it mean that if optimal alignment supports homology, true alignment '''''might''''' support homology?
-
-(By optimal we mean maximizing sequence similarity score under a particular evolutionary model)
-
-'''For a given alignment, can quantify sequence similarity as the sum of pairwise matching scores'''
-:* Pairscores of pairing possibilities can be tabulated as a matrix
-
-;"Proving" homology: under a particular model of evolution, if it is sufficiently improbable that a given sequence similarity is due to random chance, then we assume homology of the most likely explanation.
-
-;Generating the optimal sequence alignment:
-:* Generate all possible alignments is an intractable problem. Complications due to existence of '''indels (sequence insertion/deletion)'''
-:* Instead, we use an approach that make use of a path matrix. But there is an '''assumption'''
- Assumption/Premise: Alignment score = Sum of Pairscores - Penalty for Indels
-
-This is the independence assumption. The alignment score for each aligned pair is independent of each other.
-
-Any alignment can be represented as a path in the path matrix.
-
-;The method - Needleman–Wunsch algorithm
-:* Implements dynamic programming principles
-
-;A note on modelling indels:
-:* Indels are infrequent evolutionary events
-:* Indels cannot be modelled with mechanistic considerations
-:* Often, a simple penalty score function is used to model indels in sequence alignment: <math>w(l) = a + bl</math> (affine gap model)
-:* Two parameters <math>a</math> and <math>b</math>: <math>a</math> imposes a "fixed cost" for having an indel. <math>b</math> parametrizes that longer indels are less frequent
-:* Despite analysis showing that gap length distribution appears to be log-based, proposed log-labsed gap functions do not seem to improve alignment in practice [Cartwright, 2006]
-
-Penalty scores from gap functions can be applied easily in Needleman–Wunsch path matrix method.
-
-;Global vs local alignments:
-:* Beware! A mathematically optimal alignment can be generated from just any two sequences. It's meaningless to generate alignment between two non-conserved or nonhomologous sequences
-:* If the lengths are very different, or clearly sequences are multi-domain, or only domains have homology, local alignment is more favourable > Smith–Waterman algorithm
-:* Local alignment used especially when insertion of domains would make gap penalty unreasonably large
-:* Use global alignment for whole-length homologous sequences, bridging segments of high divergence?, discovering islands of similarity
-
-;Final notes:
-:* Impact of penalty function will depend on the scoring matrix as well.
-:* Things to consider reporting: matrix, gap penalty functions, algorithm/methodology of alignment, percent identity
-:* The 25% homology rule-of-thumb. But not a replacement for judicious analysis. Evidence for homology can stem from many other sources of similarities (e.g. structural, functional, sequence features etc.)
-
-;Tools for sequence alignment:
-:* EMBOSS tools: Needle (optimal global), Water (optimal local), stretcher, matcher, supermatcher
-
-;Activity 1 - Explore EMBOSS tools and explore the impact of gap function parameters
-
-1. Get sequences for MBP1 of Saccharomyces cerevisiae as well as of MYSPE from stored data
-
-<source lang="R">
-library(jsonlite)
-source("../makeProteinDB.R")
-
-#Get MBP1_SACCE sequence
-sel <- myDB$protein$name == "MBP1_SACCE"
-myDB$protein$sequence[sel]
-
-#Get MBP1_ERECY sequence
-sel <- myDB$protein$name == paste0("MBP1_", biCode(MYSPE))
-myDB$protein$sequence[sel]
-</source>
-
-2. Go to EMBOSS tools https://www.ebi.ac.uk/Tools/emboss/
-
-3. Launch "Water". Paste sequence for "MBP1_SACCE" and "MBP1_ERECY" as two sequences to be aligned. Start job with all other default settings.
-
-4. Inspect and download as "emboss_water-I20191117-044521-0763-24891350-p1m.txt"
-
-5. The N-terminus domain is very well aligned. The overall sequence identity is 47.4%. The N-terminus region is obviously well above 25% sequence identity.
-
-6. Redo the same alignment. But under "More Options", set "Gap Open" to 25 and "Gap Extend" to 5.0
-
-7. Inspect and download as "emboss_water-I20191117-045631-0075-96632173-p1m.txt"
-
-;Conclusions:
-:* Under the 25%-rule, the APSES domain of the two sequences considered are homologous
-:* Increasing gap penalty here reduces both number and total amount of the gaps (12 vs 6; 12.5% vs 4.8%)
-:* Somehow sequence identity did not seem to change after increasing the gap penalty (47.4% vs 47.3%). However, the alignment score decreased a lot (1883 vs 1563)
-
-8. Do exactly the same, except now Launch "Needle" with all default settings.
-
-9. Inspect and download result as "emboss_needle-I20191117-050738-0877-87249423-p2m.txt"
-
-;Conclusions:
-:* Global alignment captures the N-terminus excellent alignment as well. The sequence identity and alignment scores are not heavily compromised (46.8% and 1878)
-:* The entire sequences were used here. There is an N-terminal indel.
-:* Percent gaps: 13.2%
-
-;Activity 2 - Explore Biostrings Pairwise sequence alignment tools in R with "BIN-ALI-Optimal_sequence_alignment.R"
-
-Useful functions:
-:* Biostrings::pairwiseAlignment(<pattern>, <subject>): <pattern>, <subject> are sequences to be aligned. Can be vectors of characters or XString objects. <subject> vector can only be length 1
-:: Useful additional arguments: type, substitutionMatrix, gapOpening, gapExtension
-:: Returns an incredibly complicated class of object "PairwiseAlignmentsSingleSubject"
-:* Biostrings::writePairwiseAlignments(<alignment_object>): <alignment_object> is of class "PairwiseAlignmentsSingleSubject"
-:* seqinr::s2c(<string>): string to a vector of characters
-
-Useful syntax:
-:* @: class attributes?
-
-Line 228: <code>type="Overlap"</code>??
-
-Have not done "BIN-FUNC-Annotation". Follow the instructions in 4.1.1
-
-Line 337:
-<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
-<span style="color:red">'''''Error messagess'''''</span>
-<div class="mw-collapsible-content">
-<code>
-Error: lexical error: invalid char in json text.
-                                      <MYSPE>-Annotations.json
-                    (right here) ------^ 
-</code>
-</div>
-</div>
-
-<span style="color:green">'''Solution:'''</span> Change Line 8 in "makeProteinDB.R" from <code>myDB <- dbAddAnnotation(myDB, fromJSON("<MYSPE>-Annotations.json"))</code>
-
-to <code>myDB <- dbAddAnnotation(myDB, fromJSON("../ERECY-Annotations.json"))</code>. My bad..
-
-Finally, working as intended.
-
 ==3.14 Software Development for Research Labs==
 
 <div class="time-estimate">
