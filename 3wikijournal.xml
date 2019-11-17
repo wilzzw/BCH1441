@@ -67,7 +67,7 @@ BLOSUM also incorporates/considers more evolutionarily distant sequences?
 
 ===3.15.3 Optimal sequence alignment===
 
-20 min
+45 min
 
 Inference of homology based on sequence similarity requires proper alignment (ideally the "correct" alignment)
 
@@ -77,6 +77,33 @@ Inference of homology based on sequence similarity requires proper alignment (id
 True alignment is not as "optimal" as the optimal (best possible) alignment. If even the optimal alignment cannot support homology, then the true alignment cannot either.
 :* Does it mean that if optimal alignment supports homology, true alignment '''''might''''' support homology?
 
+(By optimal we mean maximizing sequence similarity score under a particular evolutionary model)
+
+;For a given alignment, can quantify sequence similarity as the sum of pairwise matching scores
+:* Pairscores of pairing possibilities can be tabulated as a matrix
+
+;"Proving" homology: under a particular model of evolution, if it is sufficiently improbable that a given sequence similarity is due to random chance, then we assume homology of the most likely explanation.
+
+;Generating the optimal sequence alignment:
+:* Generate all possible alignments is an intractable problem. Complications due to existence of '''indels (sequence insertion/deletion)'''
+:* Instead, we use an approach that make use of a path matrix. But there is an '''assumption'''
+ Assumption/Premise: Alignment score = Sum of Pairscores - Penalty for Indels
+
+This is the independence assumption. The alignment score for each aligned pair is independent of each other.
+
+Any alignment can be represented as a path in the path matrix.
+
+;The method - Needleman–Wunsch algorithm
+:* Implements dynamic programming principles
+
+;A note on modelling indels:
+:* Indels are infrequent evolutionary events
+:* Indels cannot be modelled with mechanistic considerations
+:* Often, a simple penalty score function is used to model indels in sequence alignment: <math>w(l) = a + bl</math> (affine gap model)
+:* Two parameters <math>a</math> and <math>b</math>: <math>a</math> imposes a "fixed cost" for having an indel. <math>b</math> parametrizes that longer indels are less frequent
+:* Despite analysis showing that gap length distribution appears to be log-based, proposed log-labsed gap functions do not seem to improve alignment in practice [Cartwright, 2006]
+
+Penalty scores from gap functions can be applied easily in Needleman–Wunsch path matrix method.
 
 
 ==3.14 Software Development for Research Labs==
