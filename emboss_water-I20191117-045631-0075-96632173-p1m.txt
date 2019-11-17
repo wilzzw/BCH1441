@@ -1,0 +1,107 @@
+########################################
+# Program: water
+# Rundate: Sun 17 Nov 2019 04:56:32
+# Commandline: water
+#    -auto
+#    -stdout
+#    -asequence emboss_water-I20191117-045631-0075-96632173-p1m.asequence
+#    -bsequence emboss_water-I20191117-045631-0075-96632173-p1m.bsequence
+#    -datafile EBLOSUM62
+#    -gapopen 25.0
+#    -gapextend 5.0
+#    -aformat3 pair
+#    -sprotein1
+#    -sprotein2
+# Align_format: pair
+# Report_file: stdout
+########################################
+
+#=======================================
+#
+# Aligned_sequences: 2
+# 1: EMBOSS_001
+# 2: EMBOSS_001
+# Matrix: EBLOSUM62
+# Gap_penalty: 25.0
+# Extend_penalty: 5.0
+#
+# Length: 819
+# Identity:     387/819 (47.3%)
+# Similarity:   528/819 (64.5%)
+# Gaps:          39/819 ( 4.8%)
+# Score: 1563.0
+# 
+#
+#=======================================
+
+EMBOSS_001         3 NQIYSARYSGVDVYEFIHSTGSIMKRKKDDWVNATHILKAANFAKAKRTR     52
+                     :|||||:||||:||||||.||||||||.|||||||||||||.||||||||
+EMBOSS_001        10 DQIYSAKYSGVEVYEFIHPTGSIMKRKADDWVNATHILKAAKFAKAKRTR     59
+
+EMBOSS_001        53 ILEKEVLKETHEKVQGGFGKYQGTWVPLNIAKQLAEKFSVYDQLKPLFDF    102
+                     ||||||:|:.||||||||||||||||||:||::|||||.|.::|:|||||
+EMBOSS_001        60 ILEKEVIKDIHEKVQGGFGKYQGTWVPLDIARRLAEKFDVLEELRPLFDF    109
+
+EMBOSS_001       103 TQTDGSASPPPAPKHHHASKVDRKKAIRSASTSAIMETKRNNKKAEENQF    152
+                     :|.|||||||.||||||||:.|..|.....|.|..:..            
+EMBOSS_001       110 SQRDGSASPPQAPKHHHASRSDSTKKGTGKSPSGALNN------------    147
+
+EMBOSS_001       153 QSSKILGNPTAAPRKRGRPVGSTRGSRRKLG--VNLQRSQSDM-GFPRPA    199
+                           .:.:..|::||||..|.:..|....  ..||||:||: ||.:|:
+EMBOSS_001       148 ------ASGSVIPKRRGRPPRSKKLDRIPASGDAALQRSRSDVTGFHKPS    191
+
+EMBOSS_001       200 IPNSSISTTQLPSIRSTMGPQSPTLGILEEERHDSRQQQPQQNNSAQFKE    249
+                     |..|:||:..||||:||:     ..|:..:|:...:.:..||.:..:::|
+EMBOSS_001       192 ITISTISSHNLPSIQSTL-----QRGVNIDEQQHYQDKLQQQISQQKYEE    236
+
+EMBOSS_001       250 IDLEDGLSSDVEPSQQLQQVFNQNTGFVPQQQSSLIQTQQTESMATSVSS    299
+                     :|:|||||||:|.:  |..:.....|      |:.:.||........|||
+EMBOSS_001       237 LDIEDGLSSDIETN--LAYIAEGPVG------SNRLNTQLMTGKEEPVSS    278
+
+EMBOSS_001       300 SPSLPTSPGDFADSNPFEERFPGGGTSPIISMIPRYPVTSRPQTSDINDK    349
+                     |.|||:||.||:...||:.:..|..||||.:|:|||.:.|||.|||::.|
+EMBOSS_001       279 SSSLPSSPSDFSAPVPFDTQRVGSATSPIGAMLPRYSMQSRPPTSDLDQK    328
+
+EMBOSS_001       350 VNKYLSKLVDYFISNEMKSNKSLPQVLLHPPPHSAPYIDAPIDPELHTAF    399
+                     ||.||:|||||||::||::..::|..||: ||||.|||||.||.|.||||
+EMBOSS_001       329 VNDYLAKLVDYFINSEMQNTNAVPIELLN-PPHSTPYIDAWIDSEHHTAF    377
+
+EMBOSS_001       400 HWACSMGNLPIAEALYEAGTSIRSTNSQGQTPLMRSSLFHNSYTRRTFPR    449
+                     ||||:||||||.|||.:||.|.|:.|..|:|||||:|:||||||:||:||
+EMBOSS_001       378 HWACAMGNLPIVEALLQAGASHRAVNHAGETPLMRASMFHNSYTKRTYPR    427
+
+EMBOSS_001       450 IFQLLHETVFDIDSQSQTVIHHIVKRKSTTPSAVYYLDVVLSKIKDFSPQ    499
+                     |||||.:||||||||||||:||||||:|.|.||:|||||:||||||||||
+EMBOSS_001       428 IFQLLQDTVFDIDSQSQTVVHHIVKRRSNTQSALYYLDVLLSKIKDFSPQ    477
+
+EMBOSS_001       500 YRIELLLNTQDKNGDTALHIASKNGDVVFFNTLVKMGALTTISNKEGLTA    549
+                     ||||.|:||||..|:|.||||:.|||..||.||:..|||:|:.|.:|:||
+EMBOSS_001       478 YRIETLINTQDDKGNTPLHIAAINGDKKFFQTLLGSGALSTLKNYDGVTA    527
+
+EMBOSS_001       550 NEIMNQQYEQMMIQNGTNQHVNSSNTDLNIHVNTNNIETKNDVNSMVIMS    599
+                     :..:|.::.:.:..:..:.|..:..|......:|..:.|.....:....|
+EMBOSS_001       528 DVFINNKFSRTLNYSEHSYHYGNGTTHSPASTSTGAVITGPAGAAAASAS    577
+
+EMBOSS_001       600 PVSPSDYITYPSQIATNISRNIPNVVNSMKQMASIYNDLHEQHDNEIKSL    649
+                     .........:|||.||::||.||.|:|.||.||..|..|::....|::|:
+EMBOSS_001       578 ASFIHTGDMFPSQAATSVSRAIPEVINLMKDMADSYQGLYQDRSQELQSI    627
+
+EMBOSS_001       650 QKTLKSISKTKIQVSLKTLEVLKESSKDENGEAQTNDDFEILSRLQEQNT    699
+                     :|.|||::.|...|.:|.||.|.....::.|:...    :|...:.|..:
+EMBOSS_001       628 KKMLKSMNNTVASVDIKILETLDIKKYEQIGQTME----DITQAIDELQS    673
+
+EMBOSS_001       700 KKLRKRLIRYKRLIKQKLEYRQTVLLNKLIEDETQATTNNTVEKDNNTLE    749
+                     :...|:......|.|.:....|.::..:..|.:.....:.:....:....
+EMBOSS_001       674 RFTVKQKCLMNILEKGQRIQLQRLINEQEQEIDKHQEESESKSGPSINPN    723
+
+EMBOSS_001       750 RLELAQELTMLQLQRKNKLSSLVKKFEDNAKIHKYRRIIREGTEMNIEEV    799
+                     .:...:||.:|||:||.|:..:::....|:|:.|:|::|.:||:|.::||
+EMBOSS_001       724 LITGIKELAILQLRRKAKIKQMLELLCGNSKVQKFRKMISQGTDMELDEV    773
+
+EMBOSS_001       800 DSSLDVILQTLIANNNKNK    818
+                     |:.||||||.|..:|...|
+EMBOSS_001       774 DNFLDVILQQLNDDNEAKK    792
+
+
+#---------------------------------------
+#---------------------------------------
