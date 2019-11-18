@@ -6,6 +6,7 @@ source("./scripts/ABC-createRefDB.R")
 myDB <- dbAddProtein(myDB, fromJSON("../MBP1_ERECY.json"))
 myDB <- dbAddTaxonomy(myDB, fromJSON("../MYSPEtaxonomy.json"))
 myDB <- dbAddAnnotation(myDB, fromJSON("../ERECY-Annotations.json")) # Added for the sake of activity 4 in "BIN-ALI-Optimal_sequence_alignment.R"
+myDB <- dbAddProtein(myDB, fromJSON("../ERECY_APSES_PSI-BLAST.json")) # After PSI-BLAST search
 
 #Alternative code
 #source("C:/Users/Wilson/Documents/BCH1441/ABC-units/scripts/ABC-createRefDB.R")

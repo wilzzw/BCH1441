@@ -200,11 +200,11 @@ to <code>myDB <- dbAddAnnotation(myDB, fromJSON("../ERECY-Annotations.json"))</c
 Finally, working as intended.
 
 ==9.4 BLAST (Basic Local Alignment Search Tool)==
-
+===9.4.1 BLAST===
 <div class="time-estimate">
 Time estimated: 2 h; taken 105 min; date started: 2019-11-17; date completed: 2019-11-17
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 14:32, 17 November 2019 (EST)
 </div>
 
 ;Motivation:
@@ -297,5 +297,172 @@ Error in requireNamespace(httr, quietly = TRUE) : object 'httr' not found
 
 Line 91:
 Top hit is "NP_010227.1", the Mbp1_SACCE. Confirmed RBM of APSES for Mbp1_ERECY!
+
+===9.4.2 PSI-BLAST===
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 3 h; date started: 2019-11-17; date completed: 2019-11-17
+
+~~~~
+</div>
+
+;Motivation:
+Search instead of individual sequences, do '''profile-based search'''. Reduce impact of neutral drifts.
+
+;PSI-BLAST:
+Focus on commonalities with specific tolerance of variation within a family of homologous sequences.
+:* First, constructs MSA from generic protein BLAST hits. This creates a profile called '''Position-specific Scoring Matrix (PSSM)'''
+:* PSSM is used as the query against the database. E-values of hits are evaluated and hits are included in the construction of the profile. Iterate these two steps a few times.
+:* (Essentially, the first iteration/base case is normal BLAST)
+
+;Behaviour of PSI-BLAST results:
+:* Real homologs will tend to dramatically decrease in E-value over iterations. E-value of spurious homologs tends to stay the same or increase.
+:* Can exclude suspicious hits from the profile based on E-value trend, in order to not "corrupt" the profile.
+
+;Species selection:
+Aim for "well-spaced" selection and a balance of restrictions.
+
+;Dealing with issues of profile corruption:
+:* Filtering regions with low-complexity (X the regions in the query that might lead to stat. signif. but biologically uninteresting ones)
+:* Other approaches: stringent E-values, eliminate suspicious hits, always actually inspect the outputs and combine with biological intuition.
+
+;DELTA-BLAST:
+Seems like a variant of PSI-BLAST, except it builds profiles from CDD domains in the query
+
+;COMPASS:
+An improvement of PSI-BLAST? [Sadreyev & Grishin (2003)]
+
+Why would optimal sequence alignment be less able to find alignment of internal repeats?
+
+;Activity 1 - Use PSI-BLAST and find transcription factor orthologs and paralogs in ERECY containing APSES
+
+ Choice of domain for this task: APSES from Mbp1_SACCE (specific and sensitive choice).
+ Choice of species space for this task: sampled from as large range of the evolutionary tree as possible with genomes fully squenced.
+ This is to build a reliable profile. But also not too many to practically check all the hits.
+
+1. My choice of species formatted in NCBI Entrez query:
+
+ "Aspergillus nidulans"[organism] OR
+ "Bipolaris oryzae"[organism] OR
+ "Coprinopsis cinerea"[organism] OR
+ "Cryptococcus neoformans"[organism] OR
+ "Neurospora crassa"[organism] OR
+ "Puccinia Graminis"[organism] OR
+ "Saccharomyces cerevisiae"[organism] OR
+ "Schizosaccharomyces pombe"[organism] OR
+ "Ustilago maydis"[organism] OR
+ "Wallemia mellicola"[organism] OR
+ "Eremothecium cymbalariae"[organism]
+
+2. Go to Protein BLAST. Use the APSES of Mbp1_SACCE as sequence query (FASTA see 9.4.1). "Database" is "refseq_protein". 
+
+<span style="color:red">'''I cannot find the "Entrez Query" field. Instead, I put all the above organisms in "Organisms". Like this:'''</span>
+
+[[File:organism.jpg|500px]]
+
+3. Select "PSI-BLAST" as the "Algorithm". Then BLAST!
+
+4. Under "Sequences producing significant alignments", hits are divided into "better than threshold" and "worse than threshold". "Worse than threshold" were not by default selected for PSI-BLAST.
+
+ The E-value threshold is 10, while PSI-BLAST threshold is 0.005. Maybe that's what it means?
+
+5. Under "Filter Results", change "PSI-BLAST incl. threshold" from 0.005 to 0.001. Click "Filter". Also, unselect the hits with "Query Cover" less than 80% from "Select for PSI blast".
+
+6. Run PSI-BLAST iteration 2.
+
+7. Seeing the results, I feel like some of the added ones might have been the ones I just excluded, coming back with different coverage values.
+
+[[File:bottom_iter2.jpg|500px]]
+
+Get rid of all the new ones with query coverage below 80%. Additionally, one sequence that was not excluded ended up with query coverage below 80%. Eliminate that as well.
+
+Two newly added ones have above 80% query coverage:
+
+ hypothetical protein AN5405.2 [Aspergillus nidulans FGSC A4]
+ XP_663009.1
+ Score	Expect	Method	Identities	Positives	Gaps
+ 51.0 bits(121)	3e-08	Composition-based stats.	22/97(23%)	42/97(43%)	9/97(9%)
+ Query  11   DVYEF------IHSTGSIMKRKKDDWVNATHILKAANFAKAKRTRILEKEV-LKETHEKV  63
+             +V+++           ++M       V  TH+ K  +++K    ++L +   L++    +
+ Sbjct  115  EVFQYTFQLPGEEKQWTVMWDYNIGLVRTTHLFKCNDYSKTTPAKMLNQNPGLRDICHSI  174
+ Query  64   QGGFGKYQGTWVPLNIAKQLAEK--FSVYDQLKPLFD  98
+              GG    QG W+P   AK +A    + +   L PLF 
+ Sbjct  175  TGGALAAQGYWMPYEAAKAIAATFCWKIRFALTPLFG  211
+
+
+ hypothetical protein CNH00150 [Cryptococcus neoformans var. neoformans JEC21]
+ XP_024513299.1
+ Score	Expect	Method	Identities	Positives	Gaps
+ 39.8 bits(92)	3e-04	Composition-based stats.	23/114(20%)	42/114(36%)	25/114(21%)
+ Query  9     GVDVYEFIHST------GSIMKRKKDDWVNATHILKAANFAKAKRTRILE---KEVLKET  59
+               + VY  +           +++R   D+VNA  +L A   + +K +  L+    +     
+ Sbjct  1112  NIPVYAHLFEGRNGSGKQVLLRRLDTDFVNANALLHALGVSPSKHSEYLDHPISQARLAA  1171
+ Query  60    HEKVQGGF--GKY----QGTWVPLNIAKQLAEKFS----------VYDQLKPLF  97
+                 VQ      +Y     G WV L+ A++ A +            + + L  LF
+ Sbjct  1172  RHIVQSSTSGMEYSNGVSGIWVHLSEAREFARRAKLAGGSLLASVLREDLFQLF  1225
+
+My arbitrary qualitative judgement tells me I don't trust these two and would exclude them. The alignments are not good at all. The second one has a large amount of gaps.
+
+8. Run PSI-Blast iteration 3.
+
+9. No new sequences were added. What if I exclude the bottom sequences not used to build PSSM?
+
+[[File:bottom_iter3.jpg|500px]]
+
+10. Run PSI-Blast iteration 4.
+
+11. I think my PSI-BLAST has converged. Go to "Taxonomy" > "Organism". Find "Eremothecium cymbalariae DBVPG#721".
+
+;Conclusions:
+:* Here are the homologs in ERECY based on my PSI-BLAST:
+
+ Hypothetical protein Ecym_2783 [Eremothecium cymbalariae DBVPG#7215]	141	4e-40	XP_003645298
+ hypothetical protein Ecym_7145 [Eremothecium cymbalariae DBVPG#7215]	134	2e-37	XP_003647811
+ hypothetical protein Ecym_4584 [Eremothecium cymbalariae DBVPG#7215]	121	6e-33	XP_003646434
+ Hypothetical protein Ecym_3312 [Eremothecium cymbalariae DBVPG#7215]	53.7	4e-09	XP_003645620
+
+:* Just like Xbp1 in SACCE, hypothetical protein Ecym_3312 has low sequence coverage, but keeps coming back in iterations. Tempting to think this is a similar situation to Xbp1.
+
+Hmm.. For my info:
+
+ Score	Expect	Method	Identities	Positives	Gaps
+ 53.7 bits(128)	4e-09	Composition-based stats.	16/41(39%)	28/41(68%)	2/41(4%)
+ Query  60   HEKVQGGFGKYQGTWVPLNIAKQLAEK--FSVYDQLKPLFD  98
+             +++++GG+ K QGTW+PL I++QL  +  F +   L P+F 
+ Sbjct  370  YKRIRGGYIKIQGTWLPLEISRQLCTRFCFPIRYLLVPIFG  410
+
+I will keep it for now
+
+;Activity 2 - Add discovered homolog sequences to my records
+
+1. Use https://www.uniprot.org/uploadlists/ ID-mapping tool to get UniProtID for each entry.
+
+ I just realized the top hit ECYM_2783 is just the hypothetical Mbp1_ERECY I've been working with the whole time..
+
+ XP_003645298: G8JQ18
+ XP_003647811: G8JVX9
+ XP_003646434: G8JS95
+ XP_003645620: G8JRN4
+
+2. Add PSI-BLAST discovered proteins into a JSON file. Use a script I created in 3.8.3 to get a nice formatted sequence to store in JSON.
+
+3. This results in the file "ERECY_APSES_PSI-BLAST.json". Add <code>myDB <- dbAddProtein(myDB, fromJSON("MYSPE_APSES_PSI-BLAST.json"))</code> to "makeProteinDB.R" and save.
+
+4. Verify my storage with the following code:
+<source lang="R">
+source("../makeProteinDB.R") # My scripts are located differently due to my own version control
+
+sel <- which(myDB$taxonomy$species == MYSPE)
+(taxid <- myDB$taxonomy$ID[sel])
+ 
+sel <- which(myDB$protein$taxonomyID == taxid)
+myDB$protein$name[sel]      # Does this return all of the APSES domain protein
+                            # names of MYSPE? If not, this needs to be fixed.
+                            # Ask for advice.
+ 
+nchar(myDB$protein$sequence[sel])
+</source>
+
+Success! Though entry "MBP1_ERECY" and "ECYM_2783" are duplicates. I am going to remove "ECYM_2783" from "ERECY_APSES_PSI-BLAST.json"
 
 {{Vspace}}
