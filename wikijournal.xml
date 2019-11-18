@@ -319,7 +319,7 @@ Top hit is "NP_010227.1", the Mbp1_SACCE. Confirmed RBM of APSES for Mbp1_ERECY!
 <div class="time-estimate">
 Time estimated: 2 h; taken 3 h; date started: 2019-11-17; date completed: 2019-11-17
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 20:21, 17 November 2019 (EST)
 </div>
 
 ;Motivation:
@@ -480,6 +480,330 @@ nchar(myDB$protein$sequence[sel])
 </source>
 
 Success! Though entry "MBP1_ERECY" and "ECYM_2783" are duplicates. I am going to remove "ECYM_2783" from "ERECY_APSES_PSI-BLAST.json"
+
+==9.5 Multiple Sequence Alignment (MSA)==
+
+<div class="time-estimate">
+Time estimated: 2.5 h; taken 3.5 h; date started: 2019-11-17; date completed: TBD
+
+~~~~
+</div>
+
+;Important premise:
+MSA is still an unsolved problem and an active research topic. Current specific technical knowledge can become outdated rapidly.
+
+MSA can inform phylogenic relationships and conservation patterns. Useful for homology modelling, structural prediction, defining domain boundaries etc.
+
+MSA is not constructed from pairwise alignments between sequences (e.g. conflicts).
+
+Optimal pairwise alignment is also not necessarily best multiple alignment.
+
+Optimal multiple alignment is not only intractable very quickly but also has questionable value (i.e. amino acid similarity in average case vs MSA concerned specific case)
+
+;Objective functions for MSAs:
+Depends on biological objectives. Often heuristic in nature.
+:* Min number of indels & max sequence similarity > Exact algorithm (E). Search optimal path in n-dim path matrix.
+:* Recapitulation of phylogeny > Progressive algorithm (Prog). Align most simiar first, guide tree, then merge. FND
+:* Retention of conserved motifs > Consistency based algorithm (C). Use conserved regions to guide alignment. FND
+:* Max similarity to a model > Probabilistic algorithm (Prob). Create a model and align sequences to it (recall PSI-BLAST). FND
+:* "Learn" about important regions & extend alignment from important seed regions > Iterated (I). Iteratively improve alignment from draft.
+
+;Examples of algorithms:
+
+;Pure algorithms:
+Clustal W, X:
+:* Pure P. MSA.
+:* Performance not great. Degredation of accuracy severe.
+
+MUSCA, MEME
+:* C. MSA.
+
+HMMER:
+:* Prob. MSA.
+
+;Hybrid algorithms:
+:* '''TCoffee''': C. & Prog. MSA. Reliable, robust, and fast.
+:* '''MUSCLE''': Prog. & I. MSA. Available in R-package "msa" as well.
+
+===9.5.1 The practice and best approaches to MSA===
+;Choosing algorithms:
+Depends on biological question... (e.g. Conservation pattern - easy. Domain boundaries - correct indel placements. Homol. Model. - correct pairwise template target alignment)
+:* Use the best algorithms and compare results of multiple algorithms. > Benchmark sets are available out there for this (e.g. BAliBASE, SABmark, PREFAB)
+
+Benchmark sets for testing algorithms differ in standard of truth, difficulty/quality of reference sequence sets, alignment scores..
+
+:* Keep updated about recent algorithms via PubMed (thanks for the punchline!):
+
+<code>
+("multiple protein sequence alignment"[ti] OR "multiple sequence
+alignment"[ti] OR "multiple alignment"[ti]) AND (server OR algorithm) AND
+"last 2 years"[dp]
+</code>
+
+;Selecting sequences:
+One of the most important considerations!
+:* Sample sequences well distributed on the evolutionary tree for MSA to alleviate bias (fair distribution)
+:* Include sequences with known structures if available
+:* Selection of sequence aligns with research goal
+:* '''Avoid non-homologous sequences''' and sequences evolved in different local structural environments (i.e. complications of voiding the point of similarity scores)
+:* Align domains separately if domain annotations are available. Caution around "unalignable regions" from contaminating models or early stages.
+
+;Performing the alignment:
+:* Use several algorithms. This way can see which regions are consensual as well as regions sensitive to parameters of algorithms.
+
+<span style="color:green">'''It's OK to manually edit alignments to improve it!'''</span>
+:* Incorporate context and heuristics. Just document it well and it's fine. Common sense is important too.
+
+;MSA data formats:
+:* .mfa: multiFASTA.
+:* .aln: CLUSTAL MSA format
+:* .msa: MSF?
+
+;Useful tools for viewing and editing:
+:* JALVIEW
+
+;Representing MSAs:
+'''Sequence Logo''' seems the best.. Based off information theory.
+
+;Quantitative analysis of MSAs:
+Column scores.
+:* Variation score: based on substitution matrix. Reflect the model manifested by the matrix (which may not be accurate for the specific instance of MSA at hand..)
+:* Information score: based on information theory. Use frequency of amino acids at each position. Seems to perform the best. Require a reference distribution of frequency though..
+:* Conservation score: based on explicit phylogenies?
+
+===9.5.2 Performing MSA on Mbp1===
+;Activity 1 - Perform MSA via EBI web tools on Mbp1 orthologs
+
+1. Go to [https://www.ncbi.nlm.nih.gov/protein/ NCBI Protein]. Search with the following query:
+
+ NP_010227 NP_593032 XP_660758 XP_007682304 XP_955821 XP_001837394
+ XP_569090 XP_003327086 XP_011392621 XP_006957051 XP_003645298
+
+2. Query returns a list of retrieved protein entries. Under "Summary" drop-down, choose "FASTA(text)". Content saved to "msa_Mbp1.mfa"
+
+3. Go to EBI MSA tools page https://www.ebi.ac.uk/Tools/msa/ > "Launch T-coffee"
+
+4. Paste the content from "msa_Mbp1.mfa" in the query field. Then, "Submit"
+
+5. I guess there are roughly 3 well-aligned regions. (The C-terminal one is a bit of a stretch qualitatively).
+
+6. Download alignment file as "msaT.aln"
+
+;Activity 2 - Perform MSA in R (BIN-ALI-MSA.R)
+
+<source lang="R">
+install.packages("ggseqlogo")
+</source>
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation messages'''''
+<div class="mw-collapsible-content">
+<code>
+Installing package into ‘C:/Users/Wilson/Documents/R/win-library/3.6’
+(as ‘lib’ is unspecified)
+also installing the dependencies ‘colorspace’, ‘plyr’, ‘labeling’, ‘munsell’, ‘gtable’, ‘lazyeval’, ‘reshape2’, ‘scales’, ‘viridisLite’, ‘ggplot2’
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/colorspace_1.4-1.zip'
+Content type 'application/zip' length 2550209 bytes (2.4 MB)
+downloaded 2.4 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/plyr_1.8.4.zip'
+Content type 'application/zip' length 1302845 bytes (1.2 MB)
+downloaded 1.2 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/labeling_0.3.zip'
+Content type 'application/zip' length 62937 bytes (61 KB)
+downloaded 61 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/munsell_0.5.0.zip'
+Content type 'application/zip' length 245687 bytes (239 KB)
+downloaded 239 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/gtable_0.3.0.zip'
+Content type 'application/zip' length 434412 bytes (424 KB)
+downloaded 424 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/lazyeval_0.2.2.zip'
+Content type 'application/zip' length 173491 bytes (169 KB)
+downloaded 169 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/reshape2_1.4.3.zip'
+Content type 'application/zip' length 628245 bytes (613 KB)
+downloaded 613 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/scales_1.0.0.zip'
+Content type 'application/zip' length 1073764 bytes (1.0 MB)
+downloaded 1.0 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/viridisLite_0.3.0.zip'
+Content type 'application/zip' length 60758 bytes (59 KB)
+downloaded 59 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/ggplot2_3.2.1.zip'
+Content type 'application/zip' length 3976049 bytes (3.8 MB)
+downloaded 3.8 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/ggseqlogo_0.1.zip'
+Content type 'application/zip' length 782923 bytes (764 KB)
+downloaded 764 KB
+
+package ‘colorspace’ successfully unpacked and MD5 sums checked
+package ‘plyr’ successfully unpacked and MD5 sums checked
+package ‘labeling’ successfully unpacked and MD5 sums checked
+package ‘munsell’ successfully unpacked and MD5 sums checked
+package ‘gtable’ successfully unpacked and MD5 sums checked
+package ‘lazyeval’ successfully unpacked and MD5 sums checked
+package ‘reshape2’ successfully unpacked and MD5 sums checked
+package ‘scales’ successfully unpacked and MD5 sums checked
+package ‘viridisLite’ successfully unpacked and MD5 sums checked
+package ‘ggplot2’ successfully unpacked and MD5 sums checked
+package ‘ggseqlogo’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in C:\Users\Wilson\AppData\Local\Temp\Rtmp8G3olX\downloaded_packages
+</code>
+</div>
+</div>
+
+
+<source lang="R">
+if (! requireNamespace("msa", quietly=TRUE)) {
+  BiocManager::install("msa")
+}
+</source>
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation  and warning messages'''''
+<div class="mw-collapsible-content">
+<code>
+Bioconductor version 3.9 (BiocManager 1.30.9), R 3.6.1 (2019-07-05)
+Installing package(s) 'msa'
+
+  There is a binary version available but the source version is later:
+    binary source needs_compilation
+msa 1.15.0 1.16.0              TRUE
+
+  Binaries will be installed
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/msa_1.15.0.zip'
+Content type 'application/zip' length 3210886 bytes (3.1 MB)
+downloaded 3.1 MB
+
+package ‘msa’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\Wilson\AppData\Local\Temp\Rtmp8G3olX\downloaded_packages
+Installation path not writeable, unable to update packages: boot, foreign, KernSmooth, mgcv,
+  nlme, survival
+Old packages: 'BiocManager', 'hexbin', 'msa', 'R.oo', 'R6', 'Rcpp', 'testthat'
+Update all/some/none? [a/s/n]: 
+a
+also installing the dependencies ‘ps’, ‘processx’, ‘callr’, ‘desc’, ‘pkgbuild’, ‘rprojroot’, ‘rstudioapi’, ‘pkgload’
+
+
+  There is a binary version available but the source version is later:
+    binary source needs_compilation
+msa 1.15.0 1.16.0              TRUE
+
+  Binaries will be installed
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/ps_1.3.0.zip'
+Content type 'application/zip' length 307255 bytes (300 KB)
+downloaded 300 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/processx_3.4.1.zip'
+Content type 'application/zip' length 409396 bytes (399 KB)
+downloaded 399 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/callr_3.3.2.zip'
+Content type 'application/zip' length 339461 bytes (331 KB)
+downloaded 331 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/desc_1.2.0.zip'
+Content type 'application/zip' length 287244 bytes (280 KB)
+downloaded 280 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/pkgbuild_1.0.6.zip'
+Content type 'application/zip' length 137113 bytes (133 KB)
+downloaded 133 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/rprojroot_1.3-2.zip'
+Content type 'application/zip' length 84899 bytes (82 KB)
+downloaded 82 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/rstudioapi_0.10.zip'
+Content type 'application/zip' length 240333 bytes (234 KB)
+downloaded 234 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/pkgload_1.0.2.zip'
+Content type 'application/zip' length 157366 bytes (153 KB)
+downloaded 153 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/BiocManager_1.30.10.zip'
+Content type 'application/zip' length 100427 bytes (98 KB)
+downloaded 98 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/hexbin_1.28.0.zip'
+Content type 'application/zip' length 992451 bytes (969 KB)
+downloaded 969 KB
+
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/msa_1.15.0.zip'
+Content type 'application/zip' length 3210886 bytes (3.1 MB)
+downloaded 3.1 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/R.oo_1.23.0.zip'
+Content type 'application/zip' length 967752 bytes (945 KB)
+downloaded 945 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/R6_2.4.1.zip'
+Content type 'application/zip' length 59337 bytes (57 KB)
+downloaded 57 KB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/Rcpp_1.0.3.zip'
+Content type 'application/zip' length 2996604 bytes (2.9 MB)
+downloaded 2.9 MB
+
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/testthat_2.3.0.zip'
+Content type 'application/zip' length 1810444 bytes (1.7 MB)
+downloaded 1.7 MB
+
+package ‘ps’ successfully unpacked and MD5 sums checked
+package ‘processx’ successfully unpacked and MD5 sums checked
+package ‘callr’ successfully unpacked and MD5 sums checked
+package ‘desc’ successfully unpacked and MD5 sums checked
+package ‘pkgbuild’ successfully unpacked and MD5 sums checked
+package ‘rprojroot’ successfully unpacked and MD5 sums checked
+package ‘rstudioapi’ successfully unpacked and MD5 sums checked
+package ‘pkgload’ successfully unpacked and MD5 sums checked
+package ‘BiocManager’ successfully unpacked and MD5 sums checked
+package ‘hexbin’ successfully unpacked and MD5 sums checked
+package ‘msa’ successfully unpacked and MD5 sums checked
+package ‘R.oo’ successfully unpacked and MD5 sums checked
+package ‘R6’ successfully unpacked and MD5 sums checked
+package ‘Rcpp’ successfully unpacked and MD5 sums checked
+Warning: cannot remove prior installation of package ‘Rcpp’
+Warning: restored ‘Rcpp’
+package ‘testthat’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in C:\Users\Wilson\AppData\Local\Temp\Rtmp8G3olX\downloaded_packages
+Warning message:
+In file.copy(savedcopy, lib, recursive = TRUE) :
+problem copying C:\Users\Wilson\Documents\R\win-library\3.6\00LOCK\Rcpp\libs\x64\Rcpp.dll to C:\Users\Wilson\Documents\R\win-library\3.6\Rcpp\libs\x64\Rcpp.dll:
+Permission denied
+</code>
+</div>
+</div>
+
+Useful functions from msa package:
+:* msa::msaMuscle(<XStringSet>): <XStringSet> is a object returned by for example <code>Biostrings::AAStringSet</code>. Returns an object of class MsaXMultipleAlignment.
+:* msa::print(): show MSA output from an object of class MsaXMultipleAlignment
+:* msaConservationScore(): returns a vector of column scores. Takes an object of class MsaXMultipleAlignment as argument.
+:: A scoring matrix object, obtained from <code>data()</code> can be used for the <code>substitutionMatrix</code> argument.
+:* rle(): run-length encoding?
+
+Line 101:
+File name is not "MBP1orthologuesTC.aln". It's "msaT.aln".
+
+Line 170:
+The code should say <code>data("BLOSUM62", package="Biostrings")</code>
+
+Line 180-188:
+Smoothing treatment for the plot.
 
 {{Vspace}}
 =8 Gene Expression and Functional Bioinformatics=
