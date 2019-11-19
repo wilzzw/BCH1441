@@ -1,0 +1,47 @@
+=10 Phylogenetic Analysis=
+==10.1 Concepts of Phylogenetic Analysis==
+15 min
+
+;Phylogenetic Analysis:
+Infer '''evolutionary distances''' between species based on observed states > construct phylogenetic trees
+:* Key is to quantitatively interpret evolutionary distance under a branching model of '''stochastic variation''' and '''selection'''
+
+Sequence changes can cause changes in fitness, criterion of selection.
+
+Selection requires reproduction to work. Once speciation due to reproductive separation occurs, genomes will diverge.
+
+:* Important tasks: quantifying divergence in gene sequences, construct phylogenetic trees such that the order of branching events best explain contemporary divergence.
+
+;Phylogenetic Tree:
+A graph-abstraction of computable evolutionary relationships.
+
+Each node is a ''species''. Each edge is a ''homology''. Lengths of the edges represent time.
+
+:* '''Operational Taxonomic Units (OTUs)''': Terminal nodes. "Leaves" of phylogenetic tree. Contemporary species
+:* '''Internal Nodes''': Hypothetical state of '''ancestral species'''
+:* '''Root''': '''Last Common Ancestor''' or cenancestor
+:* '''Monophyletic Group''': a clade - a node AND all its descendents
+:* '''Paraphyletic Group''': a clade minus some of its members. This group is said to be "paraphyletic" to the excluded members/groups
+:* '''Polyphyletic Group''': set of members from several clades grouped together perhaps by some similarities, but do not include a shared common ancestor of them all
+
+;"Molecular Clock" Hypothesis:
+In prehistory since speciation, amount of mutation (to have accumulated) changes linearly with time.
+:* Despite its loose conception, it works surprisingly well
+
+;Rooting phylogenetic tree:
+When time-direction assumption from "molecular clock" is weighed in
+:* Outgroup rooting
+:* Midpoint rooting
+:* Gene duplication rooting
+
+;Types of phylogenetic tree:
+:* Cladogram: only branching patterns. Meaningless lengths of edges
+:* Phylogram: branch lengths correspond to amount of genetic changes
+:* Ultrametric Tree: edge lengths represent time from LCA to current taxa??
+
+;Complications not constrained by the universal "Tree of Life" -- Horizontal Gene Transfer
+:* Causes incompatibility with the Common Tree
+:* Detected via parametric methods: evidence by sequence composition e.g. GC contents, specific codon biases, sequence signatures
+:* Detected via phylogenetic methods: evidence through observed difference between trees of species and trees of genes (cannot infer direction though)
+
+?What are split networks?
