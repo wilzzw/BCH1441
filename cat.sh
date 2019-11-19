@@ -1,1 +1,1 @@
-cat opening.xml {9..0}wikijournal.xml closing.xml > wikijournal.xml
+cat opening.xml {10..0}wikijournal.xml closing.xml > wikijournal.xml

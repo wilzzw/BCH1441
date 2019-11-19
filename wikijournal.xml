@@ -484,7 +484,7 @@ Success! Though entry "MBP1_ERECY" and "ECYM_2783" are duplicates. I am going to
 ==9.5 Multiple Sequence Alignment (MSA)==
 
 <div class="time-estimate">
-Time estimated: 2.5 h; taken 3.5 h; date started: 2019-11-17; date completed: TBD
+Time estimated: 2.5 h; taken 4.5 h; date started: 2019-11-17; date completed: 2019-11-19
 
 ~~~~
 </div>
@@ -561,6 +561,7 @@ One of the most important considerations!
 
 ;Useful tools for viewing and editing:
 :* JALVIEW
+:* AliView
 
 ;Representing MSAs:
 '''Sequence Logo''' seems the best.. Based off information theory.
@@ -670,17 +671,17 @@ if (! requireNamespace("msa", quietly=TRUE)) {
 }
 </source>
 <div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
-'''''Installation  and warning messages'''''
+'''''Installation and warning messages'''''
 <div class="mw-collapsible-content">
 <code>
 Bioconductor version 3.9 (BiocManager 1.30.9), R 3.6.1 (2019-07-05)
 Installing package(s) 'msa'
 
-  There is a binary version available but the source version is later:
-    binary source needs_compilation
+There is a binary version available but the source version is later:
+binary source needs_compilation
 msa 1.15.0 1.16.0              TRUE
 
-  Binaries will be installed
+Binaries will be installed
 trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/msa_1.15.0.zip'
 Content type 'application/zip' length 3210886 bytes (3.1 MB)
 downloaded 3.1 MB
@@ -688,20 +689,20 @@ downloaded 3.1 MB
 package ‘msa’ successfully unpacked and MD5 sums checked
 
 The downloaded binary packages are in
-	C:\Users\Wilson\AppData\Local\Temp\Rtmp8G3olX\downloaded_packages
+C:\Users\Wilson\AppData\Local\Temp\Rtmp8G3olX\downloaded_packages
 Installation path not writeable, unable to update packages: boot, foreign, KernSmooth, mgcv,
-  nlme, survival
+nlme, survival
 Old packages: 'BiocManager', 'hexbin', 'msa', 'R.oo', 'R6', 'Rcpp', 'testthat'
 Update all/some/none? [a/s/n]: 
 a
 also installing the dependencies ‘ps’, ‘processx’, ‘callr’, ‘desc’, ‘pkgbuild’, ‘rprojroot’, ‘rstudioapi’, ‘pkgload’
 
 
-  There is a binary version available but the source version is later:
-    binary source needs_compilation
+There is a binary version available but the source version is later:
+binary source needs_compilation
 msa 1.15.0 1.16.0              TRUE
 
-  Binaries will be installed
+Binaries will be installed
 trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/ps_1.3.0.zip'
 Content type 'application/zip' length 307255 bytes (300 KB)
 downloaded 300 KB
@@ -789,12 +790,18 @@ Permission denied
 </div>
 </div>
 
-Useful functions from msa package:
+Useful functions:
 :* msa::msaMuscle(<XStringSet>): <XStringSet> is a object returned by for example <code>Biostrings::AAStringSet</code>. Returns an object of class MsaXMultipleAlignment.
 :* msa::print(): show MSA output from an object of class MsaXMultipleAlignment
 :* msaConservationScore(): returns a vector of column scores. Takes an object of class MsaXMultipleAlignment as argument.
 :: A scoring matrix object, obtained from <code>data()</code> can be used for the <code>substitutionMatrix</code> argument.
+:* seqinr::read.alignment(): read from MSA object and returns a list.
 :* rle(): run-length encoding?
+:* writeALN(): from .utilities.R. Write from MSA object to stdout() in multiFASTA format (but the STDOUT will print "CLUSTAL W Format"..).
+:* fetchMSAmotif(<ali>, <mot>): retrieve a subset from <ali>(MSA) that spans sequence in <mot>(string)
+:* new(<class_string>): Generate a new object from <class_string> (might end up being incredibly useful!)
+:* DECIPHER::AlignProfiles(): align two sets of aligned one or more sequences by generating profiles for both first. Then returns merged aligned both sequence sets
+:* ggseqlogo::ggseqlogo(<data>): Plot sequence logo. <data> is a vector of characters that are sequences of the same width
 
 Line 101:
 File name is not "MBP1orthologuesTC.aln". It's "msaT.aln".
@@ -804,6 +811,76 @@ The code should say <code>data("BLOSUM62", package="Biostrings")</code>
 
 Line 180-188:
 Smoothing treatment for the plot.
+
+'''Comparing MSA in R is really kind of a pain. msa is unable to import just any algorithms out there (e.g. T-coffee)..'''
+
+'''Has to import alignment output files, and create an R-object of MSA type class (class "MsaAAMultipleAlignment") before msa functions can read them..'''
+
+Line 476-477:
+Profile-Profile alignments - Great for picking up relationships between distant sequence families? (but here only used to compare MSA methods??)
+
+<source lang="R">
+if (! requireNamespace("DECIPHER", quietly=TRUE)) {
+  BiocManager::install("DECIPHER")
+}
+</source>
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+'''''Installation  and warning messages'''''
+<div class="mw-collapsible-content">
+<code>
+Bioconductor version 3.9 (BiocManager 1.30.10), R 3.6.1 (2019-07-05)
+Installing package(s) 'DECIPHER'
+trying URL 'https://bioconductor.org/packages/3.9/bioc/bin/windows/contrib/3.6/DECIPHER_2.12.0.zip'
+Content type 'application/zip' length 11930416 bytes (11.4 MB)
+downloaded 11.4 MB
+
+package ‘DECIPHER’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in C:\Users\Wilson\AppData\Local\Temp\Rtmp8G3olX\downloaded_packages
+Installation path not writeable, unable to update packages: boot, foreign, KernSmooth, mgcv,
+nlme, survival
+Old packages: 'msa', 'Rcpp'
+Update all/some/none? [a/s/n]: 
+a
+
+There is a binary version available but the source version is later:
+binary source needs_compilation
+msa 1.15.0 1.16.0              TRUE
+
+Binaries will be installed
+Warning: package ‘msa’ is in use and will not be installed
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/3.6/Rcpp_1.0.3.zip'
+Content type 'application/zip' length 2996604 bytes (2.9 MB)
+downloaded 2.9 MB
+
+package ‘Rcpp’ successfully unpacked and MD5 sums checked
+Warning: cannot remove prior installation of package ‘Rcpp’
+Warning: restored ‘Rcpp’
+
+The downloaded binary packages are in
+C:\Users\Wilson\AppData\Local\Temp\Rtmp8G3olX\downloaded_packages
+Warning message:
+In file.copy(savedcopy, lib, recursive = TRUE) :
+problem copying C:\Users\Wilson\Documents\R\win-library\3.6\00LOCK\Rcpp\libs\x64\Rcpp.dll to C:\Users\Wilson\Documents\R\win-library\3.6\Rcpp\libs\x64\Rcpp.dll:
+Permission denied
+</code>
+</div>
+</div>
+
+Line 500:
+Should actually be:
+<code>(ppa <- DECIPHER::AlignProfiles(Biostrings::AAStringSet(w), Biostrings::AAStringSet(m)))</code>
+
+Can see where the two MSA methods made different decisions.
+
+===9.5.3 Alignment editing===
+;Poor alignment features biologically relevant not necessarily screened by MSA methods:
+Alignment of functionally different residues or evolved in different contexts, indels at annotated features and biologically relevant positions, other errors
+
+;Manual alignment editing can:
+Reduce implausible number of rare evolutionary events, emphasize conservation of known functional motifs
+
+
 
 {{Vspace}}
 =8 Gene Expression and Functional Bioinformatics=
