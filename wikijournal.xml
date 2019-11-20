@@ -14,6 +14,112 @@ The relevant contents of the oral exam can be found at [[#6.3_Mutation_Impact]]
 __TOC__
 
 {{Vspace}}
+=10 Phylogenetic Analysis=
+==10.1 Concepts of Phylogenetic Analysis==
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 70 min; date started: 2019-11-18; date completed: 2019-11-19
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 19:49, 19 November 2019 (EST)
+</div>
+
+;Phylogenetic Analysis:
+Infer '''evolutionary distances''' between species based on observed states > construct phylogenetic trees
+:* Key is to quantitatively interpret evolutionary distance under a branching model of '''stochastic variation''' and '''selection'''
+
+Sequence changes can cause changes in fitness, criterion of selection.
+
+Selection requires reproduction to work. Once speciation due to reproductive separation occurs, genomes will diverge.
+
+:* Important tasks: quantifying divergence in gene sequences, construct phylogenetic trees such that the order of branching events best explain contemporary divergence.
+
+;Phylogenetic Tree:
+A graph-abstraction of computable evolutionary relationships.
+
+Each node is a ''species''. Each edge is a ''homology''. Lengths of the edges represent time.
+
+:* '''Operational Taxonomic Units (OTUs)''': Terminal nodes. "Leaves" of phylogenetic tree. Contemporary species
+:* '''Internal Nodes''': Hypothetical state of '''ancestral species'''
+:* '''Root''': '''Last Common Ancestor''' or cenancestor
+:* '''Monophyletic Group''': a clade - a node AND all its descendents
+:* '''Paraphyletic Group''': a clade minus some of its members. This group is said to be "paraphyletic" to the excluded members/groups
+:* '''Polyphyletic Group''': set of members from several clades grouped together perhaps by some similarities, but do not include a shared common ancestor of them all
+
+;"Molecular Clock" Hypothesis:
+In prehistory since speciation, amount of mutation (to have accumulated) changes linearly with time.
+:* Despite its loose conception, it works surprisingly well
+
+;Rooting phylogenetic tree:
+When time-direction assumption from "molecular clock" is weighed in
+:* Outgroup rooting
+:* Midpoint rooting
+:* Gene duplication rooting
+
+;Types of phylogenetic tree:
+:* Cladogram: only branching patterns. Meaningless lengths of edges
+:* Phylogram: branch lengths correspond to amount of genetic changes
+:* Ultrametric Tree: edge lengths represent time from LCA to current taxa??
+
+;Complications not constrained by the universal "Tree of Life" -- Horizontal Gene Transfer
+:* Causes incompatibility with the Common Tree
+:* Detected via parametric methods: evidence by sequence composition e.g. GC contents, specific codon biases, sequence signatures
+:* Detected via phylogenetic methods: evidence through observed difference between trees of species and trees of genes (cannot infer direction though)
+
+?What are split networks?
+
+More on concepts at [pmid 12801728]
+
+Generally:
+Trees built from maximum likelihood methods are more reliable than parsimony methods or distance methods.
+
+However, just like in MSA, weigh in biological intuitions when applicable.
+
+Number of all possible trees:
+<source lang="R">
+nTrees(11) #34459425
+</source>
+
+Seems like a lot...
+
+==10.2 Data Preparation for Phylogenetic Analysis==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 45 min; date started: 2019-11-19; date completed: 2019-11-19
+
+~~~~
+</div>
+
+;Phylogenetic analysis uses results of MSA as input.
+:* Use DNA sequences for closely related sequences. Use protein sequences for distantly related sequences.
+:* Quality of MSA: desirable to edit ensuring homologous residues are aligned and avoid unlikely large number of indels.
+:* Avoid sequences that evolved under different models of evolution
+:* Remove frayed N- or C-termini
+:* The bottom line: Reduce contaminating noise in the put MSA information.
+
+
+ '''''Caution! Indels/gaps are extra problematic in phylogenetic input alignments. Because phylo. programs analyze columns only, All "-" are treated the same.'''''
+
+ '''''This is not the case in MSA, where occurance and extension are not equivalent. The result is overestimation of distance for true long indels (actual insertion), and underestimation of distance for short indels (rare)'''''
+
+
+;Add an outgroup to root the tree
+
+(e.g. With all fungi APSES sequences I have, add a Kil-A protein outside the fungi kingdom, such as E.coli. Place it as the first sequence)
+
+;Activity - Prepare data for phylogenetic analysis by going through "BIN-PHYLO-Data_preparation.R"
+
+Line 89:
+Get annotation IDs for those that are annotating proteins selected and Feature ID 1.
+
+Line 125:
+Alignment with MUSCLE.
+
+Line 228:
+Run this instead <code>writeMFA(APSESphyloSet, myCon = "../APSESphyloSet.mfa")</code>
+
+(In general practice, masking gaps and uncertain areas are better done in MSA editors such as JalView)
+
+{{Vspace}}
 =9 Sequence Alignments=
 ==9.1 The sequence alignment problem==
 <div class="time-estimate">
@@ -486,7 +592,7 @@ Success! Though entry "MBP1_ERECY" and "ECYM_2783" are duplicates. I am going to
 <div class="time-estimate">
 Time estimated: 2.5 h; taken 4.5 h; date started: 2019-11-17; date completed: 2019-11-19
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 01:11, 19 November 2019 (EST)
 </div>
 
 ;Important premise:
@@ -879,7 +985,6 @@ Alignment of functionally different residues or evolved in different contexts, i
 
 ;Manual alignment editing can:
 Reduce implausible number of rare evolutionary events, emphasize conservation of known functional motifs
-
 
 
 {{Vspace}}

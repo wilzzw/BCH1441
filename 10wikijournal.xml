@@ -1,6 +1,11 @@
 =10 Phylogenetic Analysis=
 ==10.1 Concepts of Phylogenetic Analysis==
-15 min
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 70 min; date started: 2019-11-18; date completed: 2019-11-19
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 19:49, 19 November 2019 (EST)
+</div>
 
 ;Phylogenetic Analysis:
 Infer '''evolutionary distances''' between species based on observed states > construct phylogenetic trees
@@ -45,3 +50,57 @@ When time-direction assumption from "molecular clock" is weighed in
 :* Detected via phylogenetic methods: evidence through observed difference between trees of species and trees of genes (cannot infer direction though)
 
 ?What are split networks?
+
+More on concepts at [pmid 12801728]
+
+Generally:
+Trees built from maximum likelihood methods are more reliable than parsimony methods or distance methods.
+
+However, just like in MSA, weigh in biological intuitions when applicable.
+
+Number of all possible trees:
+<source lang="R">
+nTrees(11) #34459425
+</source>
+
+Seems like a lot...
+
+==10.2 Data Preparation for Phylogenetic Analysis==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 45 min; date started: 2019-11-19; date completed: 2019-11-19
+
+~~~~
+</div>
+
+;Phylogenetic analysis uses results of MSA as input.
+:* Use DNA sequences for closely related sequences. Use protein sequences for distantly related sequences.
+:* Quality of MSA: desirable to edit ensuring homologous residues are aligned and avoid unlikely large number of indels.
+:* Avoid sequences that evolved under different models of evolution
+:* Remove frayed N- or C-termini
+:* The bottom line: Reduce contaminating noise in the put MSA information.
+
+
+ '''''Caution! Indels/gaps are extra problematic in phylogenetic input alignments. Because phylo. programs analyze columns only, All "-" are treated the same.'''''
+
+ '''''This is not the case in MSA, where occurance and extension are not equivalent. The result is overestimation of distance for true long indels (actual insertion), and underestimation of distance for short indels (rare)'''''
+
+
+;Add an outgroup to root the tree
+
+(e.g. With all fungi APSES sequences I have, add a Kil-A protein outside the fungi kingdom, such as E.coli. Place it as the first sequence)
+
+;Activity - Prepare data for phylogenetic analysis by going through "BIN-PHYLO-Data_preparation.R"
+
+Line 89:
+Get annotation IDs for those that are annotating proteins selected and Feature ID 1.
+
+Line 125:
+Alignment with MUSCLE.
+
+Line 228:
+Run this instead <code>writeMFA(APSESphyloSet, myCon = "../APSESphyloSet.mfa")</code>
+
+(In general practice, masking gaps and uncertain areas are better done in MSA editors such as JalView)
+
+{{Vspace}}
