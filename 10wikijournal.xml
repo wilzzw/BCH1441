@@ -70,7 +70,7 @@ Seems like a lot...
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 45 min; date started: 2019-11-19; date completed: 2019-11-19
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 21:58, 19 November 2019 (EST)
 </div>
 
 ;Phylogenetic analysis uses results of MSA as input.
@@ -102,5 +102,241 @@ Line 228:
 Run this instead <code>writeMFA(APSESphyloSet, myCon = "../APSESphyloSet.mfa")</code>
 
 (In general practice, masking gaps and uncertain areas are better done in MSA editors such as JalView)
+
+==10.3 Construction of Phylogenetic Trees==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 80 min; date started: 2019-11-25; date completed: 2019-11-25
+
+~~~~
+</div>
+
+;Motivation:
+Construct a tree that best represent an evolutionary model on how it shaped the current OTUs
+
+Listing all possible trees can get astronomical and intractable. Use heuristic methods.
+
+'''Depending on metric/model of evolution, the objective "functions" lead to respective methods.'''
+
+;Distance-based methods:
+:* Objective: the best tree have the most similar OTUs share direct ancestors
+:* Compute distance matrix based on number of changes required to map between sequences. Find closest neighbours. Based off an evolutionary model.
+:* Grouping sequences: Fitch/Margoliash method (minimizes branch lengths), Neighbour-joining method (minimizes deviations of branch lengths from observed distances)
+:* Takes into account distance pairscores
+
+;Parsimony-based methods:
+:* Objective: the best tree minimal number of evolutionary events in a tree
+:* Predicts the tree that require the fewest mutation events
+:* Takes into account whole columns
+
+Distance and parsimony based methods are fast, but less accurate.
+
+;Maximum likelihood methods:
+:* Objective: the best tree maximizes the likelihood of observed alignment
+
+;Bayesian methods:
+:* Objective: (related, but not quite the same as above) the best tree maximizes its probability given the alignment
+
+'''''Maximum likelihood and Bayesian methods are typicall the methods of choice.'''''
+
+'''Bootstrapping''' can be used to test the robustness of the tree (i.e. sensitivity to small variations in input data used for construction)
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+<span style="color:red">'''''Warning Messages'''''</span>
+<div class="mw-collapsible-content">
+Warning:
+One or more of "infile" 
+was found in your current working directory and may be overwritten
+Press ENTER to continue or q to quit: 
+</div>
+</div>
+
+I am going to make a new directory called PHYLO. Then:
+<code>setwd("C:/Users/Wilson/Documents/BCH1441/PHYLO")</code>
+
+Line 90:
+My lines is <code>PROMLPATH <- "C:/Users/Wilson/Desktop/phylip-3.698/exe"</code>
+
+Line 129 (proml):
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+<span style="color:red">'''''Error and Warning Messages'''''</span>
+<div class="mw-collapsible-content">
+Amino acid sequence Maximum Likelihood method, version 3.698
+
+Settings for this run:
+U                 Search for best tree?  Yes
+P    JTT, PMB or PAM probability model?  Jones-Taylor-Thornton
+C                One category of sites?  Yes
+R           Rate variation among sites?  constant rate of change
+W                       Sites weighted?  No
+S        Speedier but rougher analysis?  Yes
+G                Global rearrangements?  No
+J   Randomize input order of sequences?  No. Use input order
+O                        Outgroup root?  No, use as outgroup species  1
+M           Analyze multiple data sets?  No
+I          Input sequences interleaved?  Yes
+0   Terminal type (IBM PC, ANSI, none)?  IBM PC
+1    Print out the data at start of run  No
+2  Print indications of progress of run  Yes
+3                        Print out tree  Yes
+4       Write out trees onto tree file?  Yes
+5   Reconstruct hypothetical sequences?  No
+
+Y to accept these or type the letter for one to change
+Amino acid sequence Maximum Likelihood method, version 3.698
+
+Settings for this run:
+U                 Search for best tree?  Yes
+P    JTT, PMB or PAM probability model?  Jones-Taylor-Thornton
+C                One category of sites?  Yes
+R           Rate variation among sites?  Gamma distributed rates
+A   Rates at adjacent sites correlated?  No, they are independent
+W                       Sites weighted?  No
+S        Speedier but rougher analysis?  Yes
+G                Global rearrangements?  No
+J   Randomize input order of sequences?  No. Use input order
+O                        Outgroup root?  No, use as outgroup species  1
+M           Analyze multiple data sets?  No
+I          Input sequences interleaved?  Yes
+0   Terminal type (IBM PC, ANSI, none)?  IBM PC
+1    Print out the data at start of run  No
+2  Print indications of progress of run  Yes
+3                        Print out tree  Yes
+4       Write out trees onto tree file?  Yes
+5   Reconstruct hypothetical sequences?  No
+
+Y to accept these or type the letter for one to change
+Amino acid sequence Maximum Likelihood method, version 3.698
+
+Settings for this run:
+U                 Search for best tree?  Yes
+P    JTT, PMB or PAM probability model?  Jones-Taylor-Thornton
+C                One category of sites?  Yes
+R           Rate variation among sites?  Gamma distributed rates
+A   Rates at adjacent sites correlated?  No, they are independent
+W                       Sites weighted?  No
+S        Speedier but rougher analysis?  No, not rough
+G                Global rearrangements?  No
+J   Randomize input order of sequences?  No. Use input order
+O                        Outgroup root?  No, use as outgroup species  1
+M           Analyze multiple data sets?  No
+I          Input sequences interleaved?  Yes
+0   Terminal type (IBM PC, ANSI, none)?  IBM PC
+1    Print out the data at start of run  No
+2  Print indications of progress of run  Yes
+3                        Print out tree  Yes
+4       Write out trees onto tree file?  Yes
+5   Reconstruct hypothetical sequences?  No
+
+Y to accept these or type the letter for one to change
+Amino acid sequence Maximum Likelihood method, version 3.698
+
+Settings for this run:
+U                 Search for best tree?  Yes
+P    JTT, PMB or PAM probability model?  Jones-Taylor-Thornton
+C                One category of sites?  Yes
+R           Rate variation among sites?  Gamma distributed rates
+A   Rates at adjacent sites correlated?  No, they are independent
+W                       Sites weighted?  No
+S        Speedier but rougher analysis?  No, not rough
+G                Global rearrangements?  Yes
+J   Randomize input order of sequences?  No. Use input order
+O                        Outgroup root?  No, use as outgroup species  1
+M           Analyze multiple data sets?  No
+I          Input sequences interleaved?  Yes
+0   Terminal type (IBM PC, ANSI, none)?  IBM PC
+1    Print out the data at start of run  No
+2  Print indications of progress of run  Yes
+3                        Print out tree  Yes
+4       Write out trees onto tree file?  Yes
+5   Reconstruct hypothetical sequences?  No
+
+Y to accept these or type the letter for one to change
+
+Random number seed (must be odd)?
+Number of times to jumble?
+Amino acid sequence Maximum Likelihood method, version 3.698
+
+Settings for this run:
+U                 Search for best tree?  Yes
+P    JTT, PMB or PAM probability model?  Jones-Taylor-Thornton
+C                One category of sites?  Yes
+R           Rate variation among sites?  Gamma distributed rates
+A   Rates at adjacent sites correlated?  No, they are independent
+W                       Sites weighted?  No
+S        Speedier but rougher analysis?  No, not rough
+G                Global rearrangements?  Yes
+J   Randomize input order of sequences?  Yes (seed =   45785, 10 times)
+O                        Outgroup root?  No, use as outgroup species  1
+M           Analyze multiple data sets?  No
+I          Input sequences interleaved?  Yes
+0   Terminal type (IBM PC, ANSI, none)?  IBM PC
+1    Print out the data at start of run  No
+2  Print indications of progress of run  Yes
+3                        Print out tree  Yes
+4       Write out trees onto tree file?  Yes
+5   Reconstruct hypothetical sequences?  No
+
+Y to accept these or type the letter for one to change
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+Coefficient of variation of substitution rate among sites (must be positive)
+In gamma distribution parameters, this is 1/(square root of alpha)
+
+ERROR: Made 10 attempts to read input in loop. Aborting run.
+Press enter to quit.
+Error in file(file, "r") : cannot open the connection
+In addition: Warning message:
+In file(file, "r") : cannot open file 'outtree': No such file or directory
+</div>
+</div>
+
+<span style="color:red">'''Strangely, rerunning Line 129 command results in it not complaining anymore... Except the following'''</span>
+
+<div class="toccolours mw-collapsible mw-collapsed" style="width:90%; margin-left: 10px; padding-right: 15px">
+<span style="color:red">'''''Warning Messages'''''</span>
+<div class="mw-collapsible-content">
+Warning messages:
+1: In system(paste("rm", fs[i], sep = " "), show.output.on.console = FALSE) :
+'rm' not found
+2: In system(paste("rm", fs[i], sep = " "), show.output.on.console = FALSE) :
+'rm' not found
+3: In system(paste("rm", fs[i], sep = " "), show.output.on.console = FALSE) :
+'rm' not found
+</div>
+</div>
+
+Ignore for now. Here is the tree:
+
+[[File:phylotree_ERECY.jpg|500px]]
+
+Move all content from PHYLO directory to BCH1441 directory (including the .Rdata containing the tree). Maybe I got too paranoid of program overwritting unexpectedly..
 
 {{Vspace}}
