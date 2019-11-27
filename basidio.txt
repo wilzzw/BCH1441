@@ -1,0 +1,1 @@
+((((Cryptococcus_neoformans_var._neoformans_JEC21,Coprinopsis_cinerea_okayama7#130)Agaricomycotina,Ustilago_maydis_521),(Puccinia_graminis_f._sp._tritici_CRL_75-36-700-3,Wallemia_mellicola_CBS_633.66))Basidiomycota);

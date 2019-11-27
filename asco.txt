@@ -1,0 +1,1 @@
+((((Saccharomyces_cerevisiae_S288C,Eremothecium_cymbalariae_DBVPG#7215)Saccharomycetaceae,((Aspergillus_nidulans_FGSC_A4,Bipolaris_oryzae_ATCC_44560),Neurospora_crassa_OR74A)leotiomyceta)saccharomyceta,Schizosaccharomyces_pombe_972h-)Ascomycota);

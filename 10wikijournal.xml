@@ -339,4 +339,84 @@ Ignore for now. Here is the tree:
 
 Move all content from PHYLO directory to BCH1441 directory (including the .Rdata containing the tree). Maybe I got too paranoid of program overwritting unexpectedly..
 
+==10.4 Phylogenetic Tree Analysis==
+80 min
+
+;"Golden Rules":
+:* Orthologues arise through speciation. Paralogues arise through duplication
+:* Each branch point is either duplication or speciation
+:* Do not assume orthology is transitive (it's not. See inparalogs and co-orthologues, when duplication occurs after speciation)
+:* Gene tree should recapitulate the sequence of speciation events. '''Need a species tree'''
+:* RBM: (very often) orthologues. Reason being paralogues undergo faster evolution
+:* Prepare for complications arising from gene-loss, lack of resolution branch point, and horizontal gene transfer, long branch attraction
+
+===10.4.1 Compute reference species tree===
+
+<span style="color:red">Since I will not be able to make full use of PhyloT, I follow the following procedure to obtain reference species tree (Procedure obtained from Dr. Steipe on the mailing list).</span>
+
+1. Get Entrez species info:
+
+<source lang="R">
+#Initiate ABC-units project
+init()
+
+#Step 1: Determine whether ERECY is an ascomycota or a basidiomycota
+entrezQueryString <- function() {
+   query <- character()
+   for (spec in myDB$taxonomy$species) {
+       query <- c(query, paste(unlist(strsplit(spec, " "))[1:2], collapse = " "))
+   }
+   return(paste(query, collapse = " OR "))
+}
+
+#This function requires myDB, so for me the following lines are needed:
+library(jsonlite)
+source("../makeProteinDB.R")
+
+#Call the function
+entrezQueryString()
+</source>
+
+2. Go to https://www.ncbi.nlm.nih.gov/taxonomy
+
+3. Search the following (Output of the <code>entrezQueryString()</code>)
+
+ Aspergillus nidulans OR Bipolaris oryzae OR Coprinopsis cinerea OR Cryptococcus neoformans OR Neurospora crassa OR Puccinia graminis OR Saccharomyces cerevisiae OR Schizosaccharomyces pombe
+ OR Ustilago maydis OR Wallemia mellicola OR Eremothecium cymbalariae
+
+4. Under "Displaye Settings", choose "Common Tree"
+
+ '''MYSPE Eremothecium cymbalariae is under Ascomycota clade'''
+
+5. Go to phyloT at https://phylot.biobyte.de/
+
+6. Build tree with the following tree elements of Ascomycota clade:
+
+ 227321, 930090, 367110, 559292, 284812, 931890
+
+7. Settings:
+:* "Node Identifiers": "Scientific Names"
+:* "Internal Nodes": "Collapsed"
+:* "Polytomy": "no"
+:* "Format": "Newick"
+:* Everything else default
+
+Then, "Generate Tree" (Wow so fast..)
+
+(The tree can be visualized in "Visualize in iTOL" as well)
+
+8. Similarly, build tree with the following tree elements of Basidiomycota:
+
+ 671144, 240176, 418459, 237631, 214684
+
+9. ... and for Fungi (grand tree):
+
+(The outputs are formatted in Newick with its specific syntax)
+
+10. Manually edit output .txt files to merge the trees. This results in "fullfungiTree.txt". Use https://itol.embl.de/upload.cgi to validate trees.
+
+My species trees look like this:
+
+[[File:species_tree.jpg]]
+
 {{Vspace}}
