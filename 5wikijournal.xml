@@ -1,4 +1,29 @@
 =5 Structural Bioinformatics=
+==5.8 Structural Superposition==
+;Motivation:
+Structural alignment, conserved interaction etc. Reveal alignments between poorly conserved sequence identities
+
+;Criteria:
+Minimized RMSD after translation+rotation
+
+;Complications:
+Choice of coordinate subsets (does not always make sense to align all coordinates. e.g. domains? relatively immobile elements?)
+
+;Superposition servers:
+:* VAST (Vector Alignment Search Tool): find similar structures by similarly oriented and arranged elements of secondary structures
+:* DALI: collections of superimposed domains?
+
+;Notes from working with [https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/alignments.html Chimera Superpositions and Alignments Tutorial]
+
+Key tools for structural alignment:
+MatchMaker, Match -> Align, Multalign Viewer
+
+'''''{{WP|Circular permutation in proteins|Circular permutation}} of protein sequence is a thing?!'''''
+
+;Bio3d tutorials:
+:* [http://thegrantlab.org/bio3d/tutorials/structure-analysis Structural analysis]
+:* [http://thegrantlab.org/bio3d/tutorials/principal-component-analysis PCA]
+
 ==5.7 Protein Structural Domains==
 
 <div class="time-estimate">

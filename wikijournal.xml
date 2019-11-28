@@ -359,7 +359,7 @@ Move all content from PHYLO directory to BCH1441 directory (including the .Rdata
 <div class="time-estimate">
 Time estimated: 2 h; taken 2.5 h; date started: 2019-11-25; date completed: 2019-11-28
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 00:27, 28 November 2019 (EST)
 </div>
 
 ;"Golden Rules":
@@ -437,7 +437,7 @@ Then, "Generate Tree" (Wow so fast..)
 
 My species trees look like this:
 
-[[File:species_tree.jpg|500px]]
+[[File:Species_tree_ERECY.jpg|500px]]
 
 ;Activity 2 - Phylogenetic tree analysis with "BIN-PHYLO-Tree_analysis.R"
 
@@ -2029,6 +2029,31 @@ write.csv(outcomesOfMutation(codonWithC, "C", "A"), file="C_to_A_table.csv")
 
 {{Vspace}}
 =5 Structural Bioinformatics=
+==5.8 Structural Superposition==
+;Motivation:
+Structural alignment, conserved interaction etc. Reveal alignments between poorly conserved sequence identities
+
+;Criteria:
+Minimized RMSD after translation+rotation
+
+;Complications:
+Choice of coordinate subsets (does not always make sense to align all coordinates. e.g. domains? relatively immobile elements?)
+
+;Superposition servers:
+:* VAST (Vector Alignment Search Tool): find similar structures by similarly oriented and arranged elements of secondary structures
+:* DALI: collections of superimposed domains?
+
+;Notes from working with [https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/alignments.html Chimera Superpositions and Alignments Tutorial]
+
+Key tools for structural alignment:
+MatchMaker, Match -> Align, Multalign Viewer
+
+'''''{{WP|Circular permutation in proteins|Circular permutation}} of protein sequence is a thing?!'''''
+
+;Bio3d tutorials:
+:* [http://thegrantlab.org/bio3d/tutorials/structure-analysis Structural analysis]
+:* [http://thegrantlab.org/bio3d/tutorials/principal-component-analysis PCA]
+
 ==5.7 Protein Structural Domains==
 
 <div class="time-estimate">
