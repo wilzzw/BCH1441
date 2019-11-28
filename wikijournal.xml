@@ -124,7 +124,7 @@ Run this instead <code>writeMFA(APSESphyloSet, myCon = "../APSESphyloSet.mfa")</
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 80 min; date started: 2019-11-25; date completed: 2019-11-25
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:20, 25 November 2019 (EST)
 </div>
 
 ;Motivation:
@@ -354,6 +354,136 @@ Ignore for now. Here is the tree:
 [[File:phylotree_ERECY.jpg|500px]]
 
 Move all content from PHYLO directory to BCH1441 directory (including the .Rdata containing the tree). Maybe I got too paranoid of program overwritting unexpectedly..
+
+==10.4 Phylogenetic Tree Analysis==
+<div class="time-estimate">
+Time estimated: 2 h; taken 2.5 h; date started: 2019-11-25; date completed: 2019-11-28
+
+~~~~
+</div>
+
+;"Golden Rules":
+:* Orthologues arise through speciation. Paralogues arise through duplication
+:* Each branch point is either duplication or speciation
+:* Do not assume orthology is transitive (it's not. See inparalogs and co-orthologues, when duplication occurs after speciation)
+:* Gene tree should recapitulate the sequence of speciation events. '''Need a species tree'''
+:* RBM: (very often) orthologues. Reason being paralogues undergo faster evolution
+:* Prepare for complications arising from gene-loss, lack of resolution branch point, and horizontal gene transfer, long branch attraction
+
+;Activity 1 - Create a reference species tree
+
+<span style="color:red">Since I will not be able to make full use of PhyloT, I follow the following procedure to obtain reference species tree (Procedure obtained from Dr. Steipe on the mailing list).</span>
+
+1. Get Entrez species info:
+
+<source lang="R">
+#Initiate ABC-units project
+init()
+
+#Step 1: Determine whether ERECY is an ascomycota or a basidiomycota
+entrezQueryString <- function() {
+   query <- character()
+   for (spec in myDB$taxonomy$species) {
+       query <- c(query, paste(unlist(strsplit(spec, " "))[1:2], collapse = " "))
+   }
+   return(paste(query, collapse = " OR "))
+}
+
+#This function requires myDB, so for me the following lines are needed:
+library(jsonlite)
+source("../makeProteinDB.R")
+
+#Call the function
+entrezQueryString()
+</source>
+
+2. Go to https://www.ncbi.nlm.nih.gov/taxonomy
+
+3. Search the following (Output of the <code>entrezQueryString()</code>)
+
+ Aspergillus nidulans OR Bipolaris oryzae OR Coprinopsis cinerea OR Cryptococcus neoformans OR Neurospora crassa OR Puccinia graminis OR Saccharomyces cerevisiae OR Schizosaccharomyces pombe
+ OR Ustilago maydis OR Wallemia mellicola OR Eremothecium cymbalariae
+
+4. Under "Displaye Settings", choose "Common Tree"
+
+ '''MYSPE Eremothecium cymbalariae is under Ascomycota clade'''
+
+5. Go to phyloT at https://phylot.biobyte.de/
+
+6. Build tree with the following tree elements of Ascomycota clade:
+
+ 227321, 930090, 367110, 559292, 284812, 931890
+
+7. Settings:
+:* "Node Identifiers": "Scientific Names"
+:* "Internal Nodes": "Collapsed"
+:* "Polytomy": "no"
+:* "Format": "Newick"
+:* Everything else default
+
+Then, "Generate Tree" (Wow so fast..)
+
+(The tree can be visualized in "Visualize in iTOL" as well)
+
+8. Similarly, build tree with the following tree elements of Basidiomycota:
+
+ 671144, 240176, 418459, 237631, 214684
+
+9. ... and for Fungi (grand tree):
+
+(The outputs are formatted in Newick with its specific syntax)
+
+10. Manually edit output .txt files to merge the trees. This results in "fullfungiTree.txt". Use https://itol.embl.de/upload.cgi to validate trees.
+
+My species trees look like this:
+
+[[File:species_tree.jpg|500px]]
+
+;Activity 2 - Phylogenetic tree analysis with "BIN-PHYLO-Tree_analysis.R"
+
+Line 59:
+Change this line to <code>fungiTree <- ape::read.tree("../fullfungiTree.txt")</code>
+
+Line 61:
+Hopefully this line can be refined. In the plot the texts got cut-off (Line 76 uses biCode which made it better)
+
+Line 107:
+For me it should be <code>load(file = "../APSEStreeRproml.RData")</code>
+
+It contains a tree object <code>apsTree</code>, which is a named list with attributes:
+:* apsTree$tip.label
+:* apsTree$edge
+:* apsTree$edge.length
+
+Line 162:
+The outgroup of my tree is tip 12. So this line should be <code>apsTree <- ape::root(apsTree, outgroup = 12, resolve.root = TRUE)</code>
+
+Line 166-178:
+What it means by "zero edge-length":
+
+[[File:zero_edge_length.jpg|500px]]
+
+Line 171:
+The tree appears still the same. However, the edge length has been modified to reflect rooting.
+
+Line 178:
+I think this line should also be changed to <code>ape::nodelabels(text = "MRCA", node = 13, cex = 0.5, adj = 0.1, bg = "#ff8866")</code> for me..
+
+Line 187:
+Again, I think it should say <code>node = 13</code>
+
+Line 205:
+Can plot the tree so it corresponds as well as possible to a predefined tip ordering. Great if we want to make the tree conform to species tree as much as possible (which is what I want here)
+:* ape::rotate(<tree>, node = <int>): rotate around an internal node
+
+[[File:gene_tree.jpg|500px]]
+
+[[File:Fungi_tree_ERECY.jpg|500px]]
+
+ The gene tree captures almost no correct speciation events! The only one captured correctly is speciation into SACCE and ERECY.
+ It might have gotten speciation into WALME and PUCGR correct, if the trifurcation in the gene tree is resolved.
+
+'''Yet still, the tree distances to the species tree is still significantly less than an average random tree! I am actually not too sure what this means?'''
 
 {{Vspace}}
 =9 Sequence Alignments=

@@ -108,7 +108,7 @@ Run this instead <code>writeMFA(APSESphyloSet, myCon = "../APSESphyloSet.mfa")</
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 80 min; date started: 2019-11-25; date completed: 2019-11-25
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:20, 25 November 2019 (EST)
 </div>
 
 ;Motivation:
@@ -340,7 +340,11 @@ Ignore for now. Here is the tree:
 Move all content from PHYLO directory to BCH1441 directory (including the .Rdata containing the tree). Maybe I got too paranoid of program overwritting unexpectedly..
 
 ==10.4 Phylogenetic Tree Analysis==
-100 min
+<div class="time-estimate">
+Time estimated: 2 h; taken 2.5 h; date started: 2019-11-25; date completed: 2019-11-28
+
+~~~~
+</div>
 
 ;"Golden Rules":
 :* Orthologues arise through speciation. Paralogues arise through duplication
@@ -417,7 +421,7 @@ Then, "Generate Tree" (Wow so fast..)
 
 My species trees look like this:
 
-[[File:species_tree.jpg]]
+[[File:Species_tree_ERECY.jpg|500px]]
 
 ;Activity 2 - Phylogenetic tree analysis with "BIN-PHYLO-Tree_analysis.R"
 
@@ -438,6 +442,11 @@ It contains a tree object <code>apsTree</code>, which is a named list with attri
 Line 162:
 The outgroup of my tree is tip 12. So this line should be <code>apsTree <- ape::root(apsTree, outgroup = 12, resolve.root = TRUE)</code>
 
+Line 166-178:
+What it means by "zero edge-length":
+
+[[File:zero_edge_length.jpg|500px]]
+
 Line 171:
 The tree appears still the same. However, the edge length has been modified to reflect rooting.
 
@@ -446,5 +455,18 @@ I think this line should also be changed to <code>ape::nodelabels(text = "MRCA",
 
 Line 187:
 Again, I think it should say <code>node = 13</code>
+
+Line 205:
+Can plot the tree so it corresponds as well as possible to a predefined tip ordering. Great if we want to make the tree conform to species tree as much as possible (which is what I want here)
+:* ape::rotate(<tree>, node = <int>): rotate around an internal node
+
+[[File:gene_tree.jpg|500px]]
+
+[[File:Fungi_tree_ERECY.jpg|500px]]
+
+ The gene tree captures almost no correct speciation events! The only one captured correctly is speciation into SACCE and ERECY.
+ It might have gotten speciation into WALME and PUCGR correct, if the trifurcation in the gene tree is resolved.
+
+'''Yet still, the tree distances to the species tree is still significantly less than an average random tree! I am actually not too sure what this means?'''
 
 {{Vspace}}

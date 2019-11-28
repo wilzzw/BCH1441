@@ -72,3 +72,5 @@ alignment: statistical mechanics, frequency from the lab, middle alignment
 start from a alignment, iteratively adjust
 
 google bioinformatic resources doesn't quite tell you what things are good for (BLAST, EMBOSS)
+
+Phylogenetic tree analysis: how far off is it? Simulate to see how unlikely. A common theme.
