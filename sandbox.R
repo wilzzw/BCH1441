@@ -628,3 +628,147 @@ for (i in 1:N) {
 (moreExtreme <- sum(divs >= obsDiv[gene]))
 #P-value
 (Pval <- moreExtreme / length(divs))
+
+###Get SGD features into a data.frame 19-11-30
+
+# This line takes a very long time to done correctly
+# At first I assumed "SGD_features.tab" is formatted poorly, so I use fill = TRUE
+# I could not get the nrow(SGD_features) correctly, but opening as csv works properly.
+# I pinned down the first instance of problematic line to be Line 75 in "SGD_features.tab"
+# There is a single quote ' in the description of Line 75, where "3'" is mentioned
+# "SGD_features.README.txt" had some quote issues as well. In ?read.table, looks like the argument quote solves the problem
+# fill = TRUE is not necessary. Turns out the format is done nicely (I guess...) for parsing 
+SGD_features <- read.table("./data/SGD_features.tab", sep = "\t", quote = "", stringsAsFactors=FALSE)
+
+# Name its columns according to "SGD_features.README.txt"
+colnames(SGD_features) <- c("Primary SGDID", 
+                            "Feature type", 
+                            "Feature qualifier", 
+                            "Feature name", 
+                            "Standard gene name", 
+                            "Alias", 
+                            "Parent feature name",
+                            "Secondary SGDID",
+                            "Chromosome",
+                            "Start_coordinate",
+                            "Stop_coordinate",
+                            "Strand",
+                            "Genetic position",
+                            "Coordinate version",
+                            "Sequence version",
+                            "Description")
+
+#Select essential information and rename to be consistent with provided source code
+subset <- c(1:5, 16)
+SGD_features <- SGD_features[,subset]
+colnames(SGD_features) <- c("SGDID",
+                            "type",
+                            "qual",
+                            "sysName",
+                            "name",
+                            "description")
+
+# Remove all rows that don't have a systematic name
+hasSysName <- as.logical(nchar(SGD_features[, "sysName"]))
+SGD_features <- SGD_features[hasSysName,]
+
+# All systematic names are unique?
+(! any(duplicated(SGD_features[,"sysName"])))
+
+# Name rows after systematic names
+rownames(SGD_features) <- SGD_features[,"sysName"]
+
+# How many "genes" in the expression dataset is not in SGD features (yeast genome)?
+notInFeatures <- setdiff(rownames(Biobase::exprs(GSE3635)), rownames(SGD_features))
+(length(notInFeatures))
+# Above is not actually the number of genes not in yeast genome. Some of them were actually names of controls
+# The number of yeast reading frame that is not in SGD features database is:
+(length(notInFeatures[-1:-11])) #63
+
+# How many / which genes in the feature table do not have expression data?
+noData <- setdiff(rownames(SGD_features), rownames(Biobase::exprs(GSE3635))) 
+#1907 entries. Though not all of them are genes though e.g. centromere. 
+# grep() according to SGD_features[,"type"] can be helpful for that purpose
+
+#TASK>  Plot expression profiles for these genes and study them. What do you
+#TASK>  expect the profiles to look like, given the role of these genes? What
+#TASK>  do you find? (Hint: you will make your life much easier if you define
+#TASK>  a function that plots and prints descriptions with a gene name as input.
+#TASK>  Also: are the gene names in the feature table upper case, or lower case?
+#TASK>  Also: note that the absolute values of change are quite different.
+#TASK>  Also: note that some values may be outliers i.e. failed experiments.)
+
+plotGene <- function(gName, color) {
+    #Make sure it is uppercase
+    gName <- toupper(gName)
+    # Get index in SGD_features where the input gene occurs
+    iFeature <- which(SGD_features$name == gName)
+    # Get index in expression data GSE3635 where the input gene occurs
+    iExprs <- which(Biobase::featureNames(GSE3635) == SGD_features$sysName[iFeature])
+
+    # Plot it
+    plot(seq(0, 120, by = 10),
+         Biobase::exprs(GSE3635)[iExprs, ],
+         main = "Expression profile",
+         xlab = "time (min)",
+         ylab = "expression",
+         ylim = range(c(-2,2)),
+         type = "b",
+         col = color)
+
+    # Description
+    cat(sprintf("Gene Description: %s", SGD_features$description[iFeature]))
+}
+
+getColors <- function(numColors) {
+    # Divide into intervals, whose values will be assigned to colors
+    unitVals <- 1 / numColors
+    comp1 <- seq(1, 0, length.out=numColors)
+    comp2 <- seq(0, 1, length.out=numColors)
+
+    colorOut <- c()
+    for (i in 1:numColors) {
+        colorOut[i] <- rgb(comp1[i], comp2[i], 0) # This is just the red mode. I am not familiar with how to select blue modes elegently in R
+    }
+    return(colorOut)
+}
+
+plotGeneSeries <- function(gNames) {
+    allColors <- getColors(length(gNames))
+    for (i in seq_along(gNames)) {
+        color <- allColors[i]
+        plotGene(gNames[i], color)
+        # https://stackoverflow.com/questions/2564258/plot-two-graphs-in-same-plot-in-r
+        par(new=TRUE)
+    }
+    legend("topleft", gNames, fill = allColors, bty = "n")
+    abline(h =  0, col = "#00000055")
+    abline(v = 60, col = "#00000055") 
+}
+
+onGenes <- c('Cdc14', 'Mbp1', 'Swi6', 'Swi4', 'Whi5', 'Cdc28', 'Cln1', 'Cln2', 'Cln3')
+plotGeneSeries(onGenes)
+
+offGenes <- c('Rad53', 'Cdc28', 'Clb1', 'Clb2', 'Clb6', 'Nrm1')
+plotGeneSeries(offGenes)
+
+hkGenes <- c('Act1', 'Alg9')
+plotGeneSeries(hkGenes)
+
+
+# ==   5.1  Final task: Gene descriptions  =====================================
+
+#    Print the descriptions of the top ten differentially expressed genes
+#    and comment on what they have in common (or not).
+
+#Top 10 differentially expressed identified by R-package limma tools
+topTenSysName <- myTable[1:10 , "ID"]
+SGD_descriptions <- SGD_features$description
+names(SGD_descriptions) <- SGD_features$sysName
+
+#Retrieve descriptions by names
+topDescriptions <- SGD_descriptions[topTenSysName]
+
+for (i in seq_along(topDescriptions)) {
+    print(topDescriptions[i])
+}
