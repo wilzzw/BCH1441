@@ -1,4 +1,192 @@
 =5 Structural Bioinformatics=
+==5.9 Homology Modelling==
+
+<div class="time-estimate">
+Time estimated: 3 h; taken 4 h; date started: 2019-11-28; date completed: 2019-11-29
+
+~~~~
+</div>
+
+;Motivation:
+Protein structure prediction/inference from known structures of homologues
+
+Once we know there is homology, it is basically certain that the structures are similar, even if sequences have diverged a lot (to a value lower than non-homologous sequences is entirely possible)
+
+;Specific actions:
+Align target sequence with sequence of a suitable structure template > Replace coordinates of residues in the template structure with the ones in the target sequence
+
+;Indels:
+:* Cannot be modelled with certainty at all.
+:* Often in loops. When they are not, there are usually extra structurally accommodating features
+:* Uniform gap penalties are not biological. Use structure-weighted gap penalties if available
+
+;Accuracy of homology modelling is determined by sequence alignment accuracy:
+:* Correct sequence alignment is the most important factor
+:* Errors resulted from alignment typically cannot be fixed after model construction
+:* Make sure to use the best MSA. Include many homologues to resolve ambiguities if possible
+:* Manual edit alignments if necessary
+
+;Choice of template:
+Highest sequence similarity, close-to-native structures, best resolution possible
+
+Residue correlations derived from structural alignment can be different from that derived from optimal sequence alignment.
+
+;Quality assessment of models:
+Occupancy values in PDB file, "reliability metrics", unreliable disordered regions and indels and solvent accessible regions
+
+'''''Bottom line -- Do not interpret from aspects for which the homology model does not provide information'''''
+
+Seems like energy minimization often does not improve homology models..
+
+;Online servers for homology modelling:
+:* SWISS-MODEL: also a database of homology models
+
+===5.9.1 Construct homology model for ERECY Mbp1===
+;Objectives:
+:* Construct a molecular model of APSES domain of ERECY_Mbp1
+:* Hopefully construct conservation patterns of key residues with their potential to bind DNA
+
+;Target Sequence
+Retrieve MYSPE APSES domain ''target sequence''. The source code is [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-SX-Homology_modelling#Target_sequence here]
+
+Need to <code>init()</code> the ABC-units R-project and replace <code>source("makeProteinDB.R")</code> with:
+
+<source lang="R">
+library(jsonlite)
+source("../makeProteinDB.R")
+</source>
+
+<code>targetSeq</code> returns the following:
+ MBP1_ERECY 
+ "QIYSAKYSGVEVYEFIHPTGSIMKRKADDWVNATHILKAAKFAKAKRTRILEKEVIKDIHEKVQGGFGKYQGTWVPLDIARRLAEKFDVLEELRPLFDF"
+
+;Choice of Template
+
+Find PDB coordinate set that has sufficient sequence similarity to the target.
+
+A lot of biological and biochemical considerations weigh in during selection of suitable template structure.
+
+[http://steipe.biochemistry.utoronto.ca/abc/index.php/Template_choice_principles More guides on selecting template]
+
+;Activity 1 - Find a template through PDB advanced searching
+
+1. Go to https://www.rcsb.org/
+
+2. Go to advanced search
+
+3. "Choose a Query Type" as "Sequence (BLAST/PSI-BLAST)"
+
+4. Use the sequence above loaded from my R-project. Use "BLAST" as "Search Tool". "No" to "Mask Low Complexity". Everything else default
+
+5. "Submit Query"
+
+6. Report of search results:
+
+[[File:pdb_report.jpg|500px]]
+
+ 1BM8: Excellent resolution of 1.7 A. E-value is 7.52638E-45. No gap. 84% identity and 94% similarity.
+
+ 1L3G: Solution NMR ensemble. Typically not suitable.
+
+ 1MB1: Also Mbp1 from Saccharomyces cerevisiae. Lower resolution than 1BM8 (2.1 A, still pretty good)
+
+ 4UX5: Resolution 2.4 A. Complexed with DNA. From Candida albicans, Magnaporthe oryzae?. E-value is 1.16655E-29. 60% identity and 76% similarity. There is one gap.
+
+ 4WUV: Highest resolution, but least related and most distant.
+
+7. Download FASTA sequence files for 1BM8 and 4UX5. Keep only the Chain A for 4UX5. This results in two saved files of "1BM8_A.fa" and "4UX5_A.fa".
+
+;Activity 2 - Create input alignment
+
+The R-code for this activity is generously provided [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-SX-Homology_modelling#The_input_alignment here].
+
+This source code allows retrieval of protein sequences in myDB that are Mbp1. Adding to the set also the sequences read from "1BM8_A.fa" and "4UX5_A.fa".
+
+Then, multiple sequence alignment with all these sequences are calculated.
+
+Saved console print-out of alignment results in "4UX5.aln" and "1BM8.aln".
+
+<span style="color:green">'''Decided on 1BM8 as the template and continue following the source code with this info.'''</span>
+
+<span style="color:green">'''The input sequence alignment for homology modelling in FASTA format is obtained from console print-out and saved as "hm.mfa"'''</span>
+
+;Activity 3 - Create a homology model with SWISS-MODEL
+
+1. Go to https://swissmodel.expasy.org/ and "Start Modelling"
+
+2. Choose "Target-Template Alignment". Copy and paste contents from "hm.mfa" into the query field. Then, "Build Model".
+
+3. The job report is at https://swissmodel.expasy.org/interactive/5XQ5Az/models/report.html
+
+The model looks very good. With few faint red regions at loopy regions. QMEAN is -0.37
+
+;Modelling process documentation is [https://swissmodel.expasy.org/docs/help here]
+
+:* GMQE: template-target alignment, method of searching template, target coverage > measure of accuracy of model
+:* QMEAN: "degree of nativeness". How good the agreement of structure would be with experimental ones of similar size.
+
+4. Download the Model_01 as PDB file "MBP1_ERECY-APSES.pdb".
+
+<span style="color:red">The residue numbering of PDB file needs fixing. It was renumbered. e.g. the first residue 1 should be 11 (GLN11).</span>
+
+;Activity 4 - Renumbering the PDB file of the model generated with bio3d package
+
+The source code is generously provided [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-SX-Homology_modelling#Renumbering_the_model here]. 
+
+Useful functions:
+:* bio3d::read.pdb()
+
+* Need to change all lines with "MYSPE" string to "ERECY"
+* Need to properly specify paths to the files. For me they are stored in "BCH1441" and not "BCH1441/ABC-units"
+
+The last line should actually be:
+<code>bio3d::write.pdb(pdb = MYSPEmodel, file=PDB_OUTFILE)</code>
+
+'''Looking at the result, I guess we are numbering the residues according to Saccharomyces cerevisiae Mbp1 numbering.'''
+
+;Activity 5 - Visualization
+
+The PDB output from SWISS-MODEL has a quality scores based on energies from molecular mechanics in the B-factor column.
+
+1. Open "MBP1_ERECY-APSESrenum.pdb" in Chimera.
+
+2. Use "bfactor" as attribute for "Attributes of Atoms". Render.
+
+[[File:bfactor_col.jpg|500px]]
+
+The core has better energies, probably because more residues around providing favourable interactions.
+
+Importantly, the residues on the surface would be solvent accessible and expected to be flexible. Thus the structural certainty here is low.
+
+<span style="color:green">bio3d has tools that customize values to be placed in b-factor for customizable colouring during rendering</span>
+
+;Activity 6 - Modelling DNA binding for ERECY_Mbp1 based on a homologous protein structure bound to DNA
+
+1. In Chimera, <code>open 4ux5</code>
+
+2. Make a copy of the homology model with "copy/combine" in the "Model Panel"
+
+3. In "MatchMaker" panel, I did not see a radio button. But I am able to select individual chain for a model by choosing "Specific chain in reference structure with best-aligning chain in match structure".
+
+4. Match one homology model to chain A of 4ux5. Match the copy of homology model to chain B.
+
+5. Render in such way that residues are coloured according to "AL2CO" conservation style . Bright red is not well-conserved, whereas grey is highly conserved:
+
+<span style="color:red">(Instructions given is not clear, so I had to load "hm.mfa" to get "Multalign Viewer" to even do anything)</span>
+
+[[File:conserved.jpg|500px]]
+
+Selected protein residues that are within 5 A of nucleic acids results in the following selection:
+
+[[File:5na.jpg|500px]]
+
+* They are very well conserved. They are limited within residues 9-12,37,41,46-52,54-55,59,65,67-72,74-76.
+
+* These residues are identical except at residues 9 (K-R) and 59 (I-L). Still very similar
+
+Conservation within the family should look at the file "APSES-MBP1.fa" with e.g. JalView (I do not have it yet)
+
+
 ==5.8 Structural Superposition==
 ;Motivation:
 Structural alignment, conserved interaction etc. Reveal alignments between poorly conserved sequence identities
@@ -23,6 +211,7 @@ MatchMaker, Match -> Align, Multalign Viewer
 ;Bio3d tutorials:
 :* [http://thegrantlab.org/bio3d/tutorials/structure-analysis Structural analysis]
 :* [http://thegrantlab.org/bio3d/tutorials/principal-component-analysis PCA]
+
 
 ==5.7 Protein Structural Domains==
 
