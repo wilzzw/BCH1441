@@ -869,7 +869,7 @@ Reduce implausible number of rare evolutionary events, emphasize conservation of
 <div class="time-estimate">
 Time estimated: 2 h; taken 130 min; date started: 2019-12-1; date completed: 2019-12-1
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 15:12, 1 December 2019 (EST)
 </div>
 
 ;Domains:
@@ -976,7 +976,7 @@ legend(xMax - 150, 10, legend = myDB$feature$name, cex = 0.7, fill = myCol)</cod
 
 Resulting plot:
 
-[[File:SMART_domains.jpg|500px]]
+[[File:SMART_domains.png|600px]]
 
 ;Conclusions:
 :* The domain organization of Mbp1_ERECY is very similar to the rest of Mbp1 from all other shown species

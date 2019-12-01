@@ -1,4 +1,63 @@
 =6 Genes and Genome=
+==6.4 Genome Bioinformatics==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 1 h; date started: 2019-12-1; date completed: 2019-12-1
+
+~~~~
+</div>
+
+===6.4.1 Genome sequencing and data===
+;Motivation:
+Next-generation sequencing tremendously expanded the possibility of parallel, high throughput acquisition of genome-wide data and genome scale analysis.
+
+;First-generation sequencing:
+:* Classical: Sanger
+
+;Second-generation sequencing (parallel):
+:* Pyrosequencing
+:* Ion torrent
+:* Illumina (still most widely used as of 2017)
+
+;Third-generation sequencing (single-molecular level):
+:* e.g. system by PacBio based on confocal microscopy fluorescence readout
+
+;Storage and maintenance of genomic data:
+:* Base calling: extraction of sequence from raw data (base by base). Output is a sequence (common: FASTQ format)
+:* Sequence assembly/trimming: individual sequences acquired, then look for overlaps to asseble the whole sequence (e.g. methods of overlap extension making use of de Bruijn graphs of base k-mers)
+:: Also removes low quality sequences
+:* Vector trimming: remove contaminating vector sequence (crossmatch and with a vector sequence database)
+:* Data storage: A variable cost. Know that we are dealing with HUGE data size. 
+
+===6.4.2 Genome annotation===
+;Motivation:
+Annotate subsequences of genome sequence with their roles
+
+;Challenges:
+Types of elements/contents in genome is hugely diverse. Complicated transcription, also non-coding elements.
+:* e.g. functional classes of RNA is a rapidly evolving research process
+
+;Gene identification in the genome:
+:* Analysis by signal: e.g. translation start sites, poly-A, intron/exon boundary signals or splice sites
+:* Analysis by contents: e.g. codon bias for transcribed sequences
+:* Analysis by homology: e.g. sequence similarity, alignment and phylogenetic footprinting
+:* Through interpretation of transcriptome: e.g. derived from RNASeq data (caveat: genes not expressed or in low abundance in the sample)
+
+;Sources of errors:
+alignment errors, mis-identification of correct start codon
+
+'''''Early genome annotation draft is very error prone!'''''
+
+;The ENCODE (Encyclopedia of DNA Elements) project:
+Consortium aims to annotate all functional aspects of model organism genomes
+
+;Genome OnLine Database (GOLD)
+
+'''Genome annotation methods and paradigm are rapidly evolving. Best to stay current.'''
+
+===6.4.3 Genome browsers===
+
+
 ==6.3 Mutation Impact==
 ;Activity:
 Simulate point mutations of three genes (KRas, PTPN11, OR1A1) related to oncogenesis and analyze the outcomes of these mutations.
