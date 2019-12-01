@@ -4,7 +4,7 @@
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 75 min; date started: 2019-11-30; date completed: 2019-11-30
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 23:51, 30 November 2019 (EST)
 </div>
 
 ;Motivation:
@@ -79,6 +79,58 @@ Other viewing options available under this tab too. More specific subsets of thi
 
 10. Under the "Annotation" tab, there are currently 3243 records. Under filter "GO class (direct)", it becomes apparent that it also includes entries annotated to its descendent terms (including "GO:0071931")
 
+===8.5.2 Semantic similarity===
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 50 min; date started: 2019-11-30; date completed: 2019-12-1
+
+~~~~
+</div>
+
+;Motivation:
+(Again,) functions are elusive terms. GO tried its best to characterize them in terms of controlled variables.
+
+'''Now, a quantitative measure of similarity of the function terms between two genes are needed.'''
+
+;Calculating semantic similarity:
+Many metrics are information theoretic
+
+;Activity - Going through "BIN-FUNC-Semantic_similarity.R"
+
+In Bioconductor of R, the package GOSim seem to be able for the purpose.
+
+Line 66-68:
+Load yeast genome (Bioconductor is such an establishment...). <code>org.Sc.sgd.db</code> is an annotation database curated by SGD.
+
+It can be read with functions <code>AnnotationDbi::keys()</code> and <code>AnnotationDbi::columns()</code>. Subsetting with <code>AnnotationDbi::select()</code>
+
+The keys are SGD yeast gene IDs. The columns are types of annotations available. One of such annotations is "GO".
+
+Line 91:
+Did this line produce the environment <code>GOSimEnv</code>?
+
+Line 111-122:
+A key function for semantic similarity - <code>GOSim::getGeneSim(<genelist1>, <genelist2>, similarity)</code>
+:* Seems to be able to take vectors of genes (example given in SGD ID strings)
+:* Similarity method in the example is "OA"?
+:* Output appears to be a matrix of semantic similarity values between row and column genes
+
+Line 154:
+Not all genes in <code>org.Sc.sgd.db</code> begins with "Y"?!
+
+;GO Enrichment Analysis:
+
+"... given a set of genes that are up-regulated under certain conditions, an enrichment analysis will find which GO terms are over-represented (or under-represented) using annotations for that gene set" [http://geneontology.org/docs/go-enrichment-analysis/]
+
+So I guess it picks out which GO terms (i.e. functions) are noticeably influenced by the condition?
+
+GOSim::GOenrichment(genesOfInterest, allgenes):
+:* $GOTerms: get list of significant GO terms
+:* $p.values	
+:* $genes: sorted and retrievable based on GO term IDs
+
+Other useful functions:
+:* annotate::getGOTerm(<GO_ID>)
 
 ==8.4 GEO2R==
 
