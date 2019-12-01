@@ -1,4 +1,4 @@
-=9 Sequence Alignments=
+=9 Sequence Alignments and Domain Annotation=
 ==9.1 The sequence alignment problem==
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 20 min; date started: 2019-11-13; date completed: 2019-11-13
@@ -864,5 +864,142 @@ Alignment of functionally different residues or evolved in different contexts, i
 ;Manual alignment editing can:
 Reduce implausible number of rare evolutionary events, emphasize conservation of known functional motifs
 
+==9.6 Domain Annotation==
+
+<div class="time-estimate">
+Time estimated: 2 h; taken 130 min; date started: 2019-12-1; date completed: 2019-12-1
+
+~~~~
+</div>
+
+;Domains:
+:* Separate folding units of proteins (structural): inform stable independent folding regions, structural classification of proteins
+:* Units of istinct function (functional): inform protein mechanism as collective domain function
+:* Modular units of inheritance (evolutionary): inform gene fusion and insertion events
+
+;Domains can be realized from sequence alignments
+
+;Domain discovery and Sequence-based domain annotations:
+:* Pfam: Large collection of domain families, based off automated multiple sequence alignments and Hidden Markov Model alignments (implemented by HMMER). Provide downloadables.
+:* SMART: Have additional tools supposedly providing context of protein function. Not very supportive of downloads. Also HHMER.
+:* CDD: By NCBI. Domains identified via reverse BLAST algorithm (RPS-BLAST). Downloads of annotations are a bit difficult too.
+:* CDART: By NCBI. "Shared domain architectures". Finds similar domain architecture as query. Great for placing the function of protein into a "larger context".
+
+===9.6.1 Pfam domain annotation===
+;Activity - Explore offerings by Pfam with Mbp1_ERECY
+
+1. Go to https://pfam.xfam.org/ and in the "JUMP TO" field, search "G8JQ18".
+
+2. Download the domain annotation file as "Mbp1ERECY_Pfam.json". Non-trivial annotations found are (all source Pfam):
+
+ KilA-N: 26-100
+ Ank_4: 373-432
+ Ank_4: 444-511
+
+There are other coiled-coils and disordered regions identified. However, there is no APSES domain annotated.
+
+Disordered regions, albeit important, are not as conserved to be found based on alignments. These regions are found by IUPred disorder predictions [PMID 24288371].
+
+3. Go to each of the annotation links for "KilA-N" and "Ank_4".
+
+* There is a Summary page sourced from Wikipedia, Pfam, and InterPro
+* Under "Domain Organisation", various domain sequence architectures that contain the queried domain are summarized, showing the number of proteins adopting each given architecture
+* Under "HMM logo", there is a sequence logo plot showinhg conservation of sequences
+* Under "Trees", phylogenetic tree is provided, calculated by FastTree.
+* Additional info: species distribution pie chart, and structures cross-references
+
+===9.6.2 SMART domain annotation===
+;Activity 1 - Explore offerings by SMART with Mbp1_ERECY
+
+1. Go to SMART database at http://smart.embl-heidelberg.de/. The default is "Normal Mode"
+
+2. Under "Sequence analysis" > "Sequence ID or ACC", input UniProtID for Mbp1_ERECY, which is "G8JQ18"
+
+3. Check the boxes for "Outlier homologues and homologues of known structure", "PFAM domains", "signal peptides", "internal repeats"
+
+4. "Sequence SMART"
+
+Result page has a diagramatic representation of the summary of results shown beneath it. It looks like an interactive domain organization diagram.
+
+Both SMART domains and Pfam domains will show up in the summary if identified. However, priority display is given to SMART domains.
+
+Under "Confidently predicted domains, repeats, motifs and features", can see KilA-N and several ANK domains, as well as low complexity regions and coiled coil. Each with an associated E-value.
+
+However, ANK 405-441 has E-value of 393?! Seems high..
+
+"Features NOT shown in the diagram" have reasons associated with them. All of mine are due to "overlap".
+
+"Outlier homologues and homologues of known structure" E-values are directly from BLAST and is therefore not comparable to other tables (E-values from the other tables correspond to? Determined with HMMER2?)
+
+Low complexity regions and coiled coils do not have E-values.
+
+There are quick tabs to interaction networks from STRING and orthology from eggNOG.
+
+5. Visit full family annotations for KilA-N (SMART accession: SM01252) and ANK (SMART accession: SM00248)
+
+There are curated descriptions, taxonomic distribution of proteins containing the domain, literature references for this domain, structures available, and cross-references to Pfam and InterPro.
+
+For ANK, there is extra information on "Disease" based on SWISS-PROT and OMIM, and "Metabolism" participation.
+
+Information needed for the next activity:
+
+ SMART Domains:
+ KilA-N: 29 112
+ low complexity region: 154 165, 222 232, 275 292, 569 579
+ ANK: 372 401, 405 441, 490 519
+ Coiled coil: 686 717
+ (There is no AT hook)
+
+ Not shown donain annotations:
+ low complexity region: 48 56
+
+ Outliers:
+ PDB 1SW6|B: 359-525
+
+;Activity 2 - Visual comparison of SMART domain annotations for MBP1 of various species with "BIN-FUNC-Domain_annotation.R"
+
+Step 1.1.2 will be followed.
+
+1. Edit "ERECY-Annotations.json" so that the SMART domain definitions from above are included and saved.
+
+I am keeping the entry for APSES domain.
+
+<code>source("../makeProteinDB.R")</code> again does not produce warnings or errors.
+
+Line 222:
+Change to <code>xMax <- max(nchar(myDB$protein$sequence[iRows])) * 1.1</code> for formatting purposes
+
+Line 242-245:
+Change to
+<code>
+legend(xMax - 150, 10, legend = myDB$feature$name, cex = 0.7, fill = myCol)</code> for formatting purposes.
+
+Resulting plot:
+
+[[File:SMART_domains.jpg|500px]]
+
+;Conclusions:
+:* The domain organization of Mbp1_ERECY is very similar to the rest of Mbp1 from all other shown species
+:* They all adopt the general architecture of KilA-N - Ankyrin repeats in Swi6 folds - coiled coil region
+:* The number of low complexity regions and their locations are variable.
+:* While the lengths of APSES/KilA-N are fairly constant, lengths of the Swi6 fold and coiled coil regions are quite different across species
+:* Hindsight (and perhaps confirmation bias) from phylogenetic analysis aligns with the impression that the architecture details is most similar to Mbp1_SACCE
+
+===9.6.3 CDART (Conserved Domain Architecture Retrieval Tool) database===
+;Activity - Explore offerings by CDART with Mbp1_ERECY
+
+1. Go to CDART at https://www.ncbi.nlm.nih.gov/Structure/lexington/lexington.cgi
+
+2. Search in the query field the RefSeq ID "XP_003645298"
+
+Result page returns a list of domain architectures (representatives). There are 23430 architectures. Each associated with a number of non-redundant sequences.
+
+The results are arranged in decreasing similarity score
+
+3. Go to domain annotation pages for "KilA-N" (cl29320) and "ANKYR" (cl34000) by clicking the boxes.
+
+There is a summary for the domain annotation, taxonomy information.
+
+Going to the links under "Superfamily" options can be redirected to a page with multiple sequence alignments.
 
 {{Vspace}}

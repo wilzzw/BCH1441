@@ -1,3 +1,14 @@
 [
-  {"pName" : "MBP1_ERECY", "fName" : "APSES fold", "start" : "11", "end" : "109"}
+  {"pName" : "MBP1_ERECY", "fName" : "APSES fold", "start" : "11", "end" : "109"},
+  {"pName" : "MBP1_ERECY", "fName" : "KilA-N", "start" : "29", "end" : "112"},
+  {"pName" : "MBP1_ERECY", "fName" : "low complexity", "start" : "48", "end" : "56"},
+  {"pName" : "MBP1_ERECY", "fName" : "low complexity", "start" : "154", "end" : "165"},
+  {"pName" : "MBP1_ERECY", "fName" : "low complexity", "start" : "222", "end" : "232"},
+  {"pName" : "MBP1_ERECY", "fName" : "low complexity", "start" : "275", "end" : "292"},
+  {"pName" : "MBP1_ERECY", "fName" : "low complexity", "start" : "569", "end" : "579"},
+  {"pName" : "MBP1_ERECY", "fName" : "Ankyrin fold", "start" : "372", "end" : "401"},
+  {"pName" : "MBP1_ERECY", "fName" : "Ankyrin fold", "start" : "405", "end" : "441"},
+  {"pName" : "MBP1_ERECY", "fName" : "Ankyrin fold", "start" : "490", "end" : "519"},
+  {"pName" : "MBP1_ERECY", "fName" : "coiled coil", "start" : "686", "end" : "717"},
+  {"pName" : "MBP1_ERECY", "fName" : "Swi6 fold", "start" : "359", "end" : "525"}
 ]

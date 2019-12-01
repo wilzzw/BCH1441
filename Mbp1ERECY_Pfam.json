@@ -1,0 +1,389 @@
+{
+    "length": 800,
+    "regions": [
+        {
+            "modelStart": 8,
+            "modelEnd": 91,
+            "colour": "#2dcf00",
+            "endStyle": "jagged",
+            "end": 100,
+            "display": null,
+            "startStyle": "jagged",
+            "aliEnd": 94,
+            "modelLength": 112,
+            "text": "KilA-N",
+            "href": "/family/PF04383",
+            "type": "pfama",
+            "metadata": {
+                "scoreName": "e-value",
+                "score": "0.0036",
+                "description": "KilA-N domain",
+                "end": 100,
+                "accession": "PF04383",
+                "database": "pfam",
+                "identifier": "KilA-N",
+                "aliEnd": 94,
+                "type": "Domain",
+                "aliStart": 31,
+                "start": 26
+            },
+            "aliStart": 31,
+            "start": 26
+        },
+        {
+            "modelStart": 1,
+            "modelEnd": 47,
+            "colour": "#ff5353",
+            "endStyle": "straight",
+            "end": 432,
+            "display": null,
+            "startStyle": "straight",
+            "aliEnd": 418,
+            "modelLength": 55,
+            "text": "Ank_4",
+            "href": "/family/PF13637",
+            "type": "pfama",
+            "metadata": {
+                "scoreName": "e-value",
+                "score": "0.00095",
+                "description": "Ankyrin repeats (many copies)",
+                "end": 432,
+                "accession": "PF13637",
+                "database": "pfam",
+                "identifier": "Ank_4",
+                "aliEnd": 418,
+                "type": "Repeat",
+                "aliStart": 373,
+                "start": 373
+            },
+            "aliStart": 373,
+            "start": 373
+        },
+        {
+            "modelStart": 5,
+            "modelEnd": 55,
+            "colour": "#ff5353",
+            "endStyle": "straight",
+            "end": 511,
+            "display": null,
+            "startStyle": "straight",
+            "aliEnd": 511,
+            "modelLength": 55,
+            "text": "Ank_4",
+            "href": "/family/PF13637",
+            "type": "pfama",
+            "metadata": {
+                "scoreName": "e-value",
+                "score": "0.032",
+                "description": "Ankyrin repeats (many copies)",
+                "end": 511,
+                "accession": "PF13637",
+                "database": "pfam",
+                "identifier": "Ank_4",
+                "aliEnd": 511,
+                "type": "Repeat",
+                "aliStart": 447,
+                "start": 444
+            },
+            "aliStart": 447,
+            "start": 444
+        }
+    ],
+    "markups": [],
+    "metadata": {
+        "database": "uniprot",
+        "identifier": "G8JQ18_ERECY",
+        "organism": "Eremothecium cymbalariae (strain CBS 270.75 / DBVPG 7215 / KCTC 17166 / NRRL Y-17582) (Yeast)",
+        "description": "Uncharacterized protein {ECO:0000313|EMBL:AET38481.1}",
+        "taxid": "931890",
+        "accession": "G8JQ18"
+    },
+    "motifs": [
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 110,
+                "end": 193
+            },
+            "start": 165,
+            "end": 193,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 195,
+                "end": 241
+            },
+            "start": 232,
+            "end": 241,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 250,
+                "end": 252
+            },
+            "start": 250,
+            "end": 252,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 254,
+                "end": 256
+            },
+            "start": 254,
+            "end": 256,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 262,
+                "end": 298
+            },
+            "start": 292,
+            "end": 298,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 301,
+                "end": 302
+            },
+            "start": 301,
+            "end": 302,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 306,
+                "end": 325
+            },
+            "start": 306,
+            "end": 325,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 351,
+                "end": 354
+            },
+            "start": 351,
+            "end": 354,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 546,
+                "end": 553
+            },
+            "start": 546,
+            "end": 553,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 557,
+                "end": 562
+            },
+            "start": 557,
+            "end": 562,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 700,
+                "end": 721
+            },
+            "start": 712,
+            "end": 721,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "type": "disorder",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 790,
+                "end": 800
+            },
+            "start": 790,
+            "end": 800,
+            "display": null
+        },
+        {
+            "colour": "#32cd32",
+            "type": "coiled_coil",
+            "metadata": {
+                "database": "ncoils",
+                "type": "coiled_coil",
+                "start": 654,
+                "end": 674
+            },
+            "start": 654,
+            "end": 674,
+            "display": null
+        },
+        {
+            "colour": "#32cd32",
+            "type": "coiled_coil",
+            "metadata": {
+                "database": "ncoils",
+                "type": "coiled_coil",
+                "start": 691,
+                "end": 711
+            },
+            "start": 691,
+            "end": 711,
+            "display": null
+        },
+        {
+            "colour": "#00ffff",
+            "type": "low_complexity",
+            "metadata": {
+                "database": "segmasker",
+                "type": "low_complexity",
+                "start": 47,
+                "end": 55
+            },
+            "start": 47,
+            "end": 55,
+            "display": false
+        },
+        {
+            "colour": "#86bcff",
+            "type": "low_complexity",
+            "metadata": {
+                "database": "segmasker",
+                "type": "low_complexity",
+                "start": 153,
+                "end": 164
+            },
+            "start": 153,
+            "end": 164,
+            "display": null
+        },
+        {
+            "colour": "#86bcff",
+            "type": "low_complexity",
+            "metadata": {
+                "database": "segmasker",
+                "type": "low_complexity",
+                "start": 221,
+                "end": 231
+            },
+            "start": 221,
+            "end": 231,
+            "display": null
+        },
+        {
+            "colour": "#86bcff",
+            "type": "low_complexity",
+            "metadata": {
+                "database": "segmasker",
+                "type": "low_complexity",
+                "start": 274,
+                "end": 291
+            },
+            "start": 274,
+            "end": 291,
+            "display": null
+        },
+        {
+            "colour": "#86bcff",
+            "type": "low_complexity",
+            "metadata": {
+                "database": "segmasker",
+                "type": "low_complexity",
+                "start": 568,
+                "end": 578
+            },
+            "start": 568,
+            "end": 578,
+            "display": null
+        },
+        {
+            "colour": "#cccccc",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 110,
+                "end": 193
+            },
+            "type": "disorder",
+            "display": null,
+            "end": 152,
+            "start": 110
+        },
+        {
+            "colour": "#cccccc",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 195,
+                "end": 241
+            },
+            "type": "disorder",
+            "display": null,
+            "end": 220,
+            "start": 195
+        },
+        {
+            "colour": "#cccccc",
+            "metadata": {
+                "database": "IUPred",
+                "type": "disorder",
+                "start": 262,
+                "end": 298
+            },
+            "type": "disorder",
+            "display": null,
+            "end": 273,
+            "start": 262
+        }
+    ]
+}
