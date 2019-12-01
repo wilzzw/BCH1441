@@ -1,10 +1,91 @@
 =8 Gene Expression and Functional Bioinformatics=
-===8.4 GEO2R===
+==8.5 Gene Ontology (GO)==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 75 min; date started: 2019-11-30; date completed: 2019-11-30
+
+~~~~
+</div>
+
+;Motivation:
+:* Function is an elusive term. Typically not observable on its own
+:* Ontology: language "engineering" to make function tractable
+:* No automatic way to structure and categorize system relationships into insights of what the purpose of a biomolecular system is
+
+;Gene Ontology:
+:* Consortium that maintains controlled vocabulary of terms, establish relationships between attributes, annotate genes
+:* '''Root nodes: Cellular Component, Molecular Function, Biological Process'''
+
+;Gene Ontology Annotation Evidence Codes:
+:* http://wiki.geneontology.org/index.php/Guide_to_GO_Evidence_Codes
+
+;Major Challenge:
+Quantifying similarity between two genes for function comparison, categorization of genes, annotation of gene sets, and prediction of gene function
+
+;Managing GO data:
+:* Download ontology downloadables are desirable. Files are well structured and parsable
+:* In R, Bioconductor has many packages that can be used for analysis
+
+;GO slims:
+Or "GO subsets". "High level summaries of an area of biology based on selected GO terms" [https://www.ebi.ac.uk/QuickGO/help/slims]
+
+===8.5.1 AmiGO===
+AmiGo: A convenient online GO browser?
+
+;Activity - Navigate GO with Mbp1
+
+1. Go to http://geneontology.org/ and search "Mbp1"
+
+2. Obtained a AmiGO 2 interface. Select "Genes and gene products".
+
+3. A list of 8 hits were obtained. Each hit has info about organism, type of gene product, source of information, and synonyms
+
+4. Select "MBP1" with organism "Saccharomyces cerevisiae S288C", synonymous to "YDL056W" (SGD ID)
+
+
+"MBP1" has a green box around it. I am not sure what it means?
+
+The first section "Gene Product Information" is a short summary of basic info and cross-references of the gene MBP1
+
+The second section "Gene Product Association" gives browsable table of annotations. For each annotation:
+* Contributor database
+* GO class (I guess each class has an associated GO ID?)
+* GO Evidence Code
+* Reference: It may either be a PMID, which links to a publication, or a GO_REF type ID, presumably specifying annotation automatically or manually, or through other means of association
+* Evidence with: If GO_REF type ID is given in "Reference", this would refer to an entity in Contributor database from which such annotation is transferred from?
+* Date
+* PANTHER family (don't know what this is)
+
+
+5. On the left, can apply filters for results. Under "Ontology (aspect)", "C" for Cellular Component, "F" for Molecular Function, "P" for Biological Process.
+
+6. Go to the link to GO class "positive regulation of transcription involved in G1/S transition of mitotic cell cycle". This is a "P" ontology.
+
+7. Filter by "Organism" with "Saccharomyces cerevisiae S288C".
+
+A quick overview of genes show that "SWI6" comes up frequently. Among others are "MBP1", "RME1", "SPT6"
+
+8. Under "Graph Views" tab, go to "QuickGO" link for this term.
+
+
+In particular on the page, there is an "Ancestor Chart" which is essentially a directed acyclic graph showing relationships of GO-terms with the current one included.
+
+Legend is available showing what relationship each colour of a directed edge represents. Can be useful to explore a more complete picture of function this gene involved in.
+
+Other viewing options available under this tab too. More specific subsets of this entry in the "big graph" can be found under "Inferred Tree View" or "Neighborhood" tabs.
+
+
+9. Under "Inferred Tree View", find the GO term which the current term "GO:0071931" is part of. This directs to the entry "GO:0000082 G1/S transition of mitotic cell cycle".
+
+10. Under the "Annotation" tab, there are currently 3243 records. Under filter "GO class (direct)", it becomes apparent that it also includes entries annotated to its descendent terms (including "GO:0071931")
+
+
+==8.4 GEO2R==
 
 <div class="time-estimate">
 Time estimated: 2 h; taken 5 h; date started: 2019-11-30; date completed: 2019-11-30
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 17:52, 30 November 2019 (EST)
 </div>
 
 ;Useful functions:
