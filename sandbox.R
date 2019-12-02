@@ -772,3 +772,25 @@ topDescriptions <- SGD_descriptions[topTenSysName]
 for (i in seq_along(topDescriptions)) {
     print(topDescriptions[i])
 }
+
+
+
+
+#CPdefs <- list()
+for (ID in ENSPsel) {
+	cat(ID)
+    cat("\n")
+    infoID <- biomaRt::getBM(filters = "ensembl_peptide_id",
+                             attributes = c("hgnc_symbol",
+                                                  "wikigene_description",
+                                                  "phenotype_description"),
+                             values = ID,
+                             mart = myMart)
+	cat(sprintf("hgnc_symbol: %s", infoID[1,"hgnc_symbol"]))
+    cat("\n")
+    cat(sprintf("wikigene_description: %s", infoID[1,"wikigene_description"]))
+    cat("\n")
+    cat(sprintf("phenotype_description: %s", infoID[1,"phenotype_description"]))
+    cat("\n")
+    cat("\n")
+}

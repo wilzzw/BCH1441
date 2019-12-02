@@ -211,7 +211,7 @@ Here is an system architecture example I made for F1Fo ATP-synthase [http://pdb1
 ==7.3 Protein-protein Interactions==
 
 <div class="time-estimate">
-Time estimated: 1.5 h; taken 80 min; date started: 2019-12-2; date completed: 2019-12-2
+Time estimated: 3 h; taken 2.5 h; date started: 2019-12-2; date completed: 2019-12-2
 
 ~~~~
 </div>
@@ -289,5 +289,124 @@ Also role of the interaction partners in the respective studies (BAIT or HIT). E
 '''To be able to annotation transfer the interactions, typically require joint sequence identity of both potential interactors to be at least 80%''' [pmid 16854211]
 
 The overall sequence identity between full-length Mbp1_SACCE and Mbp1_ERECY is already well below 80%. So this cannot be done, although it is not a sufficient condition to say they do not interact in the same way in ERECY.
+
+===7.3.2 Analysis of protein-protein interactions===
+;Complications in PPIs:
+Constitutive vs transient, context and cell/tissue types, interaction dynamics...
+
+;Analysis of PPIs - the computational approach:
+Construct Networks, annotation of nodes, and network analysis
+
+;Activity - Experience PPI network analysis on human proteins with "BIN-PPI-Analysis.R"
+
+Possibly useful functions:
+:* igraph::graph_from_data_frame(<dataframe>): (how?)
+:* igraph::components(): returns information with number of nodes, number of clusters and respective cluster sizes
+:* igraph::clique_num(): calculates the size of maximal cliques (kind of misleading function name but ok)
+:* igraph::largest_cliques(): will return a list of edges for the graph asked for
+:* igraph::centr_betw(): betweeness-centrality
+
+:* biomaRt::useMart(): choose a database and dataset to use for biomaRt
+
+Dataset obtained from STRING database
+
+Line 71:
+<code>colnames(STRINGedges)</code> returns the following:
+ [1] "protein1"       "protein2"       "neighborhood"   "fusion"         "cooccurence"   
+ [6] "coexpression"   "experimental"   "database"       "textmining"     "combined_score"
+
+I guess this is a data frame of edges in an interaction network
+
+Line 105:
+I guess the indication for the graph is completely connected is the fact that <code>length(compSTR$no) == 1</code>?
+
+Line 107-117:
+Scale-free-"ness" diagnostic
+
+Line 136-137:
+Look up "ENSP00000472469" returned from <code>names(C)[1]</code> - a ribosomal protein
+
+Look up "ENSP00000251453" returned from <code>names(C)[2]</code> - another ribosomal protein
+
+Look up "ENSP00000346050" returned from <code>names(C)[3]</code> - yet another ribosomal protein
+
+Would not be surprised here. Maybe this clique is that mega-ribosomal complex?
+
+Line 292-293:
+Actually not much surprises here (should I be?) There is a huge bias towards genes related to oncogenesis.
+
+Also some other ones such as EGFR, heat shock protein, kinases seem reasonable to me. I have to be convinced what else would I have to expect..
+
+Code for printing out requested <code>ENSPsel</code> information
+<source lang="R">
+for (ID in ENSPsel) {
+	cat(ID)
+    cat("\n")
+    infoID <- biomaRt::getBM(filters = "ensembl_peptide_id",
+                             attributes = c("hgnc_symbol",
+                                            "wikigene_description",
+                                            "phenotype_description"),
+                             values = ID,
+                             mart = myMart)
+	cat(sprintf("hgnc_symbol: %s", infoID[1,"hgnc_symbol"]))
+    cat("\n")
+    cat(sprintf("wikigene_description: %s", infoID[1,"wikigene_description"]))
+    cat("\n")
+    cat(sprintf("phenotype_description: %s", infoID[1,"phenotype_description"]))
+    cat("\n")
+    cat("\n")
+}
+</source>
+
+Outputs:
+ ENSP00000344818
+ hgnc_symbol: UBC
+ wikigene_description: ubiquitin C
+ phenotype_description: NA
+
+ ENSP00000269305
+ hgnc_symbol: TP53
+ wikigene_description: tumor protein p53
+ phenotype_description: Adrenocortical carcinoma
+
+ ENSP00000270202
+ hgnc_symbol: AKT1
+ wikigene_description: AKT serine/threonine kinase 1
+ phenotype_description: COWDEN SYNDROME
+
+ ENSP00000350941
+ hgnc_symbol: SRC
+ wikigene_description: SRC proto-oncogene, non-receptor tyrosine kinase
+ phenotype_description: Hereditary thrombocytopenia with early-onset myelofibrosis
+
+ ENSP00000360525
+ hgnc_symbol: MAGOH
+ wikigene_description: mago homolog, exon junction complex subunit
+ phenotype_description: NA
+
+ ENSP00000335153
+ hgnc_symbol: HSP90AA1
+ wikigene_description: heat shock protein 90 alpha family class A member 1
+ phenotype_description: NA
+
+ ENSP00000344456
+ hgnc_symbol: CTNNB1
+ wikigene_description: catenin beta 1
+ phenotype_description: Adult hepatocellular carcinoma
+
+ ENSP00000360266
+ hgnc_symbol: JUN
+ wikigene_description: Jun proto-oncogene, AP-1 transcription factor subunit
+ phenotype_description: NA
+
+ ENSP00000367207
+ hgnc_symbol: MYC
+ wikigene_description: MYC proto-oncogene, bHLH transcription factor
+ phenotype_description: BURKITT LYMPHOMA
+
+ ENSP00000275493
+ hgnc_symbol: EGFR
+ wikigene_description: epidermal growth factor receptor
+ phenotype_description: Giant cell glioblastoma
 
 {{Vspace}}
