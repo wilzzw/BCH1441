@@ -211,7 +211,7 @@ Here is an system architecture example I made for F1Fo ATP-synthase [http://pdb1
 ==7.3 Protein-protein Interactions==
 
 <div class="time-estimate">
-Time estimated: 15 min; taken 10 min; date started: 2019-12-2; date completed: 2019-12-2
+Time estimated: 1.5 h; taken 80 min; date started: 2019-12-2; date completed: 2019-12-2
 
 ~~~~
 </div>
@@ -228,6 +228,66 @@ Interologs are a thing as conserved modules of biological interactions
 
 '''Be careful to distinguish genetic vs physical interactions. How deleterious mutations combine the interpretation will differ greatly depending on which of the two situations.'''
 
+;Physical interactions:
+Physical contacts, chemical modifications
 
+;Genetic interactions:
+Influences, often not physical contact
+
+===7.3.1 Protein-protein interaction databases===
+;Databases for PPIs:
+:* Curating databases: e.g. IntAct (By EBI. IMEx consortium. Most PPIs are identified by TAP-tag to date from IntAct), BioGRID
+:* Integrating databases: e.g. STRING
+
+Interactions have also been predicted from homologous proteins (refer to '''Interolog database''')
+
+;General problem:
+Poor overlap between PPI databases even for the "High Confidence" ones. This is likely due to PPIs being sensitive to experimental intricacies and vulnerable to artifacts and flaws in experiments.
+:* Filtering interactions with confidence scores is essential. Constructing confidence score metrics is also not trivial.
+
+;Tools for analyzing PPI information:
+Cytoscape, NAVIGaTOR, igraph, Social Network Analysis etc.
+
+;Activity 1 - Explore IntAct with Mbp1_SACCE
+
+1. Go to https://www.ebi.ac.uk/intact/ and search the UniProt ID "P39678"
+
+2. The search returns a table of pairwise interactions. UniProt cross-reference to each partner, interaction detection method, source database, are all provided.
+
+There is also Interaction AC (EBI provided accession number?)
+
+Though the the protein is identified as "MBP1". Not its systematic name "YDL056W".
+
+3. Clicking the interaction detection methods will display descriptions for the methods.
+
+4. Under the "Graph" tab, can visualize interaction information in terms of a graph (Flash required. Not impressed..).
+
+5. Switch "Merge Edges" to "off".
+
+Most interaction identifications (edges) are with Swi6. To my knowledge Mbp1 does form complex with Swi6.
+
+But then that is where good things end. Not enough cross-references directly linked from the graph. Under each PPI entry specified by Interaction ACs, some more details can be seen though.
+
+;Activity 2 - Explore BioGRID with Mbp1_SACCE
+
+1. Go to https://thebiogrid.org/
+
+2. Search with "Mbp1" and organism as "Saccharomyces cerevisiae (S288C)"
+
+3. This gets me to the desired correct destination at https://thebiogrid.org/32002/summary/saccharomyces-cerevisiae/mbp1.html
+
+I see a big list of interactors. But there are GO annotations as well. Statistics distinguish physical interactions and genetic interactions.
+
+Can sort by "Evidence" or alphabetically. There are also modification tags for each interactors.
+
+"PTM sites" under the tab highlights residues found to undergo PTM, with citations.
+
+Under "Interactions" tab, more details of interactions are available (some of them not in EBI), in addition to citations.
+
+Also role of the interaction partners in the respective studies (BAIT or HIT). Experimental methods with descriptions, throughput and score.
+
+'''To be able to annotation transfer the interactions, typically require joint sequence identity of both potential interactors to be at least 80%''' [pmid 16854211]
+
+The overall sequence identity between full-length Mbp1_SACCE and Mbp1_ERECY is already well below 80%. So this cannot be done, although it is not a sufficient condition to say they do not interact in the same way in ERECY.
 
 {{Vspace}}
