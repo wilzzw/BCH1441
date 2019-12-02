@@ -1,4 +1,4 @@
-=9 Sequence Alignments and Domain Annotation=
+=9 Sequence Alignments and Sequence Analysis=
 ==9.1 The sequence alignment problem==
 <div class="time-estimate">
 Time estimated: 0.5 h; taken 20 min; date started: 2019-11-13; date completed: 2019-11-13
@@ -1001,5 +1001,241 @@ The results are arranged in decreasing similarity score
 There is a summary for the domain annotation, taxonomy information.
 
 Going to the links under "Superfamily" options can be redirected to a page with multiple sequence alignments.
+
+==9.7 Sequence Analysis==
+;Motivation:
+Extract information from sequence information.
+
+===9.7.1 Paradigms and approaches to sequence analysis===
+<div class="time-estimate">
+Time estimated: 1 h; taken 40 min; date started: 2019-12-2; date completed: 2019-12-2
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:27, 2 December 2019 (EST)
+</div>
+
+;Composition:
+Sees protein aggregate properties as weighted sum of individual residue properties (e.g. pI, MW)
+
+Treats sequence as unordered set. Not context dependent perspective
+
+;Concatenation:
+Sees residues in their local context. Treats sequence as ordered. Perspective of residue arrangements and sequence patterns
+
+Informs local structures, such as secondary structures
+
+;Comparison:
+Compare sequence to dictionaries of (abstract) patterns. Informs binding site, cleavage sites, ''DNA restriction sites'', other types of elements. Perspective of motifs
+
+;Correspondence:
+Perspective of average properties or, especially, property distributions. Mapping patterns and information content. Informs sequence alignment and structural superposition
+
+Starting to move away from consideration of the perspective of individual sequence
+
+;Conservation:
+Perspective of sequences as linked together through evolution. See sequences as conserved elements and variable elements. Informs functional changes, annotation transfer, and phylogeny
+
+;Context:
+Perspective of each component of sequence provides context for other. Informs domain annotation and from domain architecture
+
+;Collaboration:
+Perspective of "guilt by association". Analyze sequences as members of collection in a shared context e.g. co-localization, co-expression, shared system and pathway, GO-term enrichment
+
+'''''Use objectives and goals to guide the analysis process. Lots of things can be done with tools available. Choice of paradigm depends on question at hand.'''''
+
+===9.7.2 Analysis of sequence composition===
+
+<div class="time-estimate">
+Time estimated: 1 h; taken 45 min; date started: 2019-12-2; date completed: 2019-12-2
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 16:27, 2 December 2019 (EST)
+</div>
+
+'''Information contained in sequence composition is more than I thought'''
+
+:* Compositional bias can occur at the organismal level, which informs HGT events, species-specific scoring functions; as well as individual protein level, which informs its general function
+
+;Activity 1 - Explore EMBOSS tools used for sequence composition analysis
+
+1. Go to http://www.bioinformatics.nl/emboss-explorer/ and then go to "pepinfo"
+
+2. Retrieve MBP1_ERECY sequence with <code>cat(myDB$protein[myDB$protein$name == "MBP1_ERECY", "sequence"])</code>
+
+3. Copy and paste the output sequence into the appropriate field in pepinfo. Everything else default. "Run pepinfo"
+
+4. Do the same 1-3 but with sequence for MBP1_SACCE.
+
+On the bottom, there are distributions of different kinds of amino acids along the peptides.
+
+There are also hydropathy plots.
+
+The profiles look kind of similar for both at a glance. Unfortunately I cannot overlay plots from two proteins together easily. All I get are image files. Dislike!
+
+5. Repeat analyses, but with the "pepstats" utility instead.
+
+The results are a lot more comparable now.
+
+MBP1_SACCE has considerably higher predicted pI (9.8105) than MBP1_ERECY (7.9987). Otherwise, composition is more or less similar (hard to be statistically sound about this)
+
+;Activity 2 - Going through R-tools of composition analysis with "BIN-SEQA-Composition.R"
+
+Functions that might be useful:
+:* seqinr::computePI()
+:* seqinr::pmw()
+:* seqinr::AAstat(): distribution of different types of amino acids along the peptide
+
+Line 91:
+I did <code>library(seqinr)</code> to prevent upcoming from here the inconvenience of functions without library indicated explicitly.
+
+Also, the pI is not exactly identical to the one computed with EMBOSS tools..
+
+Line 96-100:
+<code>aaindex</code> dataset for amino acid properties looks useful (including things like average frequencies).
+
+Line 148:
+Re-order one vector according to another
+
+Line 154:
+Side-by-side bar plots - <code>rbind()</code> them together
+
+[[File:enrich_deplete.jpg|500px]]
+
+It is not very obvious what kind of residues are enriched or depleted, except that cysteine is noticeably depleted.
+
+Not sure what this means. For extracellular proteins, cysteines tend not to occur often (I think?) or form disulfide bonds..
+
+===9.7.3 Analysis of sequence by comparison===
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 1 h; date started: 2019-12-2; date completed: 2019-12-2
+
+~~~~
+</div>
+
+;Two outcomes of pattern search:
+: Deterministic and probabilistic
+
+;Deterministic pattern matching:
+:* Binary outcome: yes or no
+:* Some more elegant solutions than brute force approach: Boyer-Moore algorithm, index tree method, regex (allows customizably relaxed criteria)
+
+;Probabilistic pattern matching:
+:* Looks at the probabilities of specific sequences being general patterns. Continuous outcome.
+:* Information content
+:* Can lead to consensus sequence, which sometimes is degenerate at certain positions with slightly relaxed requirements
+:* Objects and approaches used in probabilistic pattern matching: position frequency matrix (PFM), PSSM, machine learning, HMM, neural networks etc.
+
+1. Go to EMBOSS tools at http://www.bioinformatics.nl/emboss-explorer/ and then go to "pepcoil"
+
+2. Retrieve MBP1_ERECY sequence with <code>cat(myDB$protein[myDB$protein$name == "MBP1_ERECY", "sequence"])</code>
+
+3. Copy and paste the output sequence into the appropriate field in pepcoil. Everything else default. "Run pepcoil"
+
+4. Do the same 1-3 but for MBP1_SACCE.
+
+Both have 2 hits each. However, MBP1_ERECY has (2) as the one with much higher probability (>0.9). The rest are all around 0.5 for MBP1_ERECY and MBP1_SACCE.
+
+The locations for the first hit for both are quite comparable (MBP1_ERECY 622-650 vs MBP1_SACCE 627-655).
+
+The second one not so much (MBP1_ERECY 686-715 vs MBP1_SACCE 740-767) and the probabilities differ by a lot (0.913 vs 0.508, where as the first region is 0.518 vs 0.525).
+
+
+1. Find the "tmap" functionality. This functionality predicts TM segments. Use MBP1_ERECY sequence obtained just now and "Run tmap"
+
+Outputs:
+
+ Start   End TransMem Sequence
+ 376     401        1 AFHWACAMGNLPIVEALLQAGASHRA
+ 562     580        2 GAVITGPAGAAAASASASF
+
+[[File:tmap.1.png|500px]]
+
+It still somehow finds two TM-spanning regions in Mbp1 and annotated them.
+
+2. Use "shuffleseq" functionality to produce 2 shuffled sequences of MBP1_ERECY. Use "tmap" to attempt to annotate TM segments for both of them.
+
+Outputs:
+
+ >EMBOSS_001
+ DTLSEIVAQDTAWSMQPQVTAECYNYGVGSRIESAIIAGQSTLNSQMTYQGFASAQLAQK
+ NAEGVKVSSYDSRRYNDVIDPRNEELDTAEAKRSKFQDGADNRNNSPRPNTEQKLEQIMF
+ TRNSTPQHRHQAYTNLSKPQYKTKDSEAGDGDGDQATVFRHTIHTVADPALKFDIDNVRT
+ SKSTANHLGLFEIGNRASIHMLISIKLAISSEVLSSNKHKYQPGDTHRDSNINSKFMEGA
+ FVRSFMYHLFHAIISLQLHGVSFTFSDPMQLSESGKRFDKEDQILRMQSDYVLSANKNSA
+ PAGSLINTKKLGIQSTTEPKLKVGEIAQLLPASYEPESEVVVNQRTPETTCSSAPIDNQT
+ YKYGSSSRQFSIHSLIAKGLFINIRYLVIDWDQKLQVKKIGSLQLKPALPSRIYGMARIK
+ IDHEHLSSDRPNLSRKSGHKMITLILSSQSINSPNSLENLAYFSQTAGHSRQILEGVITA
+ PSKKIFVLTVLAEIIGWSIKVFPGFKPEHKHPEVGLLKAADQSPRRRAILLDIILLKISQ
+ TARKSYPLKVAKIGIRFKNPPGDLEPESGTYTATTADAEAELELHRVLVIQEMTPIMPYF
+ LEYSLSNRISSLYDMDKAELSEPFTHLQLSLKKQPVFIDDENIIKVAHDSCTNAPTGNTE
+ KDKSRQALDSIDRMKQVHIFDQDTTDGAQLMQWMKSQIKQKHNRQGTDGATPAGKRDTQN
+ SETMLDHTPEAKNAVDVGSSGQPVNYIPLYGSDSGPSEDLKDQAMQNIPGLRDLVQMVST
+ ASVADNGKIATQAGQNVSRQ
+
+ Start   End TransMem Sequence
+ 193     221        1 IGNRASIHMLISIKLAISSEVLSSNKHKY
+ 238     264        2 EGAFVRSFMYHLFHAIISLQLHGVSFT
+ 361     387        3 YKYGSSSRQFSIHSLIAKGLFINIRYL
+ 479     502        4 TAPSKKIFVLTVLAEIIGWSIKVF
+
+[[File:tmap.2.png|500px]]
+
+ >EMBOSS_002
+ SSYLQNDDDALANKAYTGPPQDFSSDSVLLQIQPSMYDTGPYTDKPPRMRLSVAKDVPDT
+ AQELFPANSVFISTIIEFVKIDASLLHNDKYYSQHRVRIDKTSGKYQDMEAKKHIKSNSN
+ IQAIPFQNRFRGSRSRLSQDQPTIPDLTESNGEHLGFSAYDVRVGQYVLESNSPQVEETN
+ LGQQYDMKKSHFENRKEHISLIQIALTPNGLTSSGHGITDFILLSHQIQHGDTNVDKEGS
+ IGEFFVVFNTQFQGIYGQIASFEQWAIKKPFNARFLLPSIFSEVTDMLLDADSRRPYQNK
+ QDTSQAGKQMDELLNQNSTDMGAYPPGSPPHDLRQGPCAITAPHKFEIASQDASGVYKYP
+ NPRHGLKFKISYSSGADDGSAYIGVVAFNQDTNLSTEVRGAQHRPATEVQGANTDRSMTQ
+ HPTTQVQPKKNEIKTTLVKLISSLVQSAIMIIAKEAILEIQTDDYRLNKKQVSSIKFANP
+ SKALYPLIQYLGEEAKEWVQHKAIEQGMKNNPSTGLKMDREQSVALAITTNTSLAITKSK
+ DHDKKSSTEMYLGKIRHRNLAKRDRKVTTHDWTSVLYRVEKADISSHESESSWRQGCILV
+ SHSRAPDSTAKLSENQATHSGQSREKKLIISPSAALNDLKRVSPTAGGMAGKSFIATLGI
+ HLLANARLESSQSSKPHDADMETRLPSITVILPISPAVMCIILFVIQSVQFKAGTPRSGA
+ SLEALMNILMLTKRNLAGKSVNSYIRVSNERKDEMRILQTEIDAHEEKMIILDALEDDTL
+ QGNQNVDASGLTGIQLKRNP
+
+Start    End TransMem Sequence
+ 64      85        1 LFPANSVFISTIIEFVKIDASL
+ 241     257        2 IGEFFVVFNTQFQGIYG
+ 438     460        3 VKLISSLVQSAIMIIAKEAILEI
+ 639     667        4 LKRVSPTAGGMAGKSFIATLGIHLLANAR
+ 681     705        5 METRLPSITVILPISPAVMCIILFV
+
+[[File:tmap.3.png|500px]]
+
+3. Run "tmap" with the following positive control (10 TM-segments):
+
+ >gi|6322500|ref|NP_012574.1| Gef1p [Saccharomyces cerevisiae S288c]
+ MPTTYVPINQPIGDGEDVIDTNRFTNIPETQNFDQFVTIDKIAEENRPLSVDSDREFLNSKYRHYREVIW
+ DRAKTFITLSSTAIVIGCIAGFLQVFTETLVNWKTGHCQRNWLLNKSFCCNGVVNEVTSTSNLLLKRQEF
+ ECEAQGLWIAWKGHVSPFIIFMLLSVLFALISTLLVKYVAPMATGSGISEIKVWVSGFEYNKEFLGFLTL
+ VIKSVALPLAISSGLSVGKEGPSVHYATCCGYLLTKWLLRDTLTYSSQYEYITAASGAGVAVAFGAPIGG
+ VLFGLEEIASANRFNSSTLWKSYYVALVAITTLKYIDPFRNGRVILFNVTYDRDWKVQEIPIFIALGIFG
+ GLYGKYISKWNINFIHFRKMYLSSWPVQEVLFLATLTALISYFNEFLKLDMTESMGILFHECVKNDNTST
+ FSHRLCQLDENTHAFEFLKIFTSLCFATVIRALLVVVSYGARVPAGIFVPSMAVGATFGRAVSLLVERFI
+ SGPSVITPGAYAFLGAAATLSGITNLTLTVVVIMFELTGAFMYIIPLMIVVAITRIILSTSGISGGIADQ
+ MIMVNGFPYLEDEQDEEEEETLEKYTAEQLMSSKLITINETIYLSELESLLYDSASEYSVHGFPITKDED
+ KFEKEKRCIGYVLKRHLASKIMMQSVNSTKAQTTLVYFNKSNEELGHRENCIGFKDIMNESPISVKKAVP
+ VTLLFRMFKELGCKTIIVEESGILKGLVTAKDILRFKRIKYREVHGAKFTYNEALDRRCWSVIHFIIKRF
+ TTNRNGNVI
+
+Start     End TransMem Sequence
+ 75     100        1 TFITLSSTAIVIGCIAGFLQVFTETL
+ 151     179        2 WKGHVSPFIIFMLLSVLFALISTLLVKYV
+ 200     226        3 YNKEFLGFLTLVIKSVALPLAISSGLS
+ 262     289        4 ITAASGAGVAVAFGAPIGGVLFGLEEIA
+ 300     324        5 WKSYYVALVAITTLKYIDPFRNGRV
+ 338     358        6 QEIPIFIALGIFGGLYGKYIS
+ 369     389        7 KMYLSSWPVQEVLFLATLTAL
+ 441     461        8 FTSLCFATVIRALLVVVSYGA
+ 469     489        9 VPSMAVGATFGRAVSLLVERF
+ 508     536       10 ATLSGITNLTLTVVVIMFELTGAFMYIIP
+
+[[File:tmap.4.png|500px]]
+
+All 10 TM-segments identified for the positive control protein. All regions look plausible by the plots.
+
+Interpreting Mbp1 TM-annotations would constitute Cargo Cult activity.
 
 {{Vspace}}
