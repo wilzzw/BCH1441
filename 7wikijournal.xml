@@ -208,4 +208,26 @@ Here is an system architecture example I made for F1Fo ATP-synthase [http://pdb1
 
 [[File:F1Fo.jpg|500px]]
 
+==7.3 Protein-protein Interactions==
+
+<div class="time-estimate">
+Time estimated: 15 min; taken 10 min; date started: 2019-12-2; date completed: 2019-12-2
+
+~~~~
+</div>
+
+;Motivation:
+Roles of individual biomolecules need to be looked at as part of systems of collaborating genes. This is through interactions.
+
+;Things to consider for PPI:
+Which molecules? Types of interaction? Confidence level? Genetic interactions (e.g. epistasis)? Other metadata for experimental methods and validity?
+
+Binary storage (e.g. for co-purification experiments)
+
+Interologs are a thing as conserved modules of biological interactions
+
+'''Be careful to distinguish genetic vs physical interactions. How deleterious mutations combine the interpretation will differ greatly depending on which of the two situations.'''
+
+
+
 {{Vspace}}
