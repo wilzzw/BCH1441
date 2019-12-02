@@ -1,4 +1,4 @@
-=7 Protein-Protein Interactions=
+=7 Biological Systems and Protein-Protein Interactions=
 ==7.1 Graphs and Networks==
 
 <div class="time-estimate">
@@ -152,5 +152,60 @@ U stands for undirected, N stands for named nodes, the graph has 20 nodes and 20
 ;High betweeness centrality seems to correlate with high degree of nodes. But strict relationship is not guaranteed.
 
 ;<span style="color:red">What does Line 595 do?</span>
+
+==7.2 Systems Concepts==
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 130 min; date started: 2019-12-1; date completed: 2019-12-2
+
+~~~~
+</div>
+
+;Motivation for the notion of system:
+:* Useful to integrate components that work together
+:* Maps a set of collaborating components to its energent behaviour
+:* Predictive power
+
+Understanding of a system is based on observables.
+
+;To do systems analysis, it is necessary to construct system architecture
+:* Conceptually, this can be built from top down, middle out, or bottom up. In principle the descriptions should all converge.
+:* However, Bottom up approach often run into the problem of missing the big picture (this protein binds that protein and activates expression of these three proteins...) and not lead to helpful understanding of the system.
+:* Regrettably, this is the common approach of presenting a system in many databases
+
+;System architecture:
+Describes the system's behaviour in terms of its subsystems and their relationships (given its context and within its boundaries)
+:* To construct a system architecture, while enumerating the components is important, also need to "reverse engineering" biological knowledge and put them into a big picture.
+:* Keys: context, boundaries, subsystems, relationships. See the purpose of a system.
+
+I really liked this function example:
+<source lang="R">
+f <- function(x) {
+	s <- 1
+	while (abs(s - x / s) > 1 / 112358) {
+		s <- (s + x / s) / (1 + 1)
+	}
+	return(s)
+}
+</source>
+
+It has a context specifier which is the argument x. It is composed of individual lines that may constitute subsystems.
+
+It is a self-contained function, so it has boundary. There is also conditional checkpoints manifested by the while loop to specify relationships.
+
+;SyRO (Systems Role Ontology):
+Top down annotation of biomolecular system components
+
+;A system architecture can be realized in terms of UML model diagrams:
+:* Elements: context and boundary zones, object boxes, relationship/activity (boxes or annotated edges), criterion/checkpoint and decisions
+:* There may be divisions into subsystems, enumerated interfaces
+
+Then we can start fill in the blanks in the big picture with individual biological facts.
+
+Should make roles of components explicit and lead to the understanding of the goals of the system.
+
+Here is an system architecture example I made for F1Fo ATP-synthase [http://pdb101.rcsb.org/motm/72] [Atomic model for the dimeric FO region of mitochondrial ATP synthase]:
+
+[[File:F1Fo.jpg|500px]]
 
 {{Vspace}}

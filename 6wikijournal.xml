@@ -2,9 +2,9 @@
 ==6.4 Genome Bioinformatics==
 
 <div class="time-estimate">
-Time estimated: 1.5 h; taken 1 h; date started: 2019-12-1; date completed: 2019-12-1
+Time estimated: 3 h; taken 2.5 h; date started: 2019-12-1; date completed: 2019-12-1
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 19:42, 1 December 2019 (EST)
 </div>
 
 ===6.4.1 Genome sequencing and data===
@@ -56,7 +56,73 @@ Consortium aims to annotate all functional aspects of model organism genomes
 '''Genome annotation methods and paradigm are rapidly evolving. Best to stay current.'''
 
 ===6.4.3 Genome browsers===
+;The UCSC Genome Browser [doi 10.1093/nar/gky1095]:
+:* Most annotations concentrated on human and mouse, but there are 105 species to date
+:* Annotations are organized into tracks. Open source UNIX codes available to build any track.
+:* Downloadables and other source codes
 
+;Tracks are strips of annotations associated with specific chromosomal coordinates/regions.
+:* Such annotations might include SNPs, conservation, genes with annotated intron and exons, expression levels, other features
+
+;Activity 1 - Explore UCSC Genome Browser with Cdc6, one target of Mbp1 in yeast
+
+1. Go to UCSC Genome Browser homepage at https://genome.ucsc.edu/. Under "Our Tools" go to "Genome Browser"
+
+2. On the left, find "yeast" or "S. cerevisiae".
+
+3. In "Position/Search Term", enter "Cdc6" and then "GO".
+
+4. Click "CDC6 at chrX:69338-70879"
+
+This opens up a page with regional view of the genome. Beneath it are setting for track displays?
+
+5. Under "Expression and Regulation", set "Regulatory Code" to "full" and hide all others. Refresh.
+
+Found some TF-binding sites identified by [https://en.wikipedia.org/wiki/ChIP-sequencing#/media/File:Chromatin_immunoprecipitation_sequencing.svg ChIP].
+
+<span style="color:red">I was cautioned that Swi6 showing up here does not lead to it binding directly to DNA in this region, but rather interacts indirectly through e.g. Mbp1. ChIP will still identify it though based on its experimental principle</span>
+
+Boxes are clickable. Sites identified by ChIP fall onto conserved elements. Clicking each TF-binding site box gets to an info page, with scores and sequence log plot, descriptions and citations.
+
+Conservation element boxes, whose evolutionary conservation is determined by "phastCons"?
+
+[[File:Cdc6_regregion.jpg|500px]]
+
+6. Zooming in further will display individual nucleotides. All 3 Mbp1 binding sites have this "CGCG" motif.
+
+;Activity 2 - Explore UCSC Genome Browser and map Cdc6 to homologous counterpart in human (Cdc6 is one target of Mbp1 in yeast)
+
+1. Go back to Genome Browser Gateway and select "Human" as organism. This is [https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.39 hg38 assembly]?
+
+2. In "Position/Search Term", enter "Cdc6" and then "GO".
+
+3. Click the top hit "CDC6 (ENST00000209728.9) at chr17:40287879-40304657 - Homo sapiens cell division cycle 6 (CDC6), mRNA. (from RefSeq NM_001254)"
+
+(Overwhelming amount of information..)
+
+[https://en.wikipedia.org/wiki/Synteny Definition for synteny]
+
+The exons for Cdc6 are much shorter than introns.. Conservartion among vertebrates concerned here show noticeable peaks around exons (except exon 1 somehow).
+
+4. Go to "Layered H3K27Ac". This seems like an ENCODE annotation.
+
+This seems like a "histone mark" for gene regulation. The page also lists subtracks under this H3K27Ac histone mark.
+
+5. Go back to genome view. Under "Regulation", go to "ORegAnno".
+
+It stands for "Open Regulatory Annotation". It shows "literature-curated regulatory regions, transcription factor binding sites, and regulatory polymorphisms"
+
+6. Check off all except "transcription factor binding site". Set "Display mode" to "full" and then "Submit".
+
+Top 2 clusters of orange bars (TF binding sites) as well as many other ones coincide well with high H3K27Ac histone mark density.
+
+7. Click on the orange bar corresponding to "Regulatory elements from ORegAnno (OREG1791811)" page. 
+
+Transcription factor identified for this region is RBL2. Can go to the Ensembl cross-reference for RBL2 (ENST00000379935) for more info. 
+
+8. Looking at SNPs
+
+It looks like SNP annotations are colour coded. Black means the SNP is in non-coding region. Green means synonymous variant. Red means nun-synonymous variant or splice variant (affects the gene product).
 
 ==6.3 Mutation Impact==
 ;Activity:
@@ -75,7 +141,7 @@ Outcomes of simulated mutation type frequencies:
  missense   0.74205 0.74102 0.73326
  nonsense   0.05157 0.04786 0.03351
 
-[[File:simulated.jpg]]
+[[File:simulated.jpg|500px]]
 
 Mutation type frequencies obtained from IntOGen:
                    KRas     PTPN11      OR1A1
@@ -83,7 +149,7 @@ Mutation type frequencies obtained from IntOGen:
  missense   0.990043290 0.84677419 0.62371134
  nonsense   0.001298701 0.02016129 0.04639175
 
-[[File:from_IntOGen.jpg]]
+[[File:from_IntOGen.jpg|500px]]
 
 Distribution for KRas according to the database seems wildly different than my simulated results. As for PTPN11 and OR1A1, somewhat different but not as much.
 
