@@ -828,7 +828,7 @@ mySeqMSA <- msaClustalOmega(AAStringSet(mySeq)) # too many sequences for MUSCLE
 # get the sequence of the SACCE APSES domain
 sel <- myDB$protein$name == "MBP1_SACCE"
 proID <- myDB$protein$ID[sel]
- 
+
 sel <- myDB$feature$ID[myDB$feature$name == "APSES fold"]
 fanID <- myDB$annotation$ID[myDB$annotation$proteinID == proID &
                             myDB$annotation$featureID == sel]
@@ -902,6 +902,26 @@ names(phyloInput) <- APSES.fullSeqSample@ranges@NAMES
 writeMFA(phyloInput, myCon = "../APSESphyloSample.mfa")
 newIn <- Rphylip::read.protein("../APSESphyloSample.mfa")
 
-#Path to Phylip package on my PC
-PROMLPATH <- "C:/Users/Wilson/Desktop/phylip-3.698/exe"
-newTree <- Rphylip::Rproml(apsIn, path=PROMLPATH)
+PROMLPATH <- "C:/Users/Wilson/Desktop/phylip-3.698/exe" # Path to Phylip package on my PC
+newTree <- Rphylip::Rproml(newIn, path=PROMLPATH)
+
+# Remove tips that are not found in the fungiTree. First need to reload fungiTree though (should have saved as .Rdata)
+fungiTree <- ape::read.tree("../fullfungiTree.txt")
+
+# The for-loop below is borrowed from Line 71-73 from "BIN-PHYLO-Tree_analysis.R"
+# Necessary to rename fungiTree tips for the upcoming tip filter to work
+# Update: unused
+#for (i in seq_along(fungiTree$tip.label)) {
+#    fungiTree$tip.label[i] <- biCode(gsub("_", " ", fungiTree$tip.label[i]))
+#}
+# The below two lines are borrowed from course website
+# Update: unused
+#sel <- ! (newTree$tip.label %in% fungiTree$tip.label)
+#newTree <- ape::drop.tip(newTree, newTree$tip.label[sel])
+
+# Drop non MBP1 unless it's KilA from E.coli
+sel <- ! (grepl("^MBP1", newTree$tip.label) | (newTree$tip.label == "KILA_ESCCO"))
+newTree <- ape::drop.tip(newTree, newTree$tip.label[sel])
+
+plot(newTree)
+save(newTree, file = "../newAPSEStreeRproml.RData")

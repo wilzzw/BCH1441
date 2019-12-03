@@ -1,0 +1,70 @@
+The following content is '''Genome sequence analysis''' submitted for credit for the integrative unit '''[http://steipe.biochemistry.utoronto.ca/abc/index.php/ABC-INT-Genome_annotation ABC-INT-Genome_annotation]'''
+
+==Find the MYSPE orthologue for yeast CDC6==
+
+I will do this by reverse best match method.
+
+1. Search <code>cdc6 AND "Saccharomyces cerevisiae"[organism] AND srcdb_refseq[PROP] </code> at [https://www.ncbi.nlm.nih.gov/refseq/ RefSeq] (dropdown as "Protein")
+
+2. This brings me to the right page:
+
+https://www.ncbi.nlm.nih.gov/protein/NP_012341.1 (RefSeqID for the protein is apparent from the url)
+
+3. Perform Protein BLAST on "NP_012341.1". Database = Reference Proteins (refseq_protein), Organism = Eremothecium cymbalariae
+
+The first hit looks pretty good:
+
+ Hypothetical protein Ecym_8135. Max score: 379. Total score: 379. Query coverage: 91%. E-value: 2e-127. Percent seq identity: 44.03.
+
+The RefSeq ID for this protein is [https://www.ncbi.nlm.nih.gov/protein/XP_003648243.1?report=genbank&log$=prottop&blast_rank=1&RID=YDMDDYTV014 XP_003648243.1]
+
+Alignment given by BLAST has 7 indels, including a big one. Sequence similarity 62%. Gap 8%. 
+
+ Query  41   ESSPEKLQFGSQSIFLRTKALLQKSSELVNLNSSDG-ALPARTAEYEQVMNFLAKAISEH  99
+ .           E  P++L FG  SI+ +TK++LQ+SS      + D   LP R  +Y  +  FL  ++   
+ Sbjct  64   EVQPKRLVFGKSSIYSKTKSVLQRSS----FTAMDKPWLPTRQKQYAAIAQFLKNSVGSD  119
+ Query  100  RSDSLYITGPPGTGKTAQLDMIIRQKFQSLPLSLSTPRSKDVLRHTNPNLQNLSWFELPD  159
+ .              SLYITGPPGTGKTAQL++IIRQ F ++ +     R  +  +H +P L N   +E   
+ Sbjct  120  HGGSLYITGPPGTGKTAQLELIIRQTFHTIIIGEENRR--NAPKH-DPTLANTLHYETAP  176
+ Query  160  GRLESVAVTSINCISLGEPSSIFQKIF--DSFQDLNGPTLQIKNMQHLQKFLEPYHKKTT  217
+ .           GR +SVAV S+NCI+L +P SI+ KI      QD N     +K M+ LQKF++  H  T 
+ Sbjct  177  GRYQSVAVVSLNCIALRKPESIWSKIHRQSCIQDSNKEP--VKTMEDLQKFIKA-HSNTA  233
+ Query  218  FVVVLDEMDRLLHANTSETQSVRTILELFLLAKLPTVSFVLIGMANSLDMKDRFLSRLNL  277
+ .           FVV+LDEMD+LL +   ++ + R I+ LF+LAKLP+V F LIG+ANSLDMKDR L+RL L
+ Sbjct  234  FVVILDEMDKLLTSTLEDSNATRIIVNLFILAKLPSVRFTLIGIANSLDMKDRLLNRLAL  293
+ Query  278  DRGLLPQTIVFQPYTAEQMYEIVIQKMSSLP--TIIFQPMAIKFAAKKCAGNTGDLRKLF  335
+ .               LPQ I F PY++++M+EIV  K+ S+     I QPMAIKFAAKKC+ NTGDLRKLF
+ Sbjct  294  ASDFLPQIINFAPYSSDEMFEIVTSKLKSIDKNESIIQPMAIKFAAKKCSCNTGDLRKLF  353
+ Query  336  DVLRGSIEIYELEKRFLLSPTRGSLNSAQVPLTPTTSPVKKSYPEPQGKIGLNYIAKVFS  395
+ .           DVLR S+E+ ELE                         +K    +   ++ L ++++VFS
+ Sbjct  354  DVLRNSVELAELES------------------------LKNKSSDIVVRVTLTHVSRVFS  389
+ Query  396  KFVNNNSTRTRIAKLNIQQKLILCTIIQSLK---LNSDATIDESFDHYIKAITKTDTLAP  452
+ .            ++N +ST++RI+KLN+QQK++LC ++   K     +  +ID+++D+Y K ++ T  L P
+ Sbjct  390  TYINGSSTKSRISKLNMQQKVVLCALVHREKSDLYKARCSIDDAYDYYSKLLSGTIALNP  449
+ Query  453  LQRNEFLEICTILETCGLVSIKKTKCKGKTKRFVDKIDVDLDMREFYDEMTKISILK  509
+ .           L+RNEFLE C  LE CG+VSI+  K   K K+ V  I   +D +EF DE++K+ +LK
+ Sbjct  450  LKRNEFLESCDALELCGVVSIETGKYGRKAKQSVKLIKSTIDEKEFQDEVSKVDLLK  506
+
+4. Reverse Protein BLAST. Use "XP_003648243" as query sequence. Select database "refseq_protein". Restrict "Organism" to "Saccharomyces cerevisiae (taxid:4932)".
+
+The best match (top hit) is NP_012341.1.
+ 
+ Query coverage: 86%. E-value: 4e-125. Sequence identity: 44.03%
+
+;Conclusion:
+We deem Hypothetical protein Ecym_8135 (RefSeq NP_012341) to be the orthologue of Saccharomyces cerevisiae CDC6 by reverse best match.
+
+
+==Analyse CDC6_ERECY in the Context of its Genome==
+
+5. Use cross-references to find this gene in NCBI Genome Data Viewer.
+* The putative orthologous gene for CDC6 in ERECY in its genome context is at https://www.ncbi.nlm.nih.gov/gene?cmd=retrieve&list_uids=11469884
+* The corresponding nucleotide sequence can be found at RefSeq entry [https://www.ncbi.nlm.nih.gov/nuccore/XM_003648195.1 XM_003648195]
+* The gene is located at chromosome 8 of ERECY
+* '''The gene is apparently encoded in the DNA minus-strand''', spanning the region 285,052-283,520.
+* The gene spans 
+
+=References=
+<references />
+
+{{CC-BY}}
