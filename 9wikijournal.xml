@@ -1108,7 +1108,7 @@ Not sure what this means. For extracellular proteins, cysteines tend not to occu
 <div class="time-estimate">
 Time estimated: 1.5 h; taken 1 h; date started: 2019-12-2; date completed: 2019-12-2
 
-~~~~
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 17:57, 2 December 2019 (EST)
 </div>
 
 ;Two outcomes of pattern search:
@@ -1237,5 +1237,61 @@ Start     End TransMem Sequence
 All 10 TM-segments identified for the positive control protein. All regions look plausible by the plots.
 
 Interpreting Mbp1 TM-annotations would constitute Cargo Cult activity.
+
+===9.7.4 Analysis of collaborating sequences===
+
+<div class="time-estimate">
+Time estimated: 1.5 h; taken 40 min; date started: 2019-12-2; date completed: 2019-12-2
+
+[[User:Zhi Wei Zeng|Zhi Wei Zeng]] ([[User talk:Zhi Wei Zeng|talk]]) 19:46, 2 December 2019 (EST)
+</div>
+
+;Activity 1 - Explore Mbp1 as a member of a system/pathway in KEGG
+
+1. Go to KEGG at https://www.genome.jp/kegg/ (manually curated) and then "KEGG Organisms"
+
+2. Find ERECY, or "Eremothecium cymbalariae"
+
+ '''OMG it is there! The three-letter code is "erc"'''
+
+3. Go back and go to KEGG2, which is entry point to KEGG with table of contents.
+
+4. Searching for Mbp1 and find the Saccharomyces cerevisiae entry for it will load a info summary page. It links to pathways, where there is only one (sce04111)
+
+https://www.genome.jp/kegg-bin/show_pathway?sce04111+YDL056W
+
+5. This is the cell cycle map for yeast. Use the drop-down and find MYSPE "Eremothecium cymbalariae" and "Go".
+
+Seems like the same map. However, more boxes are white instead of green. <span style="color:green">In green have been well-curated.</span>
+
+The ones remaining green are conserved in my organism (curated). They also link to my organism's counterpart instead of Saccharomyces cerevisiae.
+
+Annotation transfer is by homology?
+
+6. Go back to the [https://www.genome.jp/dbget-bin/www_bget?sce:YDL056W SACCE Mbp1 entry page]. In "SSDB", click "Ortholog".
+
+Can find Mbp1_ERECY. For my case, this orthology has been well-annoatated, but seems like most are not.
+
+Be careful when doing annotation transfer through orthology and gene similarity. It is tricky, and even some orthologs have some diverged functions.
+
+Be wary of how the functional equivalence/mapping between species is arrived and what information is used (so when things go wrong will not be catastrophic?).
+
+;CoExpressdb:
+Database for co-expression profiles for model organisms.
+:* Can compare with correlation coefficients.
+
+;Activity 2 - Explore CoExpressdb with Mbp1
+
+1. Go to https://coxpresdb.jp/
+
+2. Search "Mbp1" with "Gene alias (DHCR)"
+
+3. One gene found under "Budding yeast gene search". Click the icon undrr "Coexpressed gene list" to see the list.
+
+Kind of hard to read. Top expressed genes are involved in MAPK signalling pathway, cell cycle, meiosis, RNA-transport? etc.
+
+Not sure what those values in the table means, and "Supportability" in stars..
+
+[https://coxpresdb.jp/gene_coexpression/?gene_id=851503 Link to the results page]
 
 {{Vspace}}
