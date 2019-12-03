@@ -1,0 +1,147 @@
+;Step 1 - Target Sequence
+
+1. Fetch the APSES doamin sequence for MBP1_ERECY. [http://steipe.biochemistry.utoronto.ca/abc/students/index.php/User:Zhi_Wei_Zeng/Journal#5.9.1_Construct_homology_model_for_ERECY_Mbp1 I have already done this in my journal]
+
+2. The sequence is:
+ "QIYSAKYSGVEVYEFIHPTGSIMKRKADDWVNATHILKAAKFAKAKRTRILEKEVIKDIHEKVQGGFGKYQGTWVPLDIARRLAEKFDVLEELRPLFDF"
+
+;Step 2 - Template Structure and create alignment
+
+3. From my past activity, I already had the sequence corresponding to PDB 4UX5 stored in "4UX5_A.fa".
+
+4. Use the R-code provided [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-SX-Homology_modelling#The_input_alignment here] by Dr. Steipe in RStudio with ABC-units project loaded.
+
+Until the line where we are able to inspect the MSA or write to file.
+
+'''Now, I choose 4UX5 as the template. I have to write the alignment to a different file.'''
+
+I may not be able to re-use my old "APSES-MBP1.fa" because <code>fetchMSAmotif(MBP1msa, seq1BM8)</code> would only make sure to cover the sequence for 1BM8 but not necessarily 4UX5.
+
+I follow the following R-code, which really is just a modified version of the code provided to me:
+
+<source lang="R">
+# Be careful to not overwrite, though I do have version control..
+# My version control is in the directory parent to getwd()
+writeMFA(fetchMSAmotif(MBP1msa, seq4UX5), myCon = "../APSES-MBP1_ALT.fa")
+
+myT <- seq4UX5
+
+# Everything below is the same as source code
+# The code below has dependency on the variable targetName which I have not defined
+# Define it with the following line
+(targetName <- sprintf("MBP1_%s", biCode(MYSPE)))
+
+targetSeq   <- as.character(fetchMSAmotif(MBP1msa, myT)[targetName])
+templateSeq <- as.character(fetchMSAmotif(MBP1msa, myT)[names(myT)])
+ 
+# Drop positions in which both sequences have hyphens.
+targetSeq   <- unlist(strsplit(targetSeq,   ""))
+templateSeq <- unlist(strsplit(templateSeq, ""))
+gapMask <- ! ((targetSeq == "-") & (templateSeq == "-"))
+targetSeq   <- paste0(targetSeq[gapMask], collapse = "")
+templateSeq <- paste0(templateSeq[gapMask], collapse = "")
+ 
+# Assemble sequences into a set
+TTset <- character()
+TTset[1] <- targetSeq
+TTset[2] <- templateSeq
+names(TTset) <- c(targetName, names(myT))
+ 
+writeMFA(TTset)
+
+</code>
+
+Inspect the MSA result from file "APSES-MBP1_ALT.fa" in JalView:
+
+[[File:jalview_ERECY.jpg]]
+
+I have doubts about multiple sequence alignment in common residues 1-15 and 118-142.
+
+At only a threshold of 20% conservation threshold, these regions still do not have strong colour indication for conservation.
+
+Residues 121-132 looks pretty well aligned though. However, it is not clear how indels at 118-121 should be resolved.
+
+So I decide to remove 1-15 and 118-142 from alignment for modelling (121-132 is honestly hard to let go..).
+
+The resulting alignment stored in "hm_alt.mfa" is the following:
+
+ >MBP1_ERECY
+ QIYSAKYSGVEVYEFIHP-TGSIMKRKADDWVNATHILKAAKFAKAKRTRILEKEVIKDIHEKVQ
+ GGFGKYQGTWVPLDIARRLAEKFDVLEELRPLFDF
+
+ >4UX5_A
+ GIYSATYSGIPVYEYQFGLKEHVMRRRVDDWINATHILKAAGFDKPARTRILEREVQKDQHEKVQ
+ GGYGKYQGTWIPLEAGEALAHRNNIFDRLRPIFEF
+
+;Step 3 - Build the model and process PDB
+
+5. Use the above alignment to model at SWISS-MODEL at https://swissmodel.expasy.org/interactive#alignment
+
+Job report at https://swissmodel.expasy.org/interactive/8aB2RD/models/
+
+One indel is near the end of a beta-turn, resulting in more uncertainty there locally.
+
+ Statistics: GMQE 0.78, QMEAN -0.47 (good)
+
+6. Download the resulting PDB as "MBP1_ERECY-APSES_alt.pdb".
+
+7. Use the modified source code [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-SX-Homology_modelling#Renumbering_the_model here] to renumber the residues of the model correctly.
+
+Modified code here:
+<code>
+if (! requireNamespace("bio3d", quietly=TRUE)) {
+  install.packages("bio3d")
+}
+# Package information:
+#  library(help = bio3d)       # basic information
+#  browseVignettes("bio3d")    # available vignettes
+#  data(package = "bio3d")     # available datasets
+
+# Save with a different name
+PDB_INFILE      <- "../MBP1_ERECY-APSES_alt.pdb" 
+PDB_OUTFILE     <- "../MBP1_ERECY-APSESrenum_alt.pdb"
+ 
+# residue number for the first residue if your template was 4UX5
+# should actually be 16 though.
+# The first residue aligned to the first residue in the homology model is not 14, due to me editing the multiple sequence alignment
+iFirst <- 16  
+ 
+# == Read the MYSPE pdb file
+MYSPEmodel <- bio3d::read.pdb(PDB_INFILE) # read the PDB file into a list
+ 
+MYSPEmodel           # examine the information
+MYSPEmodel$atom[1,]  # get information for the first atom
+ 
+# Explore ?bio3d::read.pdb and study the examples.
+ 
+# == Modify residue numbers for each atom
+resNum <- as.numeric(MYSPEmodel$atom[,"resno"])
+resNum
+resNum <- resNum - resNum[1] + iFirst  # add offset
+MYSPEmodel$atom[ , "resno"] <- resNum   # replace old numbers with new
+ 
+# check result
+MYSPEmodel$atom[ , "resno"]
+MYSPEmodel$atom[1, ]
+ 
+# == Write output to file
+bio3d::write.pdb(pdb = MYSPEmodel, file=PDB_OUTFILE) # An error from the code corrected here
+</code>
+
+Now, the numbering corresponds correctly to 4UX5 numbering.
+
+;Step 4 - Visualization and superposition
+
+8. In chimera, open 4ux5. Then, load the homology model I just made.
+
+9. The homology model is already aligned to chain A of 4UX5 pretty well. But still, use "MatchMaker" to align it to chain A of 4UX5.
+
+10. Make a copy of the homology model with "copy/combine" in the "Model Panel". Then, use "MatchMaker" to align replica to chain B of 4UX5.
+
+
+
+=References=
+<references />
+
+{{CC-BY}}
+[[Category:EVAL-BIN-SX-Small_molecules]]
