@@ -58,11 +58,15 @@ We deem Hypothetical protein Ecym_8135 (RefSeq NP_012341) to be the orthologue o
 ==Analyse CDC6_ERECY in the Context of its Genome==
 
 5. Use cross-references to find this gene in NCBI Genome Data Viewer.
+
 * The putative orthologous gene for CDC6 in ERECY in its genome context is at https://www.ncbi.nlm.nih.gov/gene?cmd=retrieve&list_uids=11469884
 * The corresponding nucleotide sequence can be found at RefSeq entry [https://www.ncbi.nlm.nih.gov/nuccore/XM_003648195.1 XM_003648195]
 * The gene is located at chromosome 8 of ERECY
 * '''The gene is apparently encoded in the DNA minus-strand''', spanning the region 285,052-283,520.
-* The gene spans 
+
+6. Use "Tools" and "go to" position "285053-285552" can produce the sequence desired, including 500 bases upstream and 30 bases from the beginning of ORF.
+
+7. Then, use "Tools" > "Flip Strands". Download visible region in fasta format.
 
 =References=
 <references />
