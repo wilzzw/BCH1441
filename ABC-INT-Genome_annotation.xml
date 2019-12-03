@@ -66,7 +66,7 @@ We deem Hypothetical protein Ecym_8135 (RefSeq NP_012341) to be the orthologue o
 
 6. Use "Tools" and "go to" position "285053-285552" can produce the sequence desired, including 500 bases upstream and 30 bases from the beginning of ORF.
 
-7. Then, use "Tools" > "Flip Strands". Download visible region in fasta format.
+7. Then, use "Tools" > "Flip Strands". Download visible region in fasta format results in the file "CDC6_ERECY_DNA.fa".
 
 The sequence is below in FASTA format. I put an asterick at right before the start codon of ORF:
 
@@ -79,6 +79,81 @@ The sequence is below in FASTA format. I put an asterick at right before the sta
  TTTAAATATATTATGGTTCATAAGTTTAGTTCCCAACTTTTAGGCTTGAAATAGGGTAGATGTATCTTTG
  TTTTGGTAGTTAGTATATTGATAATATACAGGCAATTCTTTAAAGAGAGATAGAGAGAGTTGGCAAAGTA
  AAATAGAGGG*ATGCTTACGAGAAACAAGCGGACGATACTG
+
+8. Confirm my sequence is correct by translating the first 10 codons of the ORF:
+<source lang="R">
+Biostrings::translate(cdc6.ERECY.DNAseq[[1]][501:530])
+</source>
+
+Returns:
+ 10-letter "AAString" instance
+ seq: MLTRNKRTIL
+
+Consistent with the peptide sequence retrieved from Protein RefSeq entry:
+
+ 1 mltrnkrtil lpfeegngvd vvlpaakrlr glrtppaspe kqdlsvmapa lrlkhsmkle
+ 61 pdvevqpkrl vfgkssiysk tksvlqrssf tamdkpwlpt rqkqyaaiaq flknsvgsdh
+ 121 ggslyitgpp gtgktaqlel iirqtfhtii igeenrrnap khdptlantl hyetapgryq
+ 181 svavvslnci alrkpesiws kihrqsciqd snkepvktme dlqkfikahs ntafvvilde
+ 241 mdklltstle dsnatriivn lfilaklpsv rftligians ldmkdrllnr lalasdflpq
+ 301 iinfapyssd emfeivtskl ksidknesii qpmaikfaak kcscntgdlr klfdvlrnsv
+ 361 elaeleslkn kssdivvrvt lthvsrvfst yingsstksr isklnmqqkv vlcalvhrek
+ 421 sdlykarcsi ddaydyyskl lsgtialnpl krneflescd alelcgvvsi etgkygrkak
+ 481 qsvkliksti dekefqdevs kvdllkriti
+
+9. In initiated ABC-units R-project, do the motif/element search analysis. Code log below:
+
+<source lang="R">
+# Read from fasta I just saved
+cdc6.ERECY.DNAseq <- Biostrings::readDNAStringSet("../CDC6_ERECY_DNA.fa")
+
+# Change to string. More familiar.
+myDNASeq <- as.character(cdc6.ERECY.DNAseq[[1]])
+
+# Search for CGCG motif
+# The following code is provided to me for free
+patt <- "..CGCG.."
+m <- gregexpr(patt, myDNASeq)
+(regmatches(myDNASeq, m)[[1]]) # "GACGCGTC"
+
+# Search for (A/T)CGCG motif
+patt <- "[AT]CGCG"
+m <- gregexpr(patt, myDNASeq)
+(regmatches(myDNASeq, m)[[1]])
+
+# Search for CGCG(A/T) motif
+patt <- "CGCG[AT]"
+m <- gregexpr(patt, myDNASeq)
+(regmatches(myDNASeq, m)[[1]])
+
+# Search for (A/T)CGCG(A/T) motif
+patt <- "[AT]CGCG[AT]"
+m <- gregexpr(patt, myDNASeq)
+(regmatches(myDNASeq, m)[[1]])
+</source>
+
+;Conclusions:
+* There is only one instance of "CGCG", within 500 bases upstream of the start codon of open reading frame.
+* It is located at 297 bases upsteam of the start codon.
+* With more stringent requirement applied, the sequence is bounded by A or T ("A-'''CGCG'''-T"). Therefore it qualifies the requirement of this "consensus sequence".
+* '''In Saccharomyces cerevisiae though, there are 3 MBP1 binding sites (figure below).''' The further upstream one seems to receive less confidence.
+The other two further downsteam though (highlighted in yellow), have high confidence scores. Moreover, they coincide with Swi6 binding annotations.
+
+[[File:SCgenomeview.jpg|500px]]
+
+(500 bases upstream from the start codon)
+
+Because Mbp1-Swi6 interaction is quite well-known in Saccharomyces cerevisiae for regulation of cell cycle, the highlighted sites seem much more likely to be relevant for Mbp1 regulation of Cdc6 expression.
+
+* According to the [https://www.kegg.jp/kegg-bin/show_pathway?org_name=erc&mapno=04111&mapscale=1.0&show_description=hide curated annotation transfer of Mbp1 and Swi6 by KEGG], confidence of this Mbp1-Swi6 system in the cell cycle pathway being conserved from SACCE to ERECY is high.
+
+Under the assumptions that the ChIP data are reliable on UCSC AND that Mbp1-Swi6 regulation of Cdc6 expression is achieved through a conserved binding mode. Then, I should expect more than just one "CGCG" box in ERECY.
+
+* Overall, my speculations:
+
+1) Based on the existence of "(A/T)CGCG(A/T)" motif AND the Mbp1-Swi6 annotation transfer in KEGG, this motif is where MBP1 binds.
+
+2) However, there is only one such site. One possibility is that MBP1_ERECY DNA-sequence specificity is lower than MBP1_SACCE and can find a different sequence to bind in the vincinity to "CGCG".
 
 =References=
 <references />

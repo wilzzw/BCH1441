@@ -925,3 +925,33 @@ newTree <- ape::drop.tip(newTree, newTree$tip.label[sel])
 
 plot(newTree)
 save(newTree, file = "../newAPSEStreeRproml.RData")
+
+
+
+### Genome analysis
+# Read from fasta I just saved
+cdc6.ERECY.DNAseq <- Biostrings::readDNAStringSet("../CDC6_ERECY_DNA.fa")
+
+# Change to string. More familiar.
+myDNASeq <- as.character(cdc6.ERECY.DNAseq[[1]])
+
+# Search for CGCG motif
+# The following code is provided to me for free
+patt <- "..CGCG.."
+m <- gregexpr(patt, myDNASeq)
+(regmatches(myDNASeq, m)[[1]]) # "GACGCGTC"
+
+# Search for (A/T)CGCG motif
+patt <- "[AT]CGCG"
+m <- gregexpr(patt, myDNASeq)
+(regmatches(myDNASeq, m)[[1]])
+
+# Search for CGCG(A/T) motif
+patt <- "CGCG[AT]"
+m <- gregexpr(patt, myDNASeq)
+(regmatches(myDNASeq, m)[[1]])
+
+# Search for (A/T)CGCG(A/T) motif
+patt <- "[AT]CGCG[AT]"
+m <- gregexpr(patt, myDNASeq)
+(regmatches(myDNASeq, m)[[1]])
