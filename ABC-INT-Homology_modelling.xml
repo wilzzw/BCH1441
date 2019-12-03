@@ -136,9 +136,38 @@ Now, the numbering corresponds correctly to 4UX5 numbering.
 
 9. The homology model is already aligned to chain A of 4UX5 pretty well. But still, use "MatchMaker" to align it to chain A of 4UX5.
 
-10. Make a copy of the homology model with "copy/combine" in the "Model Panel". Then, use "MatchMaker" to align replica to chain B of 4UX5.
+Hide ribbons for chain B of 4UX5.
 
+10. Select chain A of my homology model. Change selection mode to "intersect" and then select positively charged residues. Show Atoms/Aonds for them.
 
+11. Change selection mode back to "replace". Select chain C of 4UX5, which selects the strand of DNA that appears to contact the protein the most. Hide ribbons and show Atoms/Bonds
+
+12. Somehow some water oxygens show up. Clear selection and then select Structure > Solvent. Hide Atoms/Bonds.
+
+It now becomes a lot more apparent which positively charged sidechains are in close proximity to the phosphate backbone now.
+
+13. Use command line to select residues and guide the decision of which DNA-contacting residues to display.
+
+The selection command for all desired residues is <code>select #1:53.A,59.A,62.A,77.A,84.A</code>
+
+;Step 5 - Choose conserved positively charged residues that contact DNA
+
+14. Use Tools > Sequence > Multialign Viewer and open "hm_alt.mfa". File type is aligned FASTA.
+
+Confirmed that all selected residues above are conserved between these two species.
+
+15. Check with the JalView MSA I produced above.
+
+<span style="color:red">I found out from inspecting the alignments that the renumbering code still did not renumber the residues correctly due to an indel in the alignment between template and target</span>
+
+'''Making a script right now to address this very specific issue would be a nightmare, so I might as well manually correct them..'''
+
+ The correct residue numbers corresponding to 4UX5 of my selected residues should actually be K56, K62, R65, K80, K87.
+ As seen from the Multialign Viewer.
+
+All of these residues are completely conserved except K87, which is an arginine in MBP1_NEUCR (still very well conserved in terms of positive charge).
+
+Render with these residues
 
 =References=
 <references />
