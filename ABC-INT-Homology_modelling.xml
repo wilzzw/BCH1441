@@ -167,7 +167,45 @@ Confirmed that all selected residues above are conserved between these two speci
 
 All of these residues are completely conserved except K87, which is an arginine in MBP1_NEUCR (still very well conserved in terms of positive charge).
 
-Render with these residues
+Render with these residues.
+
+;Step 5 - Rendering
+
+16. Clear selection. Then select positively charged residues and hide Atoms/Bonds.
+
+Then Clear selection and issue command <code>select #1:53.A,59.A,62.A,77.A,84.A</code>. Show Atoms/Bonds.
+
+17. Depth cueing setting 0.45 - 0.75.
+
+18. Hide ribbon for chain A of 4UX5.
+
+19. Select my homology model chain A and show surface. Select the surface, then Tools > Surface/Binding Analysis > Coulombic Surface Coloring.
+
+Use all default settings and "Apply".
+
+20. Change surface transparency to 70%.
+
+21. Clear selection. Now select chain C of 4UX5 and produce the same kind of surface for it.
+
+22. Tools > Viewing Controls > Effects, and turn "silhouettes" on with width of 3.0.
+
+23. Change the colour of the homology model ribbon to cyan.
+
+I am going to "cheat" a little bit to prevent using false residue numbers. I will show residue labels for 4UX5 (since they are so well aligned).
+
+It does not work without showing residue Atoms/Bonds for 4UX5, but I can "cheat" again by showing them minimally.
+
+24. Issue command <code>select #0:56.A,62.A,65.A,87.A</code>. Show Atoms/Bonds for backbone only with "chain trace". Also, use "wire" representation so that they are effectively invisible.
+
+25. Turn on residue label in custom.. mode. Everything default and hit "Apply".
+
+This prevents chain ID from showing up somehow.
+
+26. Under Label > options.., change font size to 48 and bold. Use Color > all options.. to change the label font colour to red.
+
+27. Turn on wall-eye stereo view. Done this view.
+
+28. Do the same but for residue <code>select #0:80.A</code> from the back.
 
 =References=
 <references />
