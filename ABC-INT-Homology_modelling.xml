@@ -1,3 +1,19 @@
+The following content is submitted for credit for the integrative unit '''[http://steipe.biochemistry.utoronto.ca/abc/index.php/ABC-INT-Homology_modelling#For_the_Publication_Image_Option_... ABC-INT-Homology_modelling]'''
+
+;Public image in pdf is below:
+
+[[File:public_image.pdf]]
+
+;Original figures are here:
+
+[[File:hm_front.jpg|500px]]
+
+[[File:hm_back.jpg|500px]]
+
+;Saved chimera session is available upon [https://github.com/wilzzw/BCH1441 request].
+
+=Activities=
+
 ;Step 1 - Target Sequence
 
 1. Fetch the APSES doamin sequence for MBP1_ERECY. [http://steipe.biochemistry.utoronto.ca/abc/students/index.php/User:Zhi_Wei_Zeng/Journal#5.9.1_Construct_homology_model_for_ERECY_Mbp1 I have already done this in my journal]
@@ -49,11 +65,11 @@ names(TTset) <- c(targetName, names(myT))
  
 writeMFA(TTset)
 
-</code>
+</source>
 
 Inspect the MSA result from file "APSES-MBP1_ALT.fa" in JalView:
 
-[[File:jalview_ERECY.jpg]]
+[[File:jalview_ERECY.png|500px]]
 
 I have doubts about multiple sequence alignment in common residues 1-15 and 118-142.
 
@@ -88,7 +104,7 @@ One indel is near the end of a beta-turn, resulting in more uncertainty there lo
 7. Use the modified source code [http://steipe.biochemistry.utoronto.ca/abc/index.php/BIN-SX-Homology_modelling#Renumbering_the_model here] to renumber the residues of the model correctly.
 
 Modified code here:
-<code>
+<source lang="R">
 if (! requireNamespace("bio3d", quietly=TRUE)) {
   install.packages("bio3d")
 }
@@ -126,7 +142,7 @@ MYSPEmodel$atom[1, ]
  
 # == Write output to file
 bio3d::write.pdb(pdb = MYSPEmodel, file=PDB_OUTFILE) # An error from the code corrected here
-</code>
+</source>
 
 Now, the numbering corresponds correctly to 4UX5 numbering.
 
@@ -205,10 +221,11 @@ This prevents chain ID from showing up somehow.
 
 27. Turn on wall-eye stereo view. Done this view.
 
-28. Do the same but for residue <code>select #0:80.A</code> from the back.
+28. Turn to the back and do the same but for residue <code>select #0:80.A</code> from the back. Might want to restart from a previously saved session "session_HM.py".
+
+Modifications are to hide <code>select #1:53.A,59.A,62.A,84.A</code> Atoms/Bonds. So to just show K80 (<code>select #1:77.A</code>)
 
 =References=
 <references />
 
 {{CC-BY}}
-[[Category:EVAL-BIN-SX-Small_molecules]]

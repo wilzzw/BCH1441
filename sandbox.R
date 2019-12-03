@@ -794,3 +794,100 @@ for (ID in ENSPsel) {
     cat("\n")
     cat("\n")
 }
+
+
+### Phylogeny
+
+# I just realized in "makeProteinDB.R", by including Line 9:
+# myDB <- dbAddProtein(myDB, fromJSON("../ERECY_APSES_PSI-BLAST.json"))
+# Sequence duplicates are added to myDB that are in both "ERECY_APSES_PSI-BLAST.json" and "./data/refAPSES_PSI-BLAST.json"
+# I don't know whether having them will affect my multiple sequence alignment. Or automatically removes 100% duplicates
+# So I tried the following modified prep script as well. The difference is removing the duplicates from mySeq
+
+# Write and save fasta MSA format first
+withDups <- writeMFA(APSESmsa)
+
+library(msa)
+ 
+# Align all sequences in the database + KILA_ESSCO
+mySeq <- myDB$protein$sequence
+names(mySeq) <- myDB$protein$name
+mySeq <- c(mySeq,
+           "IDGEIIHLRAKDGYINATSMCRTAGKLLSDYTRLKTTQEFFDELSRDMGIPISELIQSFKGGRPENQGTWVHPDIAINLAQ")
+names(mySeq)[length(mySeq)] <- "KILA_ESCCO"
+
+# Remove duplicates!!!!
+mySeq <- mySeq[! duplicated(mySeq)]
+# Check
+any(duplicated(mySeq))
+any(duplicated(names(mySeq)))
+
+
+mySeqMSA <- msaClustalOmega(AAStringSet(mySeq)) # too many sequences for MUSCLE
+ 
+# get the sequence of the SACCE APSES domain
+sel <- myDB$protein$name == "MBP1_SACCE"
+proID <- myDB$protein$ID[sel]
+ 
+sel <- myDB$feature$ID[myDB$feature$name == "APSES fold"]
+fanID <- myDB$annotation$ID[myDB$annotation$proteinID == proID &
+                            myDB$annotation$featureID == sel]
+start <- myDB$annotation$start[fanID]
+end   <- myDB$annotation$end[fanID]
+ 
+SACCEapses <- substring(myDB$protein$sequence[proID], start, end)
+ 
+# extract the APSES domains from the MSA
+APSESmsa <- fetchMSAmotif(mySeqMSA, SACCEapses)
+
+# Write fasta MSA again
+withoutDups <- writeMFA(APSESmsa)
+
+# The alignments look different!!!
+# From here I have to use APSESmsa reflected in withoutDups, which has duplicates removed
+
+# Filter out E. coli KilA-N and all Mbp1 orthologs 
+not.ECOLI.or.MBP1 <- ! (grepl("KILA_ESCCO", APSESmsa@ranges@NAMES) | grepl("^MBP1_", APSESmsa@ranges@NAMES))
+
+#Randomly sample 10 sequences that are not E.coli KilA or Mbp1 orthologs
+set.seed(112358)
+APSES.seqSample <- sample(APSESmsa[not.ECOLI.or.MBP1], 10)
+set.seed(NULL)
+
+# I can combine sampled sequence s with E.coli KilA and Mbp1 orthologs like this:
+APSES.fullSeqSample <- c(APSESmsa[! not.ECOLI.or.MBP1], APSES.seqSample)
+
+
+# Masking >80% gap columns.
+# The following code is largely inspired by 4.1 section in "BIN-PHYLO-Data_preparation.R"
+lengthAli <- nchar(APSES.fullSeqSample[1])
+msaMatrix <- matrix(character(length(APSES.fullSeqSample) * lengthAli), ncol = lengthAli)
+
+# Sanity check. Should print TRUE
+(nrow(msaMatrix) == length(APSES.fullSeqSample))
+
+# Put sequences into the matrix with individual characters
+for (i in 1:nrow(msaMatrix)) {
+    msaMatrix[i,] <- seqinr::s2c(as.character(APSES.fullSeqSample[[i]]))
+}
+
+# Create a masking vector
+colMask <- logical(ncol(msaMatrix))
+limit <- round(nrow(msaMatrix) * (80/100))
+
+for (i in 1:ncol(msaMatrix)) {
+    count <- sum(msaMatrix[ , i] == "-") # Number of characters in the column that would be "-"
+    colMask[i] <- (count <= limit) # TRUE if fewer than 80% are gaps
+}
+
+# Masking! Also preparing input
+maskedMatrix <- msaMatrix[ , colMask]
+
+phyloInput <- character()
+for (i in 1:nrow(maskedMatrix)) {
+    phyloInput[i] <- paste(maskedMatrix[i, ], collapse="")
+}
+names(phyloInput) <- APSES.fullSeqSample@ranges@NAMES
+
+# Perform MSA
+sampledSeqMSA <- msaClustalOmega(Biostrings::AAStringSet(phyloInput))

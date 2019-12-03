@@ -1,0 +1,19 @@
+The following content is submitted for credit for the integrative unit '''[http://steipe.biochemistry.utoronto.ca/abc/index.php/ABC-INT-Homology_modelling#For_the_Publication_Image_Option_... ABC-INT-Homology_modelling]'''
+
+ A AAStringSet instance of length 10
+ width     seq                                                          names               
+ [1]   290 ELY---------AVECSGMKYMEL--SC-...VPYDRAISIAKRYG--VYEI-LQPLISF CDC10_SCHPO
+ [2]   290 FEYAHLRAPLPKDLKGSEIFPSHS--PQ-...ISPVLALELAAEYK--MYDW-VRALLDP 01622_ASPNI
+ [3]   290 GKYAT------AGGESGFMTVFEY--D-V...LPFDLAKELSRRIAWEIRDH-LVPLFGY 04778_USTMA
+ [4]   290 FDYAHLRAPLPKGIV-SGIFK--------...IPPEQALILAEEYQ--ITPW-IRALLDP 06560_NEUCR
+ [5]   290 IVVGRIKVPTENA----------------...VSRNLAIHIAPAYN--LVQL-VAALSRA 02840_CRYNE
+ [6]   290 ITIARIKIPSPE-----------------...VPIENAAELAEVYG--LTRF-AEPLLAF PGTG_05590
+ [7]   290 KSFQE------RT-GRESFEVFQYTFQ-L...MPYEAAKAIAATFCWKIRFA-LTPLFGD 05405_ASPNI
+ [8]   290 RIY---------SAVYSGVGVYEA--MI-...IPFERGRELALQYG--CDHL-LAPIFDF 68476_WALME
+ [9]   290 VIE---------VATYAGVDVYEC--YC-...IPLLSAQNLVAKYC--ITDIVVLTLINF ECYM_7145
+ [10]   290 ITIARLKLPHPR-----------------...IPIAIAEELGQRYA--MAEY-VDALAKA 69819_WALME
+
+=References=
+<references />
+
+{{CC-BY}}
