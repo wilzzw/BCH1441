@@ -846,12 +846,21 @@ withoutDups <- writeMFA(APSESmsa)
 # The alignments look different!!!
 # From here I have to use APSESmsa reflected in withoutDups, which has duplicates removed
 
+# Indicate whether this is a control experiment
+# Because I used a different MSA method, also excluded redundant sequences, I need a blank control
+CONTROL <- FALSE
+if (CONTROL) {
+    numSample <- 0
+} else {
+    numSample <- 10
+}
+
 # Filter out E. coli KilA-N and all Mbp1 orthologs 
 not.ECOLI.or.MBP1 <- ! (grepl("KILA_ESCCO", APSESmsa@ranges@NAMES) | grepl("^MBP1_", APSESmsa@ranges@NAMES))
 
 #Randomly sample 10 sequences that are not E.coli KilA or Mbp1 orthologs
 set.seed(112358)
-APSES.seqSample <- sample(APSESmsa[not.ECOLI.or.MBP1], 10)
+APSES.seqSample <- sample(APSESmsa[not.ECOLI.or.MBP1], numSample)
 set.seed(NULL)
 
 # I can combine sampled sequence s with E.coli KilA and Mbp1 orthologs like this:
@@ -889,5 +898,10 @@ for (i in 1:nrow(maskedMatrix)) {
 }
 names(phyloInput) <- APSES.fullSeqSample@ranges@NAMES
 
-# Perform MSA
-sampledSeqMSA <- msaClustalOmega(Biostrings::AAStringSet(phyloInput))
+# Save and reload, build and plot tree
+writeMFA(phyloInput, myCon = "../APSESphyloSample.mfa")
+newIn <- Rphylip::read.protein("../APSESphyloSample.mfa")
+
+#Path to Phylip package on my PC
+PROMLPATH <- "C:/Users/Wilson/Desktop/phylip-3.698/exe"
+newTree <- Rphylip::Rproml(apsIn, path=PROMLPATH)
