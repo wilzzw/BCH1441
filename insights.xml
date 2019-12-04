@@ -38,6 +38,7 @@ Models are not necessarily better the more complicated they are.
 
 Importantly, machine learning can have human bias too<ref name="MLhb">Machine learning can have human bias. In ''Chemical & Engineering News''. Retrieved December 3, 2019, from https://cen.acs.org/physical-chemistry/computational-chemistry/Machine-learning-human-bias/97/i36</ref>
 * On a related note, applying theories and methods to answer scientific questions at hand by pushing the buttons, without understanding them is at huge risk of Cargo Cult. That includes high level statistics and machine learning.
+* Performing "big data" methods such as machine learning on datasets that are not sufficiently big.
 * An example of Inferential Structure Determination<ref name="ISD">Rieping, W., Habeck, M., & Nilges, M. (2005). Inferential structure determination. ''Science'', 309(5732), 303-306. doi:10.1126/science.1110428</ref>, where I find the authors cherry-pick examples to show the method works.
 
 I was not able to see a clear advantage of their method over traditional method, except the theory is a lot more sophisticated. It is supposed to reduce subjective bias with implemented Bayesian inference of probabilistic structural ensemble.
@@ -68,6 +69,7 @@ Newly published structures are starting to look pretty much exactly the same (wi
 * Make interpretations and draw conclusions from information that's not there (e.g. deducing from alignments of indels and interpret low confidence regions of homology models).
 * Use advanced mathematical modelling methods to impress rather than to advance understanding. A carefully taken qualitative pictures that convey the message properly is way more useful than meaningless equations.
 * Confirmation bias and guide doing the wrong experiments, misinterpretation, or straightout ignoring essential information
+* (Boris) Results are always only meaningful when we consider which algorithm was used and how the parameters were set. Results cannot be compared if algorithm and parameters are not specified.
 ...
 
 ;I really just have two problem with the notion of "cargo cult":
@@ -83,3 +85,68 @@ However, I'd argue that there is at least one important value for the notion of 
 
 -- When doing science, it is always worth asking yourself "Am I committing cargo cult activity with what I am doing?"
 
+
+=It is all about Consistency=
+;Going through bioinformatics made me learn how important is to keep information consistent.
+
+Cross-referencing, extensive annotation, and careful curation have been a theme and some of the best practices of maintaining databases.
+
+It is shocking to see how much current databases have done to be connected, while there is still work to do.
+
+Good database structure also reflects the principle of keeping things consistent. Having not worked with huge amount of data, it is hard to imagine what a nightmare it would be if inconsistent annotations are everywhere.
+
+One common thing that comes up is to not store the same contents in more than one place, including files and codes.
+
+"In the best case this is merely unnecessarily needlessly redundant, but in the common worst case the two copies will go out of sync." (Boris)
+
+If everything is kept consistent, it also means if one fails, it is more likely everything fails. This is actually better.
+
+Failing hard and completely will get you to go find the bug. This is also resonating with the ideas conveyed in basic software development units.
+
+ In computational field, do not fear the program throwing an error. Fear the program not throwing an error when it should.
+
+;On a related note, it is unfortunate that keeping good parsing behaviour and maintaining these "consistency" related practices do not get rewarded much in science, confirmed from the course.
+
+This might explain why we scientists have to deal with bad softwares. But hey, good engineering of databases, software packages etc. do not lead to exciting stories to tell in high profile journals, right?
+
+;I guess I was quite shocked that PDB format is actually pretty bad! Because I have been working with it the whole time.
+
+A tiny change in the format of PDB in the future will break all the codes we have written to parse it (Ouch). Come to think about the arbitrary indices in my PDB parsing codes, I should not have been surprised at all.
+
+
+=Graphs! Graphs Everywhere!=
+If I were in one, I would be in the continuous mathematics camp and somewhat felt "edgy" about discrete mathematics, such as graph theory.
+
+This course is the first time I see the wide application of graph theory (people in computer science might have something to say about this..).
+
+I found the invention of calculus/analysis very genius and groundbreaking, and I even thought of discrete mathematics to have limited applicability, albeit serving as fun games for math geeks.
+
+Models in this class were largely based on graphs, such as phylogenetic trees, sequence alignment, protein-protein interactions, database theory.
+
+Graph theory is like the perk that is quietly working in the back that you don't think it makes a difference, while it makes a huge difference (e.g. database structure feels like a hack that anyone should have been able to come up with but won't unless you learn).
+
+If I were to ever get far in these areas, I would have to know the endless possibilities graph theory provides.
+
+
+=All Models are Wrong, but Some are Useful=
+"All models are wrong, but some are useful." - George E. P. Box<ref name="models">All models are wrong. (n.d.). In ''Wikipedia''. Retrieved December 3, 2019, from https://en.wikipedia.org/wiki/All_models_are_wrong</ref>
+
+Many instances this quote resonates. The goal is to understand biology. No models are biology themselves, but good models/abstractions help understanding biology and advances our knowledge.
+
+==Other Lesser Random Insights==
+Risk is probability times damage (Boris). Chance of computer utterly dying is not high if well maintained. However, even once is too many.
+
+NO backup is a backup unless recovery of data has been tested and shown to work (Boris). Learned that the hard way..
+
+A statistical theme:
+How unlikely an observation is? There seems to be a repeatedly used empirical approach based on probability theory throughout - Simulate a bunch, and then see how extreme the observation is given the simulated distribution.
+
+Despite phylogenetic analysis, analysis of gene code optimality, and others seem not very related on the surface. They converge in the paradigm of statistical inference.
+
+Domain annotation:
+When it comes to excluding non-confident regions, lack of information is information here.
+
+=References=
+<references />
+
+{{CC-BY}}
