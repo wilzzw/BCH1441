@@ -56,7 +56,30 @@ There is also a questionable derivation somewhere in the paper. Overall I find i
 
 Statistics helps to inform decision, but it doesn't make decisions by itself.
 * Making plots that don't convey the key message, or that are just straightout misleading, or edit to make them look pretty at the expense of message. I have been warned about this during the plotting unit.
+* Not using biological insights to intervene with computational output, such as the case in multiple sequence alignment and computing membrane spanning regions of a protein known to not be a membrane protein.
 
 
 ;Activities that do not lead to new insights
-* This would be a controversial one, but I found that recent series of new structures of CFTR by J. Chen's group have very diminishing insights<ref name="CFTR">
+* This would be a controversial one, but I found that recent series of new structures of CFTR by J. Chen's group have very diminishing insights (https://science.sciencemag.org/content/364/6446/1184).
+
+Newly published structures are starting to look pretty much exactly the same (with RMSD of less than 1 A), even with two chemically unrelated drugs bound. I find there is a lack of improved understanding of CFTR structural mechanism with so many high impact papers and structures out.
+
+;Other randomly related examples:
+* Make interpretations and draw conclusions from information that's not there (e.g. deducing from alignments of indels and interpret low confidence regions of homology models).
+* Use advanced mathematical modelling methods to impress rather than to advance understanding. A carefully taken qualitative pictures that convey the message properly is way more useful than meaningless equations.
+* Confirmation bias and guide doing the wrong experiments, misinterpretation, or straightout ignoring essential information
+...
+
+;I really just have two problem with the notion of "cargo cult":
+* The types of conduct that could fall under "cargo cult" is too broad. The definition is not distinct enough. Probably why I had a difficult time understanding it.
+* Many of "cargo cult" activities are not more harmful than other types of scientific misconduct.
+
+e.g. One can commit "cargo cult science" even if unintentional or due to lack of ability, whereas blatantly fabricating statistics may not fall under "Cargo Cult".
+
+
+Considering how perplexing the term "cargo cult" is to understand what it means, perhaps having this notion of "cargo cult" is cargo cult itself?
+
+However, I'd argue that there is at least one important value for the notion of "cargo cult", given how often committing "cargo cult" went unnoticed
+
+-- When doing science, it is always worth asking yourself "Am I committing cargo cult activity with what I am doing?"
+
