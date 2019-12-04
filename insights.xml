@@ -1,0 +1,62 @@
+<div class="b1">
+Insights!
+</div>
+
+;Pre-word:
+This page has the key take-away insights I had as I went through the course. I took messy notes in the file "2.txt" in my project directory.
+
+"2.txt" is a "sandbox" file where I take quick rough notes without a second thought. It began with something unrelated to this course.
+
+As I put down more and more thoughts related to this course, I thought I might as well add it to my version control and deal with it later.
+
+Now that I think about it, it's probably not the best idea. If you have this habit too, I recommend compile those bursts of thoughts as soon as possible before they become obsolete.
+
+Needing this for credit motivated me to compile them for the first time ever for me.
+
+With that said, there are lots of burst of insights I gathered that, if I still recall today, have stayed with me. This wikipage is just for that.
+
+My electronic scratch paper "2.txt" can be found here at https://github.com/wilzzw/BCH1441
+
+=Cargo Cult=
+"Cargo cult" has to be one of the concepts that I have confused about for the longest time. I just did not understand what would constitute Cargo Cult.
+
+Cargo Cult science is not quite exactly research misconduct, and it's also not quite exactly being wrong about things in science.
+
+So, this is something for which I have been seeking out examples for over recent times. By this point, I think I have a much better idea what it is.
+
+The notion of "Cargo Cult Science" seems to first appear in Richard Feynman's speech, as documented in the book ''Surely You're Joking, Mr. Feynman!''<ref name="cargo cult science">Cargo cult science. (n.d.). In ''Wikipedia''. Retrieved December 3, 2019, from https://en.wikipedia.org/wiki/Cargo_cult_science</ref>
+
+'''All cargo cult activities appear to have something in common -- activity not leading to desired/intended outcome.''' For cargo cult science, that seems to encompass activities/approaches not leading to better/improved understanding.
+
+Based on my understanding, here are examples (as well as hypothetical examples) of cargo cult I came up with that can be grouped into some big categories:
+
+
+;Use of sophistication not because it is necessary, but for the mere sophistication and esotericism:
+* Use extremely quantitative and first-principle model to social sciences (e.g. Using quantum mechanical principle, which underlie molecules of hormones in neurophysiology to understand how social inequality happens.). Those may simply not be good models to understand questions at hand.
+Models are not necessarily better the more complicated they are.
+* Use of machine learning, AI, "data science", quantum computing to answer scientific questions for the wrong reasons -- Not because they are the necessary approach at the given stage but because they sound cool and are "trendy".
+
+Importantly, machine learning can have human bias too<ref name="MLhb">Machine learning can have human bias. In ''Chemical & Engineering News''. Retrieved December 3, 2019, from https://cen.acs.org/physical-chemistry/computational-chemistry/Machine-learning-human-bias/97/i36</ref>
+* On a related note, applying theories and methods to answer scientific questions at hand by pushing the buttons, without understanding them is at huge risk of Cargo Cult. That includes high level statistics and machine learning.
+* An example of Inferential Structure Determination<ref name="ISD">Rieping, W., Habeck, M., & Nilges, M. (2005). Inferential structure determination. ''Science'', 309(5732), 303-306. doi:10.1126/science.1110428</ref>, where I find the authors cherry-pick examples to show the method works.
+
+I was not able to see a clear advantage of their method over traditional method, except the theory is a lot more sophisticated. It is supposed to reduce subjective bias with implemented Bayesian inference of probabilistic structural ensemble.
+
+However, when I asked Michael Habeck at the conference about how to decide on the functional form of the likelihood function, there is still subjectivity there.
+
+There is also a questionable derivation somewhere in the paper. Overall I find it using wildly complicated theory without achieving much greater advantage.
+
+* Pursue a dry lab not because of how computation can help advancing our understanding of science, but because programming seems sounds more sophisticated than pipetting.
+
+
+;Abusing statistics or rigorous statistics without interpretation:
+* "If you torture the data long enough, it will confess." -- [https://en.wikiquote.org/wiki/Ronald_Coase Ronald Coase]. Practices that "torture" data to squeeze out positives are cargo cult.
+* "Human on average has 1 testicle" from the book ''A Field Guide to Lies and Statistics'' By Daniel Levitin<ref name="testicle">A crash course in understanding numbers. (2017, February 4). Retrieved December 3, 2019, from https://www.economist.com/books-and-arts/2017/02/04/a-crash-course-in-understanding-numbers?fsrc=scn/fb/te/bl/ed/acrashcourseinunderstandingnumbers&fbclid=IwAR0Tao3XZxGR3zYt_d0Uw2dKG7m1NSe9K73ZlkUCAZ6-Kf9X2Vd7-4n6eAQ</ref>. Lots of examples out there only looking at averages without considering distribution of data.
+* I remember being told that doing statistics, however rigorous, is not a replacement for actually looking at the data. If we use sophisticated statistics without interpreting and checking the data, that would be cargo cult?
+
+Statistics helps to inform decision, but it doesn't make decisions by itself.
+* Making plots that don't convey the key message, or that are just straightout misleading, or edit to make them look pretty at the expense of message. I have been warned about this during the plotting unit.
+
+
+;Activities that do not lead to new insights
+* This would be a controversial one, but I found that recent series of new structures of CFTR by J. Chen's group have very diminishing insights<ref name="CFTR">
