@@ -1,4 +1,134 @@
-The following content is submitted for credit for the integrative unit '''[http://steipe.biochemistry.utoronto.ca/abc/index.php/ABC-INT-Homology_modelling#For_the_Publication_Image_Option_... ABC-INT-Homology_modelling]'''
+The following content is '''R-code''' and some associated outputs submitted for credit for the integrative unit '''[http://steipe.biochemistry.utoronto.ca/abc/index.php/ABC-INT-Phylogeny#For_the_R-code_option_... ABC-INT-Phylogeny]'''
+
+<source lang="R">
+# I just realized in "makeProteinDB.R", by including Line 9:
+# myDB <- dbAddProtein(myDB, fromJSON("../ERECY_APSES_PSI-BLAST.json"))
+# Sequence duplicates are added to myDB that are in both "ERECY_APSES_PSI-BLAST.json" and "./data/refAPSES_PSI-BLAST.json"
+# I do not know whether having them will affect my multiple sequence alignment. Or automatically removes 100% duplicates
+# So I tried the following modified prep script as well. The difference is removing the duplicates from mySeq
+
+# Write and save fasta MSA format first
+withDups <- writeMFA(APSESmsa)
+
+library(msa)
+ 
+# Align all sequences in the database + KILA_ESCCO
+mySeq <- myDB$protein$sequence
+names(mySeq) <- myDB$protein$name
+mySeq <- c(mySeq,
+           "IDGEIIHLRAKDGYINATSMCRTAGKLLSDYTRLKTTQEFFDELSRDMGIPISELIQSFKGGRPENQGTWVHPDIAINLAQ")
+names(mySeq)[length(mySeq)] <- "KILA_ESCCO"
+
+# Remove duplicates!!!!
+mySeq <- mySeq[! duplicated(mySeq)]
+# Check
+any(duplicated(mySeq))
+any(duplicated(names(mySeq)))
+
+
+mySeqMSA <- msaClustalOmega(AAStringSet(mySeq)) # too many sequences for MUSCLE
+ 
+# get the sequence of the SACCE APSES domain
+sel <- myDB$protein$name == "MBP1_SACCE"
+proID <- myDB$protein$ID[sel]
+
+sel <- myDB$feature$ID[myDB$feature$name == "APSES fold"]
+fanID <- myDB$annotation$ID[myDB$annotation$proteinID == proID &
+                            myDB$annotation$featureID == sel]
+start <- myDB$annotation$start[fanID]
+end   <- myDB$annotation$end[fanID]
+ 
+SACCEapses <- substring(myDB$protein$sequence[proID], start, end)
+ 
+# extract the APSES domains from the MSA
+APSESmsa <- fetchMSAmotif(mySeqMSA, SACCEapses)
+
+# Write fasta MSA again
+withoutDups <- writeMFA(APSESmsa)
+
+# The alignments look different!!!
+# From here I have to use APSESmsa reflected in withoutDups, which has duplicates removed
+
+# Indicate whether this is a control experiment
+# Because I used a different MSA method, also excluded redundant sequences, I need a blank control
+CONTROL <- FALSE
+if (CONTROL) {
+    numSample <- 0
+} else {
+    numSample <- 10
+}
+
+# Filter out E. coli KilA-N and all Mbp1 orthologs 
+not.ECOLI.or.MBP1 <- ! (grepl("KILA_ESCCO", APSESmsa@ranges@NAMES) | grepl("^MBP1_", APSESmsa@ranges@NAMES))
+
+#Randomly sample 10 sequences that are not E.coli KilA or Mbp1 orthologs
+set.seed(112358)
+APSES.seqSample <- sample(APSESmsa[not.ECOLI.or.MBP1], numSample)
+set.seed(NULL)
+
+# I can combine sampled sequence s with E.coli KilA and Mbp1 orthologs like this:
+APSES.fullSeqSample <- c(APSESmsa[! not.ECOLI.or.MBP1], APSES.seqSample)
+
+
+# Masking >80% gap columns.
+# The following code is largely inspired by 4.1 section in "BIN-PHYLO-Data_preparation.R"
+lengthAli <- nchar(APSES.fullSeqSample[1])
+msaMatrix <- matrix(character(length(APSES.fullSeqSample) * lengthAli), ncol = lengthAli)
+
+# Sanity check. Should print TRUE
+(nrow(msaMatrix) == length(APSES.fullSeqSample))
+
+# Put sequences into the matrix with individual characters
+for (i in 1:nrow(msaMatrix)) {
+    msaMatrix[i,] <- seqinr::s2c(as.character(APSES.fullSeqSample[[i]]))
+}
+
+# Create a masking vector
+colMask <- logical(ncol(msaMatrix))
+limit <- round(nrow(msaMatrix) * (80/100))
+
+for (i in 1:ncol(msaMatrix)) {
+    count <- sum(msaMatrix[ , i] == "-") # Number of characters in the column that would be "-"
+    colMask[i] <- (count <= limit) # TRUE if fewer than 80% are gaps
+}
+
+# Masking! Also preparing input
+maskedMatrix <- msaMatrix[ , colMask]
+
+phyloInput <- character()
+for (i in 1:nrow(maskedMatrix)) {
+    phyloInput[i] <- paste(maskedMatrix[i, ], collapse="")
+}
+names(phyloInput) <- APSES.fullSeqSample@ranges@NAMES
+
+# Save and reload, build and plot tree
+writeMFA(phyloInput, myCon = "../APSESphyloSample.mfa")
+newIn <- Rphylip::read.protein("../APSESphyloSample.mfa")
+
+PROMLPATH <- "C:/Users/Wilson/Desktop/phylip-3.698/exe" # Path to Phylip package on my PC
+newTree <- Rphylip::Rproml(newIn, path=PROMLPATH)
+
+# Remove tips that are not found in the fungiTree. First need to reload fungiTree though (should have saved as .Rdata)
+fungiTree <- ape::read.tree("../fullfungiTree.txt")
+
+# The for-loop below is borrowed from Line 71-73 from "BIN-PHYLO-Tree_analysis.R"
+# Necessary to rename fungiTree tips for the upcoming tip filter to work
+# Update: unused
+#for (i in seq_along(fungiTree$tip.label)) {
+#    fungiTree$tip.label[i] <- biCode(gsub("_", " ", fungiTree$tip.label[i]))
+#}
+# The below two lines are borrowed from course website
+# Update: unused
+#sel <- ! (newTree$tip.label %in% fungiTree$tip.label)
+#newTree <- ape::drop.tip(newTree, newTree$tip.label[sel])
+
+# Drop non MBP1 unless it is KilA from E.coli
+sel <- ! (grepl("^MBP1", newTree$tip.label) | (newTree$tip.label == "KILA_ESCCO"))
+newTree <- ape::drop.tip(newTree, newTree$tip.label[sel])
+
+plot(newTree)
+save(newTree, file = "../newAPSEStreeRproml.RData")
+</source>
 
  A AAStringSet instance of length 10
  width     seq                                                          names               
@@ -12,6 +142,14 @@ The following content is submitted for credit for the integrative unit '''[http:
  [8]   290 RIY---------SAVYSGVGVYEA--MI-...IPFERGRELALQYG--CDHL-LAPIFDF 68476_WALME
  [9]   290 VIE---------VATYAGVDVYEC--YC-...IPLLSAQNLVAKYC--ITDIVVLTLINF ECYM_7145
  [10]   290 ITIARLKLPHPR-----------------...IPIAIAEELGQRYA--MAEY-VDALAKA 69819_WALME
+
+[[File:newTree_ZWZ.png|500px]]
+(New tree with more genes added for building phylogenetic tree)
+
+[[File:newTree_less.png|500px]]
+(Control tree built with just MBP1 and KILA_ESCCO)
+
+Oldest tree, using MUSCLE and probably had sequence duplicates during MSA is found [http://steipe.biochemistry.utoronto.ca/abc/students/index.php/User:Zhi_Wei_Zeng/Journal#10.3_Construction_of_Phylogenetic_Trees here in the journal] (See the R-code block comments for details).
 
 =References=
 <references />

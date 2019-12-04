@@ -55,7 +55,7 @@ The best match (top hit) is NP_012341.1.
 We deem Hypothetical protein Ecym_8135 (RefSeq NP_012341) to be the orthologue of Saccharomyces cerevisiae CDC6 by reverse best match.
 
 
-==Analyse CDC6_ERECY in the Context of its Genome==
+==Analyze CDC6_ERECY in the Context of its Genome==
 
 5. Use cross-references to find this gene in NCBI Genome Data Viewer.
 
@@ -65,6 +65,8 @@ We deem Hypothetical protein Ecym_8135 (RefSeq NP_012341) to be the orthologue o
 * '''The gene is apparently encoded in the DNA minus-strand''', spanning the region 285,052-283,520.
 
 6. Use "Tools" and "go to" position "285053-285552" can produce the sequence desired, including 500 bases upstream and 30 bases from the beginning of ORF.
+
+[[File:genomeview.jpg|500px]]
 
 7. Then, use "Tools" > "Flip Strands". Download visible region in fasta format results in the file "CDC6_ERECY_DNA.fa".
 
