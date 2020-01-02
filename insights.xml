@@ -70,7 +70,7 @@ Newly published structures are starting to look pretty much exactly the same (wi
 * Use advanced mathematical modelling methods to impress rather than to advance understanding. A carefully taken qualitative pictures that convey the message properly is way more useful than meaningless equations.
 * Confirmation bias and guide doing the wrong experiments, misinterpretation, or straightout ignoring essential information
 * (Boris) Results are always only meaningful when we consider which algorithm was used and how the parameters were set. Results cannot be compared if algorithm and parameters are not specified.
-...
+* ...
 
 ;I really just have two problem with the notion of "cargo cult":
 * The types of conduct that could fall under "cargo cult" is too broad. The definition is not distinct enough. Probably why I had a difficult time understanding it.
@@ -133,7 +133,8 @@ If I were to ever get far in these areas, I would have to know the endless possi
 
 Many instances this quote resonates. The goal is to understand biology. No models are biology themselves, but good models/abstractions help understanding biology and advances our knowledge.
 
-==Other Lesser Random Insights==
+
+=Other Lesser Random Insights=
 Risk is probability times damage (Boris). Chance of computer utterly dying is not high if well maintained. However, even once is too many.
 
 NO backup is a backup unless recovery of data has been tested and shown to work (Boris). Learned that the hard way..
@@ -150,3 +151,4 @@ When it comes to excluding non-confident regions, lack of information is informa
 <references />
 
 {{CC-BY}}
+[[Category:Insights!]]

@@ -1533,7 +1533,7 @@ The downloaded binary packages are in
 
 :* Taxonomy: Fungi > Ascomycota > Saccharomycotina > Saccharomycetes > Saccharomycetales > Dipodascaceae > ''Eremothecium''
 :* Shares the same order as ''Saccharomyces cerevisiae''
-:* Produces aerial mycelium (filamentous, like mushrooms) instead of growing like yeast [NCBI, https://www.sciencedirect.com/science/article/pii/S0960982206000418]
+:* Produces aerial mycelium (filamentous, like mushrooms) instead of growing like yeast according to [https://www.sciencedirect.com/science/article/pii/S0960982206000418 Fungal biology: Growing into the air]
 :* Genome size of 9.6Mb, 8 chromosomes
 
 ==3.3 Data Models==
@@ -1547,7 +1547,7 @@ Time estimated: 1 h; taken 4.5 h; date started: 2019-10-11; date completed: 2019
 The motivation for constructing appropriate database models -- how to store data for efficient computation and avoid errors by ensuring self-consistency.
 
 ===3.3.1 Data organizing principles===
-;Normal Form: A data model is normalized so to "reduce data redundancy and improve data integrity" [https://en.wikipedia.org/wiki/Database_normalization]
+;Normal Form: A data model is normalized so to "reduce data redundancy and improve data integrity" (https://en.wikipedia.org/wiki/Database_normalization)
 
 ;Primary Key: a label that uniquely identifies a record in the database.
 :* Pointing to information. Not storing information. It should not depend on the underlying mutable information.
@@ -1616,7 +1616,7 @@ Another version (if my idea of "double-joint" works/is a thing.. this would allo
 
 ;Journals
 :* ''Bioinformatics''
-:* ''Nucleic Acids Research'' (It has a really nice current database volume and a Web service volume for each year. 2019 Check out: EncoMPASS<ref>EncoMPASS: an online database for analyzing structure and symmetry in membrane proteins</ref>, The MemProtMD database</ref>The MemProtMD database: a resource for membrane-embedded protein structures and their lipid interactions</ref>)
+:* ''Nucleic Acids Research'' (It has a really nice current database volume and a Web service volume for each year. 2019 Check out: EncoMPASS<ref>Sarti, E., Aleksandrova, A. A., Ganta, S. K., Yavatkar, A. S., & Forrest, L. R. (2018). EncoMPASS: an online database for analyzing structure and symmetry in membrane proteins. ''Nucleic Acids Research'', 47(D1), D315–D321. https://doi.org/10.1093/nar/gky952</ref>, The MemProtMD database</ref><ref>Newport, T. D., Sansom, M. S. P., & Stansfeld, P. J. (2018). The MemProtMD database: a resource for membrane-embedded protein structures and their lipid interactions. Nucleic Acids Research, 47(D1), D390–D397. https://doi.org/10.1093/nar/gky1047</ref>)
 :* ''BMC Bioinformatics''
 :* ''PLoS Computational Biology''
 

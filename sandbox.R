@@ -774,7 +774,21 @@ for (i in seq_along(topDescriptions)) {
 }
 
 
+# =    4  Task for submission  =================================================
 
+
+# Write a loop that will go through your personalized list of Ensemble IDs and
+#    for each ID:
+#    --  print the ID,
+#    --  print the first row's HGNC symbol,
+#    --  print the first row's wikigene description.
+#    --  print the first row's phenotype.
+#
+# (Hint, you can structure your loop in the same way as the loop that
+# created CPdefs. )
+
+# Place the R code for this loop and its output into your report if you are
+# submitting a report for this unit. Please read the requirements carefully.
 
 #CPdefs <- list()
 for (ID in ENSPsel) {
@@ -782,8 +796,8 @@ for (ID in ENSPsel) {
     cat("\n")
     infoID <- biomaRt::getBM(filters = "ensembl_peptide_id",
                              attributes = c("hgnc_symbol",
-                                                  "wikigene_description",
-                                                  "phenotype_description"),
+                                            "wikigene_description",
+                                            "phenotype_description"),
                              values = ID,
                              mart = myMart)
 	cat(sprintf("hgnc_symbol: %s", infoID[1,"hgnc_symbol"]))
@@ -794,6 +808,63 @@ for (ID in ENSPsel) {
     cat("\n")
     cat("\n")
 }
+
+# I encountered that the following block of seeded random sampling code not being reproducible.
+# And I am not sure why...
+#set.seed(myStudentNumber)         # enter your student number here
+#(ENSPsel <- sample(ENSPsel))
+#set.seed(NULL)      
+
+# The outputs are the following:
+#ENSP00000269305
+#hgnc_symbol: TP53
+#wikigene_description: tumor protein p53
+#phenotype_description: Adrenocortical carcinoma
+
+#ENSP00000344456
+#hgnc_symbol: CTNNB1
+#wikigene_description: catenin beta 1
+#phenotype_description: Adult hepatocellular carcinoma
+
+#ENSP00000360525
+#hgnc_symbol: MAGOH
+#wikigene_description: mago homolog, exon junction complex subunit
+#phenotype_description: NA
+
+#ENSP00000270202
+#hgnc_symbol: AKT1
+#wikigene_description: AKT serine/threonine kinase 1
+#phenotype_description: COWDEN SYNDROME
+
+#ENSP00000360266
+#hgnc_symbol: JUN
+#wikigene_description: Jun proto-oncogene, AP-1 transcription factor subunit
+#phenotype_description: NA
+
+#ENSP00000344818
+#hgnc_symbol: UBC
+#wikigene_description: ubiquitin C
+#phenotype_description: NA
+
+#ENSP00000275493
+#hgnc_symbol: EGFR
+#wikigene_description: epidermal growth factor receptor
+#phenotype_description: Giant cell glioblastoma
+
+#ENSP00000367207
+#hgnc_symbol: MYC
+#wikigene_description: MYC proto-oncogene, bHLH transcription factor
+#phenotype_description: BURKITT LYMPHOMA
+
+#ENSP00000350941
+#hgnc_symbol: SRC
+#wikigene_description: SRC proto-oncogene, non-receptor tyrosine kinase
+#phenotype_description: Hereditary thrombocytopenia with early-onset myelofibrosis
+
+#ENSP00000335153
+#hgnc_symbol: HSP90AA1
+#wikigene_description: heat shock protein 90 alpha family class A member 1
+#phenotype_description: NA
 
 
 ### Phylogeny
