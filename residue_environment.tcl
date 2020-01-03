@@ -3,10 +3,15 @@
 # Test block #
 set HOME_PATH "C:/Users/Wilson/Documents/BCH1441"
 set PDB_CODE 6MSM
-set RESIDUE_NAME GLU
+set RESIDUE_NAME ASP
 set tclJsonPATH "${HOME_PATH}/tcllib/modules/json"
 
 cd $HOME_PATH
+# Make temporary folder
+set temp_folder .residue_env
+file mkdir $temp_folder
+
+# Damage control? If temp_folder already exists...
 
 # Idea: read from JSON for each type of residue to decide what kind of atoms to show
 # Select a subset of atoms (typically four non-coplanar atoms) for aligning the residues
@@ -72,7 +77,13 @@ for {set i 0} {$i < $num_residues} {incr i} {
     # Showing subsets
     # Show the residue and its surrounding residues (within 4.5 Ångstrom of heavy atom cut-off) in wire/line representation (default)
     # Also show the selected residue itself in licorice representation
-    mol modselect 0 top "protein and same residue as (within 4.5 of residue $resindex_to_show)"
+    # Selection language for residue and its surroundings
+    # Future development includes non-protein ligands. Require necessary respective .inp files
+#    set selang_contact "protein and same residue as (within 4.5 of residue $resindex_to_show)"
+# Added to evade error with UNK, which is proteogenic with unknown identity (modelled as poly-Ala)
+# Consider writing as a filter function
+    set selang_contact "protein and not resname UNK and same residue as (within 4.5 of residue $resindex_to_show)"
+    mol modselect 0 top $selang_contact
     mol addrep top
     mol modselect 1 top "protein and residue $resindex_to_show"
     mol modstyle 1 top Licorice
@@ -88,6 +99,11 @@ for {set i 0} {$i < $num_residues} {incr i} {
     } else {
         set ref_residue [atomselect top "protein and residue $resindex_to_show and name $selection_atoms"]
     }
+
+    # Save individual residue and its surrounding into PDB for later merging and computing densities
+    # Separately, so that we can distinguish GLU and surrounding GLU during density calculation
+    [atomselect top "$selang_contact and not residue $resindex_to_show"] writepdb ${temp_folder}/${RESIDUE_NAME}${resID_to_show}_ENV.pdb
+    [atomselect top "residue $resindex_to_show"] writepdb ${temp_folder}/${RESIDUE_NAME}${resID_to_show}.pdb
 }
 
 # Reference view. Get close to the view from the perspective of the residue
@@ -101,8 +117,46 @@ display resetview
 
 # Set up lists for all clusters
 
-# For each list, align them to a representative residue structure
+proc processPDB_writeout {pdbfile} {
+    set pdbOpen [open $pdbfile r]
+    set pdbContent [read $pdbOpen]
+    close $pdbOpen
+    set pdbLines [split $pdbContent "\n"]
 
-# Combine and compute density. Refer to MDAnalysis source code or VMD source code for it.
+    set numberOfLines [llength $pdbLines]
+    set start 1
+    set end [expr $numberOfLines - 3]
 
-# Show density
+    return [lrange $pdbLines $start $end]
+}
+
+
+set mergedEnv [open "merged_${RESIDUE_NAME}_ENV.pdb" w]
+puts $mergedEnv "TITLE     FUSED PDB FOR DENSITY CALCULATION"
+foreach pdbfile [glob ${temp_folder}/*_ENV.pdb] {
+    set lines2write [processPDB_writeout $pdbfile]
+    foreach line $lines2write {
+        puts $mergedEnv $line
+    }
+    file delete $pdbfile
+}
+puts $mergedEnv "END"
+close $mergedEnv
+
+set mergedResidue [open "merged_${RESIDUE_NAME}.pdb" w]
+puts $mergedResidue "TITLE     FUSED PDB FOR DENSITY CALCULATION"
+foreach pdbfile [glob ${temp_folder}/*.pdb] {
+    set lines2write [processPDB_writeout $pdbfile]
+    foreach line $lines2write {
+        puts $mergedResidue $line
+    }
+    file delete $pdbfile
+}
+puts $mergedResidue "END"
+close $mergedResidue
+
+#file delete $temp_folder
+
+# Compute and show density
+# Something like...
+#volmap density [atomselect top "oxygen"] -res 0.5 -weight mass
