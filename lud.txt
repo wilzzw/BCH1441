@@ -1,0 +1,9 @@
+2020-01-02
+Test for ALA residues, for which no chi angles are defined
+
+2020-01-03
+More possibilities of alignments are possible, actually depending on what I am interested in observing. I'm going to write it like that and divide atomselection for superposition in JSON based on purpose.
+For residue local superposition to work properly, I have to select atoms with fixed geometrical relationships with each other (e.g. 4 atoms of sp3 carbon centre)
+Selecting 4 non-coplanar atoms for superposition does not guarantee to be useful. They have no obligation to have fixed geometry with respect to each other. The superposition can be meaningless.
+So if I pick a "centre", I pick 4 atoms of an sp3 centre, including the central atom for superposition. This almost always guarantees excellent structural alignment of moieties.
+In certain cases this is tricky (e.g. GLY, LYS, MET), where not enough atoms are present to define such eligible atoms for superposition. I'm going to try the trick of adding hydrogens for them.

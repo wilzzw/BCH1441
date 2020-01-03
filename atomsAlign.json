@@ -1,5 +1,22 @@
 {
     "ALA": ["N", "CA", "CB", "C"],
     "GLY": ["N", "CA", "C", "O"],
-    "PRO": ["N", "CA", "CB", "C"]
+    "PRO": ["N", "CA", "CB", "C"],
+    "VAL": ["N", "CA", "CB", "C"],
+    "LEU": ["CB", "CG", "CD1", "CD2"],
+    "ILE": ["CA", "CB", "CG1", "CG2"],
+    "MET": ["CA", "CB", "CG", "SD"],
+    "PHE": ["N", "CA", "CB", "C"],
+    "TYR": ["N", "CA", "CB", "C"],
+    "TRP": ["N", "CA", "CB", "C"],
+    "SER": ["N", "CA", "CB", "C"],
+    "THR": ["CA", "CB", "OG1", "CG2"],
+    "CYS": ["N", "CA", "CB", "C"],
+    "ASN": ["CB", "CG", "OD1", "ND2"],
+    "GLN": ["CG", "CD", "OE1", "NE2"],
+    "LYS": ["N", "CA", "CB", "C"],
+    "ARG": ["NE", "CZ", "NH1", "NH2"],
+    "HIS": ["CG", "ND1", "CD2", "CE1", "NE2"],
+    "ASP": ["N", "CA", "CB", "C"],
+    "GLU": ["CG", "CD", "OE1", "OE2"]
 }

@@ -3,7 +3,7 @@
 # Test block #
 set HOME_PATH "C:/Users/Wilson/Documents/BCH1441"
 set PDB_CODE 6MSM
-set RESIDUE_NAME GLY
+set RESIDUE_NAME GLU
 set tclJsonPATH "${HOME_PATH}/tcllib/modules/json"
 
 cd $HOME_PATH
@@ -94,6 +94,8 @@ for {set i 0} {$i < $num_residues} {incr i} {
 display resetview
 
 # Measure dihedrals
+
+# Chi angle clustering recommendations
 
 # Cluster
 
