@@ -98,7 +98,7 @@ set dict_atomsAlign [readJSON "atomsAlign.json"]
 
 # Get atoms selected for superposition for the residue type
 #set selection_atoms "N CA CB C"
-set selection_atoms [dict get $dict_atomsAlign $RESIDUE_NAME]
+set selection_atoms [dict get $dict_atomsAlign $RESIDUE_NAME] ##########################
 
 # Load the structure file
 # lsearch returns the index of the occurance of an element in a list (0-based)
@@ -125,9 +125,10 @@ set num_residues [llength $all_residues]
 # Create as many copies of the structure as there are such residue in the protein
 # And show their residue representations as well as their surroundings
 # And align them to a representative residue structure, which will be the first structure
+set heavy_cutoff 4.5
 for {set i 0} {$i < $num_residues} {incr i} {
     # Load copies of the PDB structure and rename them to all residue names
-    mol new ${PDB_CODE}.pdb type {pdb} first 0 last -1 step 1 waitfor -1
+    mol new $PDB_CODE.pdb type {pdb} first 0 last -1 step 1 waitfor -1
 
     set resindex_to_show [lindex $all_residues $i]
     set resID_to_show [lindex $all_resIDs $i]
@@ -142,7 +143,7 @@ for {set i 0} {$i < $num_residues} {incr i} {
 # Added to evade error with UNK, which is proteogenic with unknown identity (modelled as poly-Ala)
 # This is also why currently I cannot read the whole .pdb file with psfgen and add hydrogens for once and for all..
 # Consider writing as a filter function
-    set selang_contact "protein and not resname UNK and same residue as (within 4.5 of residue $resindex_to_show)"
+    set selang_contact "same residue as (mass > 1 and within $heavy_cutoff of residue $resindex_to_show)"
     mol modselect 0 top $selang_contact
     mol addrep top
     mol modselect 1 top "protein and residue $resindex_to_show"
@@ -151,7 +152,7 @@ for {set i 0} {$i < $num_residues} {incr i} {
     # The first of such residues will be the reference to align the rest of the residues to
     # Except for the first of such residues, do not display the visualization (can be manually turned back on)
     if {$i > 0} {
-        set toalign_residue [atomselect top "protein and residue $resindex_to_show and name $selection_atoms"]
+        set toalign_residue [atomselect top "residue $resindex_to_show and name $selection_atoms"]
         set transform [measure fit $toalign_residue $ref_residue]
         set full_protein [atomselect top "all"]
         $full_protein move $transform
@@ -171,12 +172,25 @@ for {set i 0} {$i < $num_residues} {incr i} {
 display resetview
 
 # Measure dihedrals
+proc measureDihedral {{a1 a2 a3 a4} mol} {
+    return [measure dihed {$a1 $a2 $a3 $a4} molid $mol]
+}
+
+proc measureChi {n resID mol} {
+    set atomsToDefine [lrange [expr n - 1] [expr n + 3] $atomsDefs]
+    set atomList [list]
+    foreach a $atomsToDefine {
+        set atom [atomselect $mol "residue $resID and name ' or '.join($a)"]
+        set atomindex [$atom get index]
+        lappend $atomList $atomindex
+    }
+    return [measureDihedral $atomList $mol]
+}
 
 # Chi angle clustering recommendations
+# Cluster via histogram using external programs
 
-# Cluster via histogram
-
-# Set up lists for all clusters
+# Set up lists for all clusters/ filtering function
 
 proc processPDB_writeout {pdbfile} {
     set pdbOpen [open $pdbfile r]

@@ -7,3 +7,34 @@ For residue local superposition to work properly, I have to select atoms with fi
 Selecting 4 non-coplanar atoms for superposition does not guarantee to be useful. They have no obligation to have fixed geometry with respect to each other. The superposition can be meaningless.
 So if I pick a "centre", I pick 4 atoms of an sp3 centre, including the central atom for superposition. This almost always guarantees excellent structural alignment of moieties.
 In certain cases this is tricky (e.g. GLY, LYS, MET), where not enough atoms are present to define such eligible atoms for superposition. I'm going to try the trick of adding hydrogens for them.
+
+# 1: Combine. Inspired by and rewritten from the officially provided script "mergepdbs.tcl"
+#    (https://www.ks.uiuc.edu/Research/vmd/script_library/scripts/mergepdbs/mergepdbs.tcl)
+#    This is accomplished with the "psfgen" package. VMD by default should have it accompanied.
+package require psfgen
+
+# VMD comes with atom-type definition files like the one below, with proteins and lipids
+# Reading topology is a "required" side effect of psfgen, although completely not necessary for just merging .pdb files
+# Could have also written brute-force file manipulation code to merge pdb files
+
+# This is the modified version of VMD "top_all27_prot_lipid.inp"
+# It no longer recognizes HIS as a residue name, but instead one of HSD, HSE, and HSP, which will result in pdb reading error
+# Therefore, I copied the section that correspond to "HSD" and rename it as "HIS" and added it to the file, making "HSD" the default for "HIS".
+# For more details, please inspect the .inp file
+set topologyfile "top_all27_prot_lipid_withHIS.inp"
+# Interpret topology definitions
+topology $topologyfile
+
+set nseg 1
+foreach pdbfile [glob ${TEMP_FOLDER}/*.pdb] {
+    set segid V$nseg 
+    segment $segid {
+        first NONE
+        last NONE
+        pdb $pdbfile
+    }
+    coordpdb $pdbfile $segid
+    incr nseg
+}
+writepdb merged_${RESIDUE_NAME}.pdb
+file delete $TEMP_FOLDER
