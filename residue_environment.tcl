@@ -235,3 +235,6 @@ file delete $TEMP_FOLDER
 # Compute and show density
 # Something like...
 #volmap density [atomselect top "oxygen"] -res 0.5 -weight mass
+proc calcDensity {selection resolution outputName} {
+    volmap density [atomselect top $selection] -res $resolution -weight mass -o $outputName
+}
