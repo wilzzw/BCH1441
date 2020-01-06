@@ -4,6 +4,7 @@
 set HOME_PATH "C:/Users/Wilson/Documents/BCH1441"
 set PDB_CODE 6MSM
 set RESIDUE_NAME LYS
+set MODE env
 
 set FILTER_LANGUAGE "protein and not resname UNK"
 # To align GLY, MET, and LYS properly, hydrogens have to be added
@@ -78,7 +79,13 @@ proc addHydrogens {pdbFilename} {
 proc strucLoad {addh} {
     global PDB_CODE
     global FILTER_LANGUAGE
-    mol new ${PDB_CODE}.pdb type {pdb} first 0 last -1 step 1 waitfor -1
+
+    if {[file exists ${PDB_CODE}.pdb]} {
+        mol new ${PDB_CODE}.pdb type {pdb} first 0 last -1 step 1 waitfor -1
+    } else {
+        mol pdbload $PDB_CODE
+    }
+    
     if {addh} {
         puts "Note: hydrogens will be added to the pdb based on reasonable bond geometries"
         # Filter off residues that psfgen cannot read and save
@@ -93,21 +100,36 @@ proc strucLoad {addh} {
     }
 }
 
-# Read "atomsAlign.json"
-set dict_atomsAlign [readJSON "atomsAlign.json"]
+proc selectAtoms {} {
+    global RESIDUE_NAME
+    global MODE
+    # Read "atomsAlign.json"
+    set dict_atomsAlign [readJSON "atomsAlign.json"]
 
-# Get atoms selected for superposition for the residue type
-#set selection_atoms "N CA CB C"
-set selection_atoms [dict get $dict_atomsAlign $RESIDUE_NAME] ##########################
+    # Get atoms selected for superposition for the residue type
+    # This retrieves a dictionary, whose keys are the "modes" of viewing
+    # (e.g. viewing chi angle distributions/densities or looking at the residue's surrounding environment densities)
+    set selection_atoms_allmodes [dict get $dict_atomsAlign $RESIDUE_NAME]
+    return [dict get $selection_atoms_allmodes $MODE]
+}
+
+proc needAddHydrogens {atomNameList} {
+    foreach aname $atomNameList {
+        if {[string index $aname 0] == "H"} {
+            return 1
+        }
+    }
+    return 0
+}
+
+# Select atoms for residue structural superposition
+set selected_atoms [selectAtoms]
 
 # Load the structure file
-# lsearch returns the index of the occurance of an element in a list (0-based)
-# If the element does not exist in the list, it returns -1
-# But in tcl, greater than zero is True... So +1.
-set needAddHydrogen [lsearch $RLIST_NEEDH_TOALIGN $RESIDUE_NAME]
-# If the residue is GLY, LYS, or MET, add hydrogens to the structure
-strucLoad [expr $needAddHydrogen + 1]
+# Add hydrogens if needed
+strucLoad [needAddHydrogens $selected_atoms]
 
+# Set the whole protein in Cartoon representation and hide it
 mol modstyle 0 top NewCartoon
 mol showrep top 0 off
 
@@ -116,11 +138,40 @@ mol showrep top 0 off
 # Also get the indices
 ### Will have other treatments if there are dihedral criteria
 set select_all_residues [atomselect top "protein and name CA and resname $RESIDUE_NAME"]
-set all_resIDs [$select_all_residues get resid]
+#set all_resIDs [$select_all_residues get resid]
 set all_residues [$select_all_residues get residue]
 
+# Dummy condition for testing
+#proc condition {resindex} {
+ #   return 1
+#}
+
+# Chi1 filtering
+proc condition {resindex} {
+    set diheadralAngle [measureChi 1 $resindex top]
+    if {($dihedralAngle >= 50) && ($dihedralAngle <= 70)} {
+        return 1
+    } else {
+        return 0
+    }
+}
+
+proc filterResidues {residueList} {
+    set filteredList [list]
+    foreach i $residueList {
+        if {[condition $i]} {
+            lappend $filteredList $i 
+        }
+    }
+    return $filteredList
+}
+
+set qualifiedResidues [filterResidues $all_residues]
+set filteredSelection [atomselect top "name CA and residue $qualifiedResidues"]
+set qualifiedResIDs [$filteredSelection get resid]
+
 # How many of such residues are there?
-set num_residues [llength $all_residues]
+set num_residues [llength $qualifiedResidues]
 
 # Create as many copies of the structure as there are such residue in the protein
 # And show their residue representations as well as their surroundings
@@ -130,8 +181,8 @@ for {set i 0} {$i < $num_residues} {incr i} {
     # Load copies of the PDB structure and rename them to all residue names
     mol new $PDB_CODE.pdb type {pdb} first 0 last -1 step 1 waitfor -1
 
-    set resindex_to_show [lindex $all_residues $i]
-    set resID_to_show [lindex $all_resIDs $i]
+    set resindex_to_show [lindex $qualifiedResidues $i]
+    set resID_to_show [lindex $qualifiedResIDs $i]
     mol rename top ${RESIDUE_NAME}${resID_to_show}
 
     # Showing subsets
@@ -176,11 +227,11 @@ proc measureDihedral {{a1 a2 a3 a4} mol} {
     return [measure dihed {$a1 $a2 $a3 $a4} molid $mol]
 }
 
-proc measureChi {n resID mol} {
+proc measureChi {n resindex mol} {
     set atomsToDefine [lrange [expr n - 1] [expr n + 3] $atomsDefs]
     set atomList [list]
     foreach a $atomsToDefine {
-        set atom [atomselect $mol "residue $resID and name ' or '.join($a)"]
+        set atom [atomselect $mol "residue $resindex and name ' or '.join($a)"]
         set atomindex [$atom get index]
         lappend $atomList $atomindex
     }
