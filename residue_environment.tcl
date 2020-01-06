@@ -6,6 +6,9 @@ set PDB_CODE 6MSM
 set RESIDUE_NAME LYS
 set MODE env
 
+# Added to evade error with UNK, which is proteogenic with unknown identity (modelled as poly-Ala)
+# This is also why I have to filter them out so that psfgen package can properly read the protein.
+# Also, treating them as Alanines is pointless, misleading, and non-biological
 set FILTER_LANGUAGE "protein and not resname UNK"
 # To align GLY, MET, and LYS properly, hydrogens have to be added
 set RLIST_NEEDH_TOALIGN {GLY MET LYS}
@@ -126,7 +129,7 @@ proc needAddHydrogens {atomNameList} {
 set selected_atoms [selectAtoms]
 
 # Load the structure file
-# Add hydrogens if needed
+# Add hydrogens if needed (i.e. when selected_atoms include hydrogens)
 strucLoad [needAddHydrogens $selected_atoms]
 
 # Set the whole protein in Cartoon representation and hide it
@@ -140,6 +143,24 @@ mol showrep top 0 off
 set select_all_residues [atomselect top "protein and name CA and resname $RESIDUE_NAME"]
 #set all_resIDs [$select_all_residues get resid]
 set all_residues [$select_all_residues get residue]
+
+# Measure dihedrals
+proc measureDihedral {alist mol} {
+    return [measure dihed $alist molid $mol]
+}
+
+# Measure chi-angles
+proc measureChi {n resindex mol} {
+    set atomsToDefine [lrange $atomsDefs [expr $n - 1] [expr $n + 3]]
+    set atomList [list]
+    foreach a $atomsToDefine {
+        set possibleAtomNames [join $a " "]
+        set atom [atomselect $mol "residue $resindex and name $possibleAtomNames"]
+        set atomindex [$atom get index]
+        lappend atomList $atomindex
+    }
+    return [measureDihedral $atomList $mol]
+}
 
 # Dummy condition for testing
 #proc condition {resindex} {
@@ -160,7 +181,7 @@ proc filterResidues {residueList} {
     set filteredList [list]
     foreach i $residueList {
         if {[condition $i]} {
-            lappend $filteredList $i 
+            lappend filteredList $i 
         }
     }
     return $filteredList
@@ -186,34 +207,30 @@ for {set i 0} {$i < $num_residues} {incr i} {
     mol rename top ${RESIDUE_NAME}${resID_to_show}
 
     # Showing subsets
-    # Show the residue and its surrounding residues (within 4.5 Ångstrom of heavy atom cut-off) in wire/line representation (default)
-    # Also show the selected residue itself in licorice representation
-    # Selection language for residue and its surroundings
+    # Show the residue and its surrounding residues (heavy atom within 4.5 Ångstrom of heavy atom cut-off) in wire/line representation (default)
+    # Also show the selected residue itself in licorice representation (more emphasized)
+    # Selection language for residue and its surroundings. No non-protein moieties are currently involved
     # Future development includes non-protein ligands. Require necessary respective .inp files
-#    set selang_contact "protein and same residue as (within 4.5 of residue $resindex_to_show)"
-# Added to evade error with UNK, which is proteogenic with unknown identity (modelled as poly-Ala)
-# This is also why currently I cannot read the whole .pdb file with psfgen and add hydrogens for once and for all..
-# Consider writing as a filter function
     set selang_contact "same residue as (mass > 1 and within $heavy_cutoff of residue $resindex_to_show)"
     mol modselect 0 top $selang_contact
     mol addrep top
     mol modselect 1 top "protein and residue $resindex_to_show"
     mol modstyle 1 top Licorice
 
-    # The first of such residues will be the reference to align the rest of the residues to
-    # Except for the first of such residues, do not display the visualization (can be manually turned back on)
-    if {$i > 0} {
-        set toalign_residue [atomselect top "residue $resindex_to_show and name $selection_atoms"]
+    # The first of such residues will be the reference to superimpose the rest of the residues to
+    # Except for the first of such residues, do not display the visualization (can be manually turned back on through GUI)
+    if {$i == 0} {
+        set ref_residue [atomselect top "residue $resindex_to_show and name $selected_atoms"]
+    } else {
+        set toalign_residue [atomselect top "residue $resindex_to_show and name $selected_atoms"]
         set transform [measure fit $toalign_residue $ref_residue]
         set full_protein [atomselect top "all"]
         $full_protein move $transform
         mol off top
-    } else {
-        set ref_residue [atomselect top "protein and residue $resindex_to_show and name $selection_atoms"]
     }
 
     # Save individual residue and its surrounding into PDB for later merging and computing densities
-    # Separately, so that we can distinguish GLU and surrounding GLU during density calculation
+    # Save the residue itself and its surroundings separately, so that we can distinguish the residue and its surrounding during density calculation
     [atomselect top "$selang_contact and not residue $resindex_to_show"] writepdb ${TEMP_FOLDER}/${RESIDUE_NAME}${resID_to_show}_ENV.pdb
     [atomselect top "residue $resindex_to_show"] writepdb ${TEMP_FOLDER}/${RESIDUE_NAME}${resID_to_show}.pdb
 
@@ -222,27 +239,14 @@ for {set i 0} {$i < $num_residues} {incr i} {
 # Reference view. Get close to the view from the perspective of the residue
 display resetview
 
-# Measure dihedrals
-proc measureDihedral {{a1 a2 a3 a4} mol} {
-    return [measure dihed {$a1 $a2 $a3 $a4} molid $mol]
-}
-
-proc measureChi {n resindex mol} {
-    set atomsToDefine [lrange [expr n - 1] [expr n + 3] $atomsDefs]
-    set atomList [list]
-    foreach a $atomsToDefine {
-        set atom [atomselect $mol "residue $resindex and name ' or '.join($a)"]
-        set atomindex [$atom get index]
-        lappend $atomList $atomindex
-    }
-    return [measureDihedral $atomList $mol]
-}
-
 # Chi angle clustering recommendations
 # Cluster via histogram using external programs
 
 # Set up lists for all clusters/ filtering function
 
+# Read lines from a PDB file saved by VMD
+# Returns the second line till the line before the "END" line
+# Used as part of the utility to write several PDB files into a merged PDB file
 proc processPDB_writeout {pdbfile} {
     set pdbOpen [open $pdbfile r]
     set pdbContent [read $pdbOpen]
@@ -256,36 +260,65 @@ proc processPDB_writeout {pdbfile} {
     return [lrange $pdbLines $start $end]
 }
 
+proc mergePDB {suffix} {
+    global RESIDUE_NAME
+    global TEMP_FOLDER
 
-set mergedEnv [open "merged_${RESIDUE_NAME}_ENV.pdb" w]
-puts $mergedEnv "TITLE     FUSED PDB FOR DENSITY CALCULATION"
-foreach pdbfile [glob ${TEMP_FOLDER}/*_ENV.pdb] {
-    set lines2write [processPDB_writeout $pdbfile]
-    foreach line $lines2write {
-        puts $mergedEnv $line
+    if {[string length $suffix] > 0} {
+        set suffix "_$suffix"
     }
-    file delete $pdbfile
-}
-puts $mergedEnv "END"
-close $mergedEnv
 
-set mergedResidue [open "merged_${RESIDUE_NAME}.pdb" w]
-puts $mergedResidue "TITLE     FUSED PDB FOR DENSITY CALCULATION"
-foreach pdbfile [glob ${TEMP_FOLDER}/*.pdb] {
-    set lines2write [processPDB_writeout $pdbfile]
-    foreach line $lines2write {
-        puts $mergedResidue $line
+    set merged [open "merged_${RESIDUE_NAME}${suffix}.pdb" w]
+    puts $merged "TITLE     FUSED PDB FOR DENSITY CALCULATION"
+
+    foreach pdbfile [glob ${TEMP_FOLDER}/*${suffix}.pdb] {
+        set lines2write [processPDB_writeout $pdbfile]
+        foreach line $lines2write {
+            puts $merged $line
+        }
+        file delete $pdbfile
     }
-    file delete $pdbfile
+    puts $merged "END"
+    close $merged
+    return "merged_${RESIDUE_NAME}${suffix}.pdb"
 }
-puts $mergedResidue "END"
-close $mergedResidue
+
+# Write merged PDB for the surroundings of requested residues
+set mergedEnv [mergePDB ENV]
+# Write merged PDB for the requested residues themselves
+set mergedResidues [mergePDB]
 
 file delete $TEMP_FOLDER
 
+# Load the merged environment if the MODE is env
+# Otherwise, it makes more sense to load and analyze the residue itself
+if {$MODE == env} {
+    mol new $mergedEnv type {pdb} first 0 last -1 step 1 waitfor -1
+} else {
+    mol new $mergedResidues type {pdb} first 0 last -1 step 1 waitfor -1
+}
+
+#file delete $mergedEnv
+#file delete $mergedResidues
+
 # Compute and show density
-# Something like...
-#volmap density [atomselect top "oxygen"] -res 0.5 -weight mass
 proc calcDensity {selection resolution outputName} {
     volmap density [atomselect top $selection] -res $resolution -weight mass -o $outputName
+    mol new $outputName type {dx} first 0 last -1 step 1 waitfor -1
 }
+
+proc atomToLookAt {} {
+    global MODE
+    if {$MODE == "env"} {
+        return
+    }
+    set atomsOfInterest [readJSON "atomToLookAt.json"]
+    set atomsSelected [dict get [dict get $atomsOfInterest $RESIDUE_NAME] $MODE]
+    puts "Recommended atoms to compute densities for: $atomsSelected"
+    set atomsSelectedLang [join $atomsSelected " "]
+    return "name $atomsSelectedLang"
+}
+
+set candidateAtoms [atomToLookAt]
+#calcDensity "oxygen" 0.5 test.dx
+calcDensity $candidateAtoms 0.5 test.dx
