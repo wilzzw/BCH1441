@@ -174,7 +174,7 @@ display resetview
 
 # Chi angle clustering recommendations
 
-# Cluster
+# Cluster via histogram
 
 # Set up lists for all clusters
 
