@@ -1,17 +1,29 @@
-# Graduate Unit Design
+### Graduate Unit Design ###
+
+######################################### Part I: Prepare and Define #########################################
+
+# Delete all currently loaded molecules
+# Don't panic if it says ERROR.
+# It throws an error when no molecules have been loaded
+# But it does not halt the script
+# There are no simple ways to get a list of loaded molecules without it throwing an error...
+mol delete all
 
 # Global variables
 set HOME_PATH "C:/Users/Wilson/Documents/BCH1441"
-set PDB_CODE 6MSM
-set RESIDUE_NAME LYS
+set PDB_CODE 5w81
+set RESIDUE_NAME PHE
 set MODE env
+
+# Format inputs properly
+set PDB_CODE [string tolower $PDB_CODE]
+set RESIDUE_NAME [string toupper $RESIDUE_NAME]
+set MODE [string tolower $MODE]
 
 # Added to evade error with UNK, which is proteogenic with unknown identity (modelled as poly-Ala)
 # This is also why I have to filter them out so that psfgen package can properly read the protein.
 # Also, treating them as Alanines is pointless, misleading, and non-biological
 set FILTER_LANGUAGE "protein and not resname UNK"
-# To align GLY, MET, and LYS properly, hydrogens have to be added
-set RLIST_NEEDH_TOALIGN {GLY MET LYS}
 
 cd $HOME_PATH
 # Make temporary folder
@@ -86,10 +98,12 @@ proc strucLoad {addh} {
     if {[file exists ${PDB_CODE}.pdb]} {
         mol new ${PDB_CODE}.pdb type {pdb} first 0 last -1 step 1 waitfor -1
     } else {
+        # This automatic download does not work for versions earlier than 1.9.4
+        # Please see for details: https://www.ks.uiuc.edu/Research/vmd/mailing_list/vmd-l/28765.html
         mol pdbload $PDB_CODE
     }
     
-    if {addh} {
+    if {$addh} {
         puts "Note: hydrogens will be added to the pdb based on reasonable bond geometries"
         # Filter off residues that psfgen cannot read and save
         [atomselect top $FILTER_LANGUAGE] writepdb ${PDB_CODE}.pdb
@@ -103,6 +117,7 @@ proc strucLoad {addh} {
     }
 }
 
+# Select atoms for structural superposition, based on "atomsAlign.json"
 proc selectAtoms {} {
     global RESIDUE_NAME
     global MODE
@@ -116,6 +131,8 @@ proc selectAtoms {} {
     return [dict get $selection_atoms_allmodes $MODE]
 }
 
+# Returns True if need hydrogens for the PDB
+# This is the case if atomNameList contain hydrogens
 proc needAddHydrogens {atomNameList} {
     foreach aname $atomNameList {
         if {[string index $aname 0] == "H"} {
@@ -124,6 +141,116 @@ proc needAddHydrogens {atomNameList} {
     }
     return 0
 }
+
+# Measure dihedrals
+proc measureDihedral {alist mol} {
+    return [measure dihed $alist molid $mol]
+}
+
+# Measure chi-angles
+proc measureChi {n resindex mol} {
+    set atomsDefs [readJSON "chiAngleAtoms.json"]
+    set atomsToDefine [lrange $atomsDefs [expr $n - 1] [expr $n + 2]]
+    set atomList [list]
+    foreach a $atomsToDefine {
+        set possibleAtomNames [join $a " "]
+        set atom [atomselect $mol "residue $resindex and name $possibleAtomNames"]
+        set atomindex [$atom get index]
+        lappend atomList $atomindex
+    }
+    return [measureDihedral $atomList $mol]
+}
+
+# Dummy condition for testing
+# Always returns True
+proc condition {resindex} {
+    return 1
+}
+
+# Chi1 filtering
+#proc condition {resindex} {
+#    set dihedralAngle [measureChi 1 $resindex [molinfo top get id]]
+#    # Dihedral angles are in degrees
+#    if {($dihedralAngle >= 50) && ($dihedralAngle <= 70)} {
+#        return 1
+#    } else {
+#        return 0
+#    }
+#}
+
+# Filter residueList to return a new list of residue indices that satisfy the "condition" proc
+proc filterResidues {residueList} {
+    set filteredList [list]
+    foreach i $residueList {
+        if {[condition $i]} {
+            lappend filteredList $i 
+        }
+    }
+    return $filteredList
+}
+
+# Read lines from a PDB file saved by VMD
+# Returns the second line till the line before the "END" line
+# Used as part of the utility to write several PDB files into a merged PDB file
+proc processPDB_writeout {pdbfile} {
+    set pdbOpen [open $pdbfile r]
+    set pdbContent [read $pdbOpen]
+    close $pdbOpen
+    set pdbLines [split $pdbContent "\n"]
+
+    set numberOfLines [llength $pdbLines]
+    set start 1
+    set end [expr $numberOfLines - 3]
+
+    return [lrange $pdbLines $start $end]
+}
+
+# Merging component PDB files in TEMP_FOLDER
+proc mergePDB {{suffix ""}} {
+    global RESIDUE_NAME
+    global TEMP_FOLDER
+
+    if {[string length $suffix] > 0} {
+        set suffix "_$suffix"
+    }
+
+    set merged [open "merged_${RESIDUE_NAME}${suffix}.pdb" w]
+    puts $merged "TITLE     FUSED PDB FOR DENSITY CALCULATION"
+
+    foreach pdbfile [glob ${TEMP_FOLDER}/*${suffix}.pdb] {
+        set lines2write [processPDB_writeout $pdbfile]
+        foreach line $lines2write {
+            puts $merged $line
+        }
+        file delete $pdbfile
+    }
+    puts $merged "END"
+    close $merged
+    return "merged_${RESIDUE_NAME}${suffix}.pdb"
+}
+
+# Compute and show density
+proc calcDensity {selection resolution method outputName} {
+    volmap density [atomselect top $selection] -res $resolution -weight $method -o $outputName
+    mol new $outputName type {dx} first 0 last -1 step 1 waitfor -1
+}
+
+# Suggest atoms to compute densities for
+proc atomToLookAt {} {
+    global MODE
+    global RESIDUE_NAME
+    if {$MODE == "env"} {
+        return
+    }
+    set atomsOfInterest [readJSON "atomToLookAt.json"]
+    set atomsSelected [dict get [dict get $atomsOfInterest $RESIDUE_NAME] $MODE]
+    puts "Recommended atoms to compute densities for: $atomsSelected"
+    set atomsSelectedLang [join $atomsSelected " "]
+    return "name $atomsSelectedLang"
+}
+
+
+######################################### Part II: Display and Calculate #########################################
 
 # Select atoms for residue structural superposition
 set selected_atoms [selectAtoms]
@@ -143,49 +270,6 @@ mol showrep top 0 off
 set select_all_residues [atomselect top "protein and name CA and resname $RESIDUE_NAME"]
 #set all_resIDs [$select_all_residues get resid]
 set all_residues [$select_all_residues get residue]
-
-# Measure dihedrals
-proc measureDihedral {alist mol} {
-    return [measure dihed $alist molid $mol]
-}
-
-# Measure chi-angles
-proc measureChi {n resindex mol} {
-    set atomsToDefine [lrange $atomsDefs [expr $n - 1] [expr $n + 3]]
-    set atomList [list]
-    foreach a $atomsToDefine {
-        set possibleAtomNames [join $a " "]
-        set atom [atomselect $mol "residue $resindex and name $possibleAtomNames"]
-        set atomindex [$atom get index]
-        lappend atomList $atomindex
-    }
-    return [measureDihedral $atomList $mol]
-}
-
-# Dummy condition for testing
-#proc condition {resindex} {
- #   return 1
-#}
-
-# Chi1 filtering
-proc condition {resindex} {
-    set diheadralAngle [measureChi 1 $resindex top]
-    if {($dihedralAngle >= 50) && ($dihedralAngle <= 70)} {
-        return 1
-    } else {
-        return 0
-    }
-}
-
-proc filterResidues {residueList} {
-    set filteredList [list]
-    foreach i $residueList {
-        if {[condition $i]} {
-            lappend filteredList $i 
-        }
-    }
-    return $filteredList
-}
 
 set qualifiedResidues [filterResidues $all_residues]
 set filteredSelection [atomselect top "name CA and residue $qualifiedResidues"]
@@ -239,49 +323,8 @@ for {set i 0} {$i < $num_residues} {incr i} {
 # Reference view. Get close to the view from the perspective of the residue
 display resetview
 
-# Chi angle clustering recommendations
+# Chi angle clustering recommendations:
 # Cluster via histogram using external programs
-
-# Set up lists for all clusters/ filtering function
-
-# Read lines from a PDB file saved by VMD
-# Returns the second line till the line before the "END" line
-# Used as part of the utility to write several PDB files into a merged PDB file
-proc processPDB_writeout {pdbfile} {
-    set pdbOpen [open $pdbfile r]
-    set pdbContent [read $pdbOpen]
-    close $pdbOpen
-    set pdbLines [split $pdbContent "\n"]
-
-    set numberOfLines [llength $pdbLines]
-    set start 1
-    set end [expr $numberOfLines - 3]
-
-    return [lrange $pdbLines $start $end]
-}
-
-proc mergePDB {suffix} {
-    global RESIDUE_NAME
-    global TEMP_FOLDER
-
-    if {[string length $suffix] > 0} {
-        set suffix "_$suffix"
-    }
-
-    set merged [open "merged_${RESIDUE_NAME}${suffix}.pdb" w]
-    puts $merged "TITLE     FUSED PDB FOR DENSITY CALCULATION"
-
-    foreach pdbfile [glob ${TEMP_FOLDER}/*${suffix}.pdb] {
-        set lines2write [processPDB_writeout $pdbfile]
-        foreach line $lines2write {
-            puts $merged $line
-        }
-        file delete $pdbfile
-    }
-    puts $merged "END"
-    close $merged
-    return "merged_${RESIDUE_NAME}${suffix}.pdb"
-}
 
 # Write merged PDB for the surroundings of requested residues
 set mergedEnv [mergePDB ENV]
@@ -290,35 +333,40 @@ set mergedResidues [mergePDB]
 
 file delete $TEMP_FOLDER
 
-# Load the merged environment if the MODE is env
-# Otherwise, it makes more sense to load and analyze the residue itself
-if {$MODE == env} {
-    mol new $mergedEnv type {pdb} first 0 last -1 step 1 waitfor -1
-} else {
-    mol new $mergedResidues type {pdb} first 0 last -1 step 1 waitfor -1
-}
-
 #file delete $mergedEnv
 #file delete $mergedResidues
 
-# Compute and show density
-proc calcDensity {selection resolution outputName} {
-    volmap density [atomselect top $selection] -res $resolution -weight mass -o $outputName
-    mol new $outputName type {dx} first 0 last -1 step 1 waitfor -1
+set suggestedAtoms [atomToLookAt]
+#puts $suggestedAtoms
+set atomsOfInterest "sulfur"
+set densityMethod "occupancy"
+#set densityMethod "mass"
+
+set resol 0.2
+set outputDensityFile "${RESIDUE_NAME}_${MODE}.dx"
+
+# Load the merged environment if the MODE is env
+# Otherwise, it makes more sense to load and analyze the residue itself
+# If want to look at residue dihedral distribution, use suggestedAtoms
+# If want to look at the average environment/atom distribution surrounding the type of residue, use your customized atomsOfInterest
+if {$MODE == "env"} {
+    mol new $mergedEnv type {pdb} first 0 last -1 step 1 waitfor -1
+    mol off top
+    puts "Computing densities for $atomsOfInterest"
+    calcDensity $atomsOfInterest $resol $densityMethod $outputDensityFile
+} else {
+    mol new $mergedResidues type {pdb} first 0 last -1 step 1 waitfor -1
+    mol off top
+    puts "Computing densities for $suggestedAtoms"
+    calcDensity $suggestedAtoms $resol $densityMethod $outputDensityFile
 }
 
-proc atomToLookAt {} {
-    global MODE
-    if {$MODE == "env"} {
-        return
-    }
-    set atomsOfInterest [readJSON "atomToLookAt.json"]
-    set atomsSelected [dict get [dict get $atomsOfInterest $RESIDUE_NAME] $MODE]
-    puts "Recommended atoms to compute densities for: $atomsSelected"
-    set atomsSelectedLang [join $atomsSelected " "]
-    return "name $atomsSelectedLang"
-}
+# Poor documentation results in me finding the answer in the niche:
+# https://www.ks.uiuc.edu/Research/vmd/mailing_list/vmd-l/30407.html
+# Change the visualization settings for the density surface
+# Feel free to interact with various settings in "Graphics > Representations.." through GUI
+mol modstyle 0 top Isosurface 1 0 0 1
 
-set candidateAtoms [atomToLookAt]
-#calcDensity "oxygen" 0.5 test.dx
-calcDensity $candidateAtoms 0.5 test.dx
+# Color by surface isovalues by selecting "Volume" as the coloring method
+
+### End ###
